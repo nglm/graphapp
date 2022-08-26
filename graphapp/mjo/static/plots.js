@@ -262,7 +262,7 @@ export async function draw_meteogram(
     {include_k = "blank", kmax = 4, id="fig", dims = dimensions()} = {},
 ) {
     // Load the data and wait until it is ready
-    const data =  await d3.json(filename);
+    const data =  await d3.json(filename + ".json");
     // d3 expects a very specific data format
     let data_xy = d3fy(data);
     // where we will store all our figs
@@ -323,7 +323,7 @@ export async function draw_mjo(
     y.domain([-vmax, vmax]);
 
     // Load the data and wait until it is ready
-    const data =  await d3.json(filename);
+    const data =  await d3.json(filename + ".json");
     let data_xy = d3fy(data);
 
     // This element will render the xAxis with the xLabel
@@ -367,7 +367,7 @@ export async function draw_entire_graph_meteogram(
     const members = g.members;
     const colors = get_list_colors(g.n_clusters_range.length);
 
-    const data =  await d3.json(filename_data);
+    const data =  await d3.json(filename_data + ".json");
 
     // where we will store all our figs
     let figs = [];
@@ -476,7 +476,7 @@ export async function draw_relevant_graph_meteogram(
     const members = g.members;
     const colors = get_list_colors(g.n_clusters_range.length);
 
-    const data =  await d3.json(filename_data);
+    const data =  await d3.json(filename_data + ".json");
     let selected_k = d3fy_dict_of_arrays(g.relevant_k);
     // console.log("g.relevant_k", g.relevant_k);
     // console.log("selected_k", selected_k);
@@ -583,7 +583,7 @@ export async function draw_entire_graph_mjo(
     const members = g.members;
     const colors = get_list_colors(g.n_clusters_range.length);
 
-    const data =  await d3.json(filename_data);
+    const data =  await d3.json(filename_data + ".json");
 
     const vmax = 5;
 
