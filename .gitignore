@@ -16,4 +16,4 @@ package-lock.json
 */tmp/*
 
 # --- Django ----
-GraphApp/static*
+graphapp/static*
