@@ -5,9 +5,11 @@ import {
     draw_entire_graph_meteogram, draw_relevant_graph_meteogram, life_span_plot
 } from "./plots.js";
 
-const path_script = document.getElementById("main-script").getAttribute("path_data");
-const data_path = path_script + "data/";
-const data_graph = path_script + "graphs/";
+const path_script = document.getElementById("main-script").getAttribute("path_script");
+// const data_path = path_script + "data/";
+// const data_graph = path_script + "graphs/";
+const data_path = "";
+const data_graph = "";
 const f1 = "ec.ens.2020011400.sfc.meteogram";
 const f2 = "ec.ens.2020011500.sfc.meteogram";
 const f3 = "ec.ens.2020011600.sfc.meteogram";
@@ -29,26 +31,26 @@ const dims_relevant_meteogram = dimensions(
     );
 
 const kmax = 8;
-let mjo = await draw_mjo(data_path + f4,{ dims : dims_mjo, id : "mjo"});
+let mjo = await draw_mjo(f4,{ dims : dims_mjo, id : "mjo"});
 setAxTitle(mjo, f4);
 let mjo_graph = await draw_entire_graph_mjo(
-    data_path + f4, data_graph + f4, {dims : dims_mjo, id: "mjo_graph"});
+    f4, {dims : dims_mjo, id: "mjo_graph"});
 let life_span = await life_span_plot(
-    data_graph + f4, {dims : dims_mjo, id : "life_span"});
+    f4, {dims : dims_mjo, id : "life_span"});
 d3.select("body").append('text').html('<br>');
 let mjo_rmm = await draw_meteogram(
-    data_path + f4, {dims : dims_meteogram, id:"mjo_rmm"});
+    f4, {dims : dims_meteogram, id:"mjo_rmm"});
 
 let mjo_rmm_graph_relevant = await draw_relevant_graph_meteogram(
-    data_path + f4, data_graph + f4,
+    f4,
     {dims : dims_meteogram, id : "mjo_rmm_graph_relevant"});
 
 let mjo_rmm_graph = await draw_entire_graph_meteogram(
-    data_path + f4, data_graph + f4,
+    f4,
     {dims : dims_meteogram, id : "mjo_rmm_graph"});
 
 let mjo_polar = await draw_meteogram(
-    data_path + f4_polar, {dims : dims_meteogram, id : "mjo_polar"});
+    f4_polar, {dims : dims_meteogram, id : "mjo_polar"});
 
 
 // await draw_meteogram(data_path + f4, undefined, "fig01");

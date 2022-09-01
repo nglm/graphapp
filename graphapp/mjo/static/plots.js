@@ -24,6 +24,10 @@ import {range_rescale, sigmoid, linear} from "./utils.js"
     // <polyline points="15,80 29,50 43,60 57,30 71,40 85,15" fill="none" stroke="grey"
     // marker-start="url(#dot)" marker-mid="url(#dot)"  marker-end="url(#dot)" />
 
+export const PATH_SCRIPT = document.getElementById("main-script").getAttribute("path_script");
+export const PATH_DATA = PATH_SCRIPT + "data/";
+export const PATH_GRAPH = PATH_SCRIPT + "graphs/";
+
 function get_brotherhood_size(
     d,
     {g=undefined} = {}
@@ -257,12 +261,55 @@ function add_edges(
         .attr("id", (d => "e" + d.key) );
 }
 
+// Give filename
+// Open json graph if exist, otherwise,
+async function load_graph(
+    filename
+) {
+    // Open a log file
+    let myLog = new File([""], PATH_GRAPH + filename + ".json");
+    console.log("Testing if", PATH_GRAPH + filename + ".json", "exists");
+
+    // If the file doesn't exist yet, call generate_graph
+    if( !myLog.exists ){
+        // generate_graph do 3 things:
+        //  1. generates a graph from the data
+        //  2. save a .json file representing the graph
+        //  3. save a .pg file, a PersistentGraph instance
+        console.log("Generating from file", filename);
+        console.log("Located at", PATH_DATA);
+        await $.get(
+            "generate_graph/",             // URL
+            {                              // Additional data
+                filename : filename,
+                path_data : PATH_DATA,
+                path_graph : PATH_GRAPH
+            },
+            function(data, status) {       // Callback on success
+                // Function called on success
+                // "data" is the value returned by the python function
+                // mapped to the "mjo/relevant/" address
+                return {data, status}
+            })
+            .fail(function(data, status) {
+                console.log('Calling generate_graph failed', data, status);
+                return {data, status}
+            })
+            .always(function(data, status) {
+                return {data, status}
+            })
+    }
+    // Return json file representing the graph
+    return await d3.json(PATH_GRAPH + filename + ".json");
+}
+
+
 export async function draw_meteogram(
     filename,
     {include_k = "blank", kmax = 4, id="fig", dims = dimensions()} = {},
 ) {
     // Load the data and wait until it is ready
-    const data =  await d3.json(filename + ".json");
+    const data =  await d3.json(PATH_DATA + filename + ".json");
     // d3 expects a very specific data format
     let data_xy = d3fy(data);
     // where we will store all our figs
@@ -323,7 +370,7 @@ export async function draw_mjo(
     y.domain([-vmax, vmax]);
 
     // Load the data and wait until it is ready
-    const data =  await d3.json(filename + ".json");
+    const data =  await d3.json(PATH_DATA + filename + ".json");
     let data_xy = d3fy(data);
 
     // This element will render the xAxis with the xLabel
@@ -355,19 +402,18 @@ export async function draw_mjo(
 
 
 export async function draw_entire_graph_meteogram(
-    filename_data,
-    filename_graph,
+    filename,
     {include_k = "yes", kmax = 4, id="fig", dims = dimensions()} = {},
 ) {
     // Load the graph and wait until it is ready
-    const g =  await d3.json(filename_graph + ".json");
+    const g =  await load_graph(filename);
     const vertices = g.vertices.flat();
     const edges = g.edges.flat();
     const time = g.time_axis;
     const members = g.members;
     const colors = get_list_colors(g.n_clusters_range.length);
 
-    const data =  await d3.json(filename_data + ".json");
+    const data =  await d3.json(PATH_DATA + filename + ".json");
 
     // where we will store all our figs
     let figs = [];
@@ -447,36 +493,37 @@ export async function draw_entire_graph_meteogram(
 async function get_relevant_components(filename, {k = undefined} = {}) {
     return $.get(
         "relevant/",                   // URL
-        {filename : filename, k: k},                       // Additional data
+        {                              // Additional data
+            filename : filename,
+            k: k,
+            path_graph : PATH_GRAPH
+        },
         function(data, status) {       // Callback function, called on success
             // Function called on success
             // "data" is the value returned by the python function
             // mapped to the "mjo/relevant/" address
-            console.log('This is success');
-            console.log('vertices', data.vertices);
-            console.log('edges', data.edges);
-            return data
+            return {data, status}
         })
         .fail(function(data, status) {
-            console.log('This is fail', data, status);
+            console.log('Calling generate_graph failed', data, status);
+            return {data, status}
         })
         .always(function(data, status) {
-            console.log('This is always', data, status);
+            return {data, status}
         })
 }
 
 export async function draw_relevant_graph_meteogram(
-    filename_data,
-    filename_graph,
+    filename,
     {include_k = "yes", kmax = 4, id="fig", dims = dimensions()} = {},
 ) {
     // Load the graph and wait until it is ready
-    const g =  await d3.json(filename_graph + ".json");
+    const g =  await load_graph(filename);
     const time = g.time_axis;
     const members = g.members;
     const colors = get_list_colors(g.n_clusters_range.length);
 
-    const data =  await d3.json(filename_data + ".json");
+    const data =  await d3.json(PATH_DATA + filename + ".json");
     let selected_k = d3fy_dict_of_arrays(g.relevant_k);
     // console.log("g.relevant_k", g.relevant_k);
     // console.log("selected_k", selected_k);
@@ -486,9 +533,9 @@ export async function draw_relevant_graph_meteogram(
 
     // document ready return a promise, se we should wait
     await $(async function () {
-        console.log("g", filename_graph);
+        console.log("g", filename);
         // sending_HTTP_request return a promise, so we should wait
-        let relevant_components = await get_relevant_components(filename_graph);
+        let relevant_components = await get_relevant_components(filename);
         console.log(relevant_components);
 
         let vertices = relevant_components.vertices;
@@ -571,19 +618,16 @@ export async function draw_relevant_graph_meteogram(
 
 
 export async function draw_entire_graph_mjo(
-    filename_data,
-    filename_graph,
+    filename,
     {id="fig", dims = dimensions()} = {},
 ) {
     // Load the graph and wait until it is ready
-    const g =  await d3.json(filename_graph + ".json");
+    const g =  await load_graph(filename);
     const vertices = g.vertices.flat();
     const edges = g.edges.flat();
     const time = g.time_axis;
     const members = g.members;
     const colors = get_list_colors(g.n_clusters_range.length);
-
-    const data =  await d3.json(filename_data + ".json");
 
     const vmax = 5;
 
@@ -672,11 +716,11 @@ export async function draw_entire_graph_mjo(
 
 
 export async function life_span_plot(
-    filename_graph,
+    filename,
     {id="fig", dims = dimensions()} = {},
 ) {
     // Load the graph and wait until it is ready
-    const g =  await d3.json(filename_graph + ".json");
+    const g =  await load_graph(filename);
     const life_spans = d3fy_life_span(g.life_span);
     const colors = get_list_colors(g.n_clusters_range.length);
 
