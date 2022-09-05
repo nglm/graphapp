@@ -25,8 +25,9 @@ import {range_rescale, sigmoid, linear} from "./utils.js"
     // marker-start="url(#dot)" marker-mid="url(#dot)"  marker-end="url(#dot)" />
 
 export const PATH_SCRIPT = document.getElementById("main-script").getAttribute("path_script");
-export const PATH_DATA = PATH_SCRIPT + "data/";
-export const PATH_GRAPH = PATH_SCRIPT + "graphs/";
+const ROOT_DATA = 'data/'
+export const PATH_DATA = ROOT_DATA + "data/";
+export const PATH_GRAPH = ROOT_DATA + "graphs/";
 
 function get_brotherhood_size(
     d,
@@ -262,45 +263,52 @@ function add_edges(
 }
 
 // Give filename
-// Open json graph if exist, otherwise,
+// Return json graph (both as .json)
 async function load_graph(
     filename
 ) {
-    // Open a log file
-    let myLog = new File([""], PATH_GRAPH + filename + ".json");
-    console.log("Testing if", PATH_GRAPH + filename + ".json", "exists");
+    // For some reasons, when we are in the 'python world', the path
+    // becomes "graphapp" + ...
+    // But not when we are still in the javascript world...
+    return await $.get(
+        "generate_graph/",             // URL
+        {                              // Additional data
+            filename : filename,
+            path_data : PATH_DATA,
+            path_graph : PATH_GRAPH
+        },
+        function(data) {       // Callback on success
+            // "data" is the value returned by the python function
+            return data
+        })
+        .fail(function(data, status) {
+            console.log('Calling generate_graph failed', data, status);
+            return data
+        })
+        .always(function(data, status) {
+            return data
+        })
+}
 
-    // If the file doesn't exist yet, call generate_graph
-    if( !myLog.exists ){
-        // generate_graph do 3 things:
-        //  1. generates a graph from the data
-        //  2. save a .json file representing the graph
-        //  3. save a .pg file, a PersistentGraph instance
-        console.log("Generating from file", filename);
-        console.log("Located at", PATH_DATA);
-        await $.get(
-            "generate_graph/",             // URL
-            {                              // Additional data
-                filename : filename,
-                path_data : PATH_DATA,
-                path_graph : PATH_GRAPH
-            },
-            function(data, status) {       // Callback on success
-                // Function called on success
-                // "data" is the value returned by the python function
-                // mapped to the "mjo/relevant/" address
-                return {data, status}
-            })
-            .fail(function(data, status) {
-                console.log('Calling generate_graph failed', data, status);
-                return {data, status}
-            })
-            .always(function(data, status) {
-                return {data, status}
-            })
-    }
-    // Return json file representing the graph
-    return await d3.json(PATH_GRAPH + filename + ".json");
+async function load_data(
+    filename
+) {
+    return await $.get(
+        "load_data/",             // URL
+        {                              // Additional data
+            filename : PATH_DATA + filename,
+        },
+        function(data) {       // Callback on success
+            // "data" is the value returned by the python function
+            return data
+        })
+        .fail(function(data, status) {
+            console.log('Calling load_data failed', data, status);
+            return data
+        })
+        .always(function(data) {
+            return data
+        })
 }
 
 
@@ -309,7 +317,7 @@ export async function draw_meteogram(
     {include_k = "blank", kmax = 4, id="fig", dims = dimensions()} = {},
 ) {
     // Load the data and wait until it is ready
-    const data =  await d3.json(PATH_DATA + filename + ".json");
+    const data =  await load_data(filename);
     // d3 expects a very specific data format
     let data_xy = d3fy(data);
     // where we will store all our figs
@@ -370,7 +378,8 @@ export async function draw_mjo(
     y.domain([-vmax, vmax]);
 
     // Load the data and wait until it is ready
-    const data =  await d3.json(PATH_DATA + filename + ".json");
+    const data =  await load_data(filename);
+    console.log("Loaded data at: ", PATH_DATA + filename + ".json");
     let data_xy = d3fy(data);
 
     // This element will render the xAxis with the xLabel
@@ -413,7 +422,7 @@ export async function draw_entire_graph_meteogram(
     const members = g.members;
     const colors = get_list_colors(g.n_clusters_range.length);
 
-    const data =  await d3.json(PATH_DATA + filename + ".json");
+    const data =  await load_data(filename);
 
     // where we will store all our figs
     let figs = [];
@@ -498,18 +507,18 @@ async function get_relevant_components(filename, {k = -1} = {}) {
             k: k,
             path_graph : PATH_GRAPH
         },
-        function(data, status) {       // Callback function, called on success
+        function(data) {       // Callback function, called on success
             // Function called on success
             // "data" is the value returned by the python function
             // mapped to the "mjo/relevant/" address
-            return {data, status}
+            return data
         })
         .fail(function(data, status) {
             console.log('Calling get_relevant_components failed', data, status);
-            return {data, status}
+            return data
         })
-        .always(function(data, status) {
-            return {data, status}
+        .always(function(data) {
+            return data
         })
 }
 
@@ -523,7 +532,7 @@ export async function draw_relevant_graph_meteogram(
     const members = g.members;
     const colors = get_list_colors(g.n_clusters_range.length);
 
-    const data =  await d3.json(PATH_DATA + filename + ".json");
+    const data =  await load_data(filename);
     let selected_k = d3fy_dict_of_arrays(g.relevant_k);
     // console.log("g.relevant_k", g.relevant_k);
     // console.log("selected_k", selected_k);

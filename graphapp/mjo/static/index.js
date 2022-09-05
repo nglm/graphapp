@@ -49,8 +49,8 @@ let mjo_rmm_graph = await draw_entire_graph_meteogram(
     f4,
     {dims : dims_meteogram, id : "mjo_rmm_graph"});
 
-let mjo_polar = await draw_meteogram(
-    f4_polar, {dims : dims_meteogram, id : "mjo_polar"});
+// let mjo_polar = await draw_meteogram(
+//     f4_polar, {dims : dims_meteogram, id : "mjo_polar"});
 
 
 // await draw_meteogram(data_path + f4, undefined, "fig01");
