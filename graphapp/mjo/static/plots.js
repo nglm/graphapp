@@ -490,7 +490,7 @@ export async function draw_entire_graph_meteogram(
     return figs
 }
 
-async function get_relevant_components(filename, {k = undefined} = {}) {
+async function get_relevant_components(filename, {k = -1} = {}) {
     return $.get(
         "relevant/",                   // URL
         {                              // Additional data
@@ -505,7 +505,7 @@ async function get_relevant_components(filename, {k = undefined} = {}) {
             return {data, status}
         })
         .fail(function(data, status) {
-            console.log('Calling generate_graph failed', data, status);
+            console.log('Calling get_relevant_components failed', data, status);
             return {data, status}
         })
         .always(function(data, status) {

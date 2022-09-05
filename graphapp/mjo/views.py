@@ -14,8 +14,13 @@ def relevant(request):
     filename = request.GET['filename']
     path_graph = request.GET['path_graph']
     selected_k = request.GET["k"]
+    # If k == -1, take the list of relevant k by default
+    if selected_k == -1:
+        selected_k = None
     g = pg.PersistentGraph()
+    print("trying to load: ", "graphapp" + path_graph + filename + ".pg")
     g.load("graphapp" + path_graph + filename + ".pg")
+    print("g was loaded")
     vertices, edges = g.get_relevant_components(selected_k)
     return HttpResponse({"vertices" : vertices, "edges" : edges})
 
