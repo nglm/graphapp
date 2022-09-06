@@ -16,6 +16,14 @@ def main(request):
     return render(request, 'index.html', {"app" : "MJO"})
 
 def relevant(request):
+    """
+    Return relevant vertices and edges as a dictionary
+
+    Note: By convention, data and graph are not stored as Django models
+    but as files directly accessible to the user. This is to ensure that
+    users can easily add their files (e.g. daily meteograms), but also so
+    that users can easily retrieve generated graphs.
+    """
     filename = request.GET['filename']
     path_graph = request.GET['path_graph']
     selected_k = request.GET["k"]
@@ -34,7 +42,12 @@ def generate_graph(request):
     """
     Generate and save graph (as .pg and .json) if it doesn't already exist
 
-    Return the json version of the graph
+    Return the json version of the graph.
+
+    Note: By convention, data and graph are not stored as Django models
+    but as files directly accessible to the user. This is to ensure that
+    users can easily add their files (e.g. daily meteograms), but also so
+    that users can easily retrieve generated graphs.
     """
     filename = request.GET['filename']
     path_data = request.GET['path_data']
@@ -52,7 +65,7 @@ def generate_graph(request):
         time = data_dict['time']
 
         # Generate graph
-        g = pg.PersistentGraph(members, time_axis=time)
+        g = pg.PersistentGraph(members, time_axis=time, k_max=5)
         g.construct_graph()
         # Save as .pg and .json
         g.save(path_graph + filename, type="pg")
@@ -67,7 +80,12 @@ def generate_graph(request):
 
 def load_data(request):
     """
-    Load data (json file)
+    Load data (json file), and return it as a json as well
+
+    Note: By convention, data and graph are not stored as Django models
+    but as files directly accessible to the user. This is to ensure that
+    users can easily add their files (e.g. daily meteograms), but also so
+    that users can easily retrieve generated graphs.
     """
     filename = request.GET['filename']
     with open(filename + ".json", "rb") as json_file:
