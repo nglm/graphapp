@@ -1,5 +1,12 @@
 export function d3fy(data) {
-
+    // data is an object with at least 3 keys:
+    // - members (N,d,T) array
+    // - time (T) array
+    // - var_names (d) array
+    //
+    // This function returns a (T) array, containing d+1 dictionaries with keys
+    // - each of d var_names values
+    // - time (real time step, not simply the index of the time step)
     var data_xy = []; // start empty, add each element one at a time
     var xy = [];
 
