@@ -6,6 +6,7 @@ import pickle
 from os.path import exists
 import json
 
+from persigraph.utils.d3 import serialize
 import persigraph as pg
 import multimet as mm
 
@@ -21,12 +22,13 @@ def relevant(request):
     # If k == -1, take the list of relevant k by default
     if selected_k == "-1":
         selected_k = None
-    print("trying to load: ", path_graph + filename + ".pg")
+    print("Loading graph at: ", path_graph + filename + ".pg")
     with open(path_graph + filename + ".pg", "rb") as f:
         g = pickle.load(f)
-        print("g was loaded")
     vertices, edges = g.get_relevant_components(selected_k)
-    return HttpResponse({"vertices" : vertices, "edges" : edges})
+    v_dict = serialize(vertices)
+    e_dict = serialize(edges)
+    return JsonResponse({"vertices" : v_dict, "edges" : e_dict}, safe=False)
 
 def generate_graph(request):
     """
@@ -64,9 +66,11 @@ def generate_graph(request):
     return JsonResponse(dict_from_json, safe=False)
 
 def load_data(request):
+    """
+    Load data (json file)
+    """
     filename = request.GET['filename']
     with open(filename + ".json", "rb") as json_file:
-        print("Loading data at", filename + ".json", "exists: ", exists(filename + ".json"))
+        print("Loading data at", filename + ".json")
         dict_from_json = json.load(json_file)
-
     return JsonResponse(dict_from_json, safe=False)

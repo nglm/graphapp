@@ -379,7 +379,6 @@ export async function draw_mjo(
 
     // Load the data and wait until it is ready
     const data =  await load_data(filename);
-    console.log("Loaded data at: ", PATH_DATA + filename + ".json");
     let data_xy = d3fy(data);
 
     // This element will render the xAxis with the xLabel
@@ -534,18 +533,14 @@ export async function draw_relevant_graph_meteogram(
 
     const data =  await load_data(filename);
     let selected_k = d3fy_dict_of_arrays(g.relevant_k);
-    // console.log("g.relevant_k", g.relevant_k);
-    // console.log("selected_k", selected_k);
 
     // where we will store all our figs
     let figs = [];
 
     // document ready return a promise, se we should wait
     await $(async function () {
-        console.log("g", filename);
         // sending_HTTP_request return a promise, so we should wait
         let relevant_components = await get_relevant_components(filename);
-        console.log(relevant_components);
 
         let vertices = relevant_components.vertices;
         let edges = relevant_components.edges;
