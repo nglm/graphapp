@@ -351,7 +351,7 @@ export async function draw_meteogram(
 
         add_members(
             myPlot, myLine, data_xy, interactiveGroupElem,
-        )
+        );
 
         figs.push(figElem);
     }
@@ -401,7 +401,7 @@ export async function draw_mjo(
 
     add_members(
         myPlot, myLine, data_xy, interactiveGroupElem,
-    )
+    );
 
     // Add mjo classes lines
     draw_mjo_classes(figElem, x, y, vmax=vmax);
@@ -454,14 +454,14 @@ export async function draw_entire_graph_meteogram(
         add_vertices(
             myPlot, cx, cy, g, vertices, interactiveGroupElem,
             {list_colors : colors}
-        )
+        );
 
         let fun_edge = (d => f_line_edge(d, g, x, y, iplot));
 
         add_edges(
             myPlot, fun_edge, g, edges, interactiveGroupElem,
             {list_colors : colors}
-        )
+        );
 
         // This element will render the standard deviation of edges
         // myPlot.append('g')
@@ -568,20 +568,21 @@ export async function draw_relevant_graph_meteogram(
             );
             style_ticks(figElem);
 
+
+            // Add vertices
             let cx = (d => x( g.time_axis[d.time_step] ));
             let cy = (d => y( d.info.mean[iplot] ));
-
             add_vertices(
                 myPlot, cx, cy, g, vertices, interactiveGroupElem,
                 {list_colors : colors, selected_k : selected_k}
-            )
+            );
 
+            // Add edges
             let fun_edge = (d => f_line_edge(d, g, x, y, iplot));
-
             add_edges(
                 myPlot, fun_edge, g, edges, interactiveGroupElem,
                 {list_colors : colors, selected_k : selected_k}
-            )
+            );
 
             // This element will render the standard deviation of edges
             // myPlot.append('g')
@@ -671,14 +672,14 @@ export async function draw_entire_graph_mjo(
     add_vertices(
         myPlot, cx, cy, g, vertices, interactiveGroupElem,
         {list_colors : colors}
-    )
+    );
 
     let fun_edge = (d => f_line_edge_mjo(d, g, x, y));
 
     add_edges(
         myPlot, fun_edge, g, edges, interactiveGroupElem,
         {list_colors : colors}
-    )
+    );
 
     // This element will render the standard deviation of edges
     // myPlot.append('g')
