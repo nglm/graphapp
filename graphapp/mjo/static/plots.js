@@ -63,7 +63,7 @@ function f_opacity(
 
     // Else, opacity based on the life span of the component
     } else {
-        let vmax = g.life_span_max
+        let vmax = g.life_span_max;
         let rescaled = range_rescale(d.life_span, {x0:vmin, x1:vmax});
         opacity = sigmoid(rescaled, {range0_1:true})
     }
@@ -233,6 +233,28 @@ function add_vertices(
         .attr("cy", (d => fun_cy(d)))
         .attr("r", (d => 2*fun_size(d)) )
         .attr("id", (d => "v-event" + d.key));
+}
+
+function add_k_options(
+    myPlot, fun_cx, fun_cy, g, life_spans, interactiveGroupElem,
+    {fun_opacity = f_opacity,
+    fun_size = (d => 5),
+    } = {},
+) {
+    // This element will render (display) the vertices but they won't be
+    // interactive
+    myPlot.append('g')
+        .attr('id', 'k-options')
+        .selectAll('.k-option')
+        .data(life_spans)
+        .enter()
+        .append("circle")                  // path: svg element for lines
+        .classed("k-option", true)           // Style
+        .attr("cx", (d => fun_cx(d)))      // Compute x coord
+        .attr("cy", (d => fun_cy(d)))      // Compute y coord
+        .attr("r", (d => fun_size(d)) )    // Compute radius
+        .attr("opacity", (d => fun_opacity( d, {g : g} )/2))
+        .attr("id", (d => "k-opt" + d.k));
 }
 
 function add_edges(
@@ -530,9 +552,13 @@ export async function draw_relevant_graph_meteogram(
     const time = g.time_axis;
     const members = g.members;
     const colors = get_list_colors(g.n_clusters_range.length);
-
     const data =  await load_data(filename);
+
+    let k_max = d3.min([kmax, g.k_max]);
+    const life_spans = d3fy_life_span(g.life_span, {k_max : k_max}).flat();
     let selected_k = d3fy_dict_of_arrays(g.relevant_k);
+
+    console.log("life_spans in draw relevant meteogram", life_spans);
 
     // where we will store all our figs
     let figs = [];
@@ -544,7 +570,6 @@ export async function draw_relevant_graph_meteogram(
 
         let vertices = relevant_components.vertices.flat();
         let edges = relevant_components.edges.flat();
-
 
         // We create a new fig for each variable
         for(var iplot = 0; iplot < g.d; iplot++ ) {
@@ -568,6 +593,14 @@ export async function draw_relevant_graph_meteogram(
             );
             style_ticks(figElem);
 
+
+            let yk_offset = myPlot.select('#yaxis-k').attr("yoffset");
+            // Add k options using life_spans variable
+            let cxk = (d => x( g.time_axis[d.t] ));
+            let cyk = (d => (parseFloat(yk_offset) + parseFloat(yk( d.k ))).toString());
+            add_k_options(
+                myPlot, cxk, cyk, g, life_spans, interactiveGroupElem,
+            );
 
             // Add vertices
             let cx = (d => x( g.time_axis[d.time_step] ));
@@ -728,6 +761,8 @@ export async function life_span_plot(
     const g =  await load_graph(filename);
     const life_spans = d3fy_life_span(g.life_span);
     const colors = get_list_colors(g.n_clusters_range.length);
+
+    console.log("life_spans in life span plot", life_spans);
 
     let figElem = draw_fig(dims, id);
     let myPlot = d3.select(figElem).select("#plot-group");

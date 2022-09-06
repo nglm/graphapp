@@ -442,11 +442,13 @@ export function add_axes(
 
     myPlot.select('#xaxis')
         // Create many sub-groups for the xAxis
-        .call(d3.axisBottom(x).tickSizeOuter(0));
+        .call(d3.axisBottom(x).tickSizeOuter(0))
+        .attr("plotWidth", plotWidth);
 
     myPlot.select('#yaxis')
         // Create many sub-groups for the yAxis
-        .call(d3.axisLeft(y).tickSizeOuter(0).tickFormat(d => d));
+        .call(d3.axisLeft(y).tickSizeOuter(0).tickFormat(d => d))
+        .attr("plotHeight", plotHeight);
 
     if (include_k === "yes") {
         myPlot.append("g")
@@ -460,7 +462,9 @@ export function add_axes(
             .attr('id', 'yaxis-k')
             .attr(
                 "transform",
-                "translate("+(plotWidth - 12)+ ", "+ (plotHeight-plotHeightK) +")");
+                "translate("+(plotWidth - 12)+ ", "+ (plotHeight-plotHeightK) +")")
+            .attr("plotHeight", plotHeightK)
+            .attr("yoffset", plotHeight-plotHeightK);
 
         myPlot.select('#yaxis-k')
             .call(d3.axisLeft(yk)

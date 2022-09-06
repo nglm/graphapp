@@ -44,7 +44,7 @@ export function range_rescale(
         f1=1
     } = {} ) {
     if ((x < x0) || (x > x1)) {
-        throw 'x is outside range';
+        throw 'x outside range: ' + x + " not in [" + x0 +', ' + x1;
     }
     let a = (f1-f0) / (x1-x0);
     let b = f0 - a*x0;

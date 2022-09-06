@@ -205,7 +205,7 @@ sklearn = "^0.0"
 type = "git"
 url = "git@github.com:nglm/persigraph.git"
 reference = "master"
-resolved_reference = "b67b54dc245d3407445d6f7435e35eef4c9df147"
+resolved_reference = "1fef2b1dd0065258d31acfaa8fc7f9577c80ab5f"
 
 [[package]]
 name = "pillow"

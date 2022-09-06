@@ -29,7 +29,7 @@ export function d3fy(data) {
     return data_xy
 }
 
-export function d3fy_life_span(data) {
+export function d3fy_life_span(data, {k_max=Infinity} = {}) {
     // WARNING: Does not give real time step, just the index of the time
     // step
 
@@ -39,11 +39,14 @@ export function d3fy_life_span(data) {
     // Iterate over keys (key, values)
     for (const [key, value] of Object.entries(data)) {
         xy = [];
-        // Iterate over time steps
-        for (var i = 0; i < value.length; i++ ) {
-            xy.push({t: i, k: key, life_span: value[i]});
+        // Ignore k values that are higher than kmax
+        if (parseInt(key) <= k_max) {
+            // Iterate over time steps
+            for (var i = 0; i < value.length; i++ ) {
+                xy.push({t: i, k: key, life_span: value[i]});
+            }
+            data_xy.push(xy);
         }
-        data_xy.push(xy);
     }
     return data_xy
 }

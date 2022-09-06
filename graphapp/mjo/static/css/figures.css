@@ -123,6 +123,16 @@
     stroke-opacity: 1.0;
 }
 
+.k-option {
+    fill: black;
+}
+
+.k-optionSelected {
+    stroke-width: 0;
+    stroke-opacity: 1;
+    stroke-width: 4;
+}
+
 .vertex {
     stroke-width: 0;
     stroke-opacity: 1;
