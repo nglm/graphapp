@@ -542,8 +542,8 @@ export async function draw_relevant_graph_meteogram(
         // sending_HTTP_request return a promise, so we should wait
         let relevant_components = await get_relevant_components(filename);
 
-        let vertices = relevant_components.vertices;
-        let edges = relevant_components.edges;
+        let vertices = relevant_components.vertices.flat();
+        let edges = relevant_components.edges.flat();
 
 
         // We create a new fig for each variable
@@ -578,10 +578,10 @@ export async function draw_relevant_graph_meteogram(
 
             let fun_edge = (d => f_line_edge(d, g, x, y, iplot));
 
-            // add_edges(
-            //     myPlot, fun_edge, g, edges, interactiveGroupElem,
-            //     {list_colors : colors, selected_k : selected_k}
-            // )
+            add_edges(
+                myPlot, fun_edge, g, edges, interactiveGroupElem,
+                {list_colors : colors, selected_k : selected_k}
+            )
 
             // This element will render the standard deviation of edges
             // myPlot.append('g')
