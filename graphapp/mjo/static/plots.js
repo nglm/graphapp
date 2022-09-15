@@ -3,7 +3,7 @@ import { d3fy, d3fy_dict_of_arrays, d3fy_life_span } from "./preprocess.js";
 
 import {
     dimensions, setAxTitle, setFigTitle, setXLabel, setYLabel,
-    draw_mjo_classes, draw_fig, style_ticks, get_list_colors, add_axes,
+    draw_mjo_classes, draw_fig, style_ticks, get_list_colors, add_axes_meteogram, add_axes_mjo,
 } from "./figures.js"
 import { onMouseClusterAux, onMouseMemberAux } from "./interact.js";
 
@@ -358,7 +358,7 @@ export async function draw_meteogram(
         let figElem = draw_fig(dims, id + "_" + iplot);
 
         // Add x and y axis element
-        let {x, y, xk, yk} = add_axes(
+        let {x, y, xk, yk} = add_axes_meteogram(
             figElem, data.time, data.members,
             {include_k:include_k, iplot:iplot}
         );
@@ -391,26 +391,13 @@ export async function draw_mjo(
 ) {
 
     let figElem = draw_fig(dims, id);
-    let myPlot = d3.select(figElem).select("#plot-group");
-    let vmax = 5;
 
-    // x y scales and their range <-> domain
-    var x = d3.scaleLinear().range([0, dims.plot.width]),
-    y = d3.scaleLinear().range([dims.plot.height, 0]);
-
-    x.domain([-vmax, vmax]);
-    y.domain([-vmax, vmax]);
+    // Add x and y axis element
+    let {x, y, xk, yk} = add_axes_mjo(figElem);
 
     // Load the data and wait until it is ready
     const data =  await load_data(filename);
     let data_xy = d3fy(data);
-
-    // This element will render the xAxis with the xLabel
-    myPlot.select('#xaxis')
-        .call(d3.axisBottom(x).tickSizeOuter(0));
-
-    myPlot.select('#yaxis')
-        .call(d3.axisLeft(y).tickSizeOuter(0));
 
     // Add titles and labels and style ticks
     setFigTitle(figElem, "");
@@ -426,7 +413,7 @@ export async function draw_mjo(
     add_members(figElem, myLine, data_xy);
 
     // Add mjo classes lines
-    draw_mjo_classes(figElem, x, y, vmax=vmax);
+    draw_mjo_classes(figElem, x, y);
     return figElem
 }
 
@@ -454,7 +441,7 @@ export async function draw_entire_graph_meteogram(
         let figElem = draw_fig(dims, id + "_" + iplot);
 
         // Add x and y axis element
-        let {x, y, xk, yk} = add_axes(
+        let {x, y, xk, yk} = add_axes_meteogram(
             figElem, data.time, data.members,
             {include_k : include_k, iplot : iplot}
         );
@@ -540,14 +527,8 @@ async function get_relevant_components(filename, {k = -1} = {}) {
 //     fig_id, data,
 //     {include_k = "yes", kmax = 4, id="fig", dims = dimensions()} = {},
 // ) {
-//     // Load the graph and wait until it is ready
-//     const g =  await load_graph(filename);
-//     const time = g.time_axis;
-//     const members = g.members;
-//     const colors = get_list_colors(g.n_clusters_range.length);
-//     const data =  await load_data(filename);
 
-//     let k_max = d3.min([kmax, g.k_max]);
+//     const data =  await load_data(filename);
 
 //     // where we will store all our figs
 //     let figs = [];
@@ -559,10 +540,9 @@ async function get_relevant_components(filename, {k = -1} = {}) {
 //         for(var iplot = 0; iplot < g.d; iplot++ ) {
 
 //             let figElem = draw_fig(dims, id + "_" + iplot);
-//             let myPlot = d3.select(figElem).select("#plot-group");
 
 //             // Add x and y axis element
-//             let {x, y, xk, yk} = add_axes(
+//             let {x, y, xk, yk} = add_axes_meteogram(
 //                 figElem, data.time, data.members,
 //                 {include_k : include_k, kmax : kmax, iplot : iplot}
 //             );
@@ -580,7 +560,7 @@ async function get_relevant_components(filename, {k = -1} = {}) {
 //         }
 //         return undefined
 //     })
-//     return figs
+//     return {figs, axes}
 // }
 
 
@@ -619,7 +599,7 @@ export async function draw_relevant_graph_meteogram(
             let myPlot = d3.select(figElem).select("#plot-group");
 
             // Add x and y axis element
-            let {x, y, xk, yk} = add_axes(
+            let {x, y, xk, yk} = add_axes_meteogram(
                 figElem, data.time, data.members,
                 {include_k : include_k, kmax : kmax, iplot : iplot}
             );
@@ -705,29 +685,10 @@ export async function draw_entire_graph_mjo(
     const members = g.members;
     const colors = get_list_colors(g.n_clusters_range.length);
 
-    const vmax = 5;
-
     let figElem = draw_fig(dims, id + "_mjo");
-    let myPlot = d3.select(figElem).select("#plot-group");
 
-    // Reminder:
-    // - Range: output range that input values to map to
-    // - scaleLinear: Continuous domain mapped to continuous output range
-    let x = d3.scaleLinear().range([0, dims.plot.width]),
-        y = d3.scaleLinear().range([dims.plot.height, 0]);
-
-    // Reminder: domain = min/max values of input data
-    x.domain([ -vmax, vmax ]);
-    y.domain([ -vmax, vmax ]);
-
-    // This element will render the xAxis with the xLabel
-    myPlot.select('#xaxis')
-        // Create many sub-groups for the xAxis
-        .call(d3.axisBottom(x).tickSizeOuter(0));
-
-    myPlot.select('#yaxis')
-        // Create many sub-groups for the yAxis
-        .call(d3.axisLeft(y).tickSizeOuter(0).tickFormat(d => d));
+    // Add x and y axis element
+    let {x, y, xk, yk} = add_axes_mjo(figElem);
 
     // Add titles and labels  and style ticks
     setFigTitle(figElem, " ");
@@ -775,7 +736,7 @@ export async function draw_entire_graph_mjo(
 
 
     // Add mjo classes lines
-    draw_mjo_classes(figElem, x, y, vmax);
+    draw_mjo_classes(figElem, x, y);
 
     return figElem
 }

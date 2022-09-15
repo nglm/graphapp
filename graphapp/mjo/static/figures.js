@@ -389,7 +389,48 @@ export function draw_mjo_classes(figElem, x, y, vmax=5) {
 }
 
 
-export function add_axes(
+export function add_axes_mjo(
+    figElem,
+) {
+    let myPlot = d3.select(figElem).select("#plot-group");
+    let xk, yk;
+
+    const plotWidth = d3.select(figElem)
+        .select("#plot")
+        .select("#background")
+        .attr("width");
+
+    const plotHeight = d3.select(figElem)
+        .select("#plot")
+        .select("#background")
+        .attr("height");
+
+    const vmax = 5;
+
+    // Reminder:
+    // - Range: output range that input values to map to
+    // - scaleLinear: Continuous domain mapped to continuous output range
+    let x = d3.scaleLinear().range([0, plotWidth]),
+        y = d3.scaleLinear().range([plotHeight, 0]);
+
+    // Reminder: domain = min/max values of input data
+    x.domain([ -vmax, vmax ]);
+    y.domain([ -vmax, vmax ]);
+
+    // This element will render the xAxis with the xLabel
+    myPlot.select('#xaxis')
+        // Create many sub-groups for the xAxis
+        .call(d3.axisBottom(x).tickSizeOuter(0));
+
+    myPlot.select('#yaxis')
+        // Create many sub-groups for the yAxis
+        .call(d3.axisLeft(y).tickSizeOuter(0).tickFormat(d => d));
+
+    return {x, y, xk, yk}
+}
+
+
+export function add_axes_meteogram(
     figElem, xvalues, yvalues,
     {include_k=true, kmax=4, iplot=0, portion=0.25} = {}
 ) {
