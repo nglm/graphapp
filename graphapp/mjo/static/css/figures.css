@@ -123,11 +123,21 @@
     stroke-opacity: 1.0;
 }
 
-.k-option {
+.k-optionO {
     fill: black;
 }
 
-.k-optionSelected {
+.k-optionOSelected {
+    stroke-width: 0;
+    stroke-opacity: 1;
+    stroke-width: 4;
+}
+
+.k-optionL {
+    fill: black;
+}
+
+.k-optionLSelected {
     stroke-width: 0;
     stroke-opacity: 1;
     stroke-width: 4;

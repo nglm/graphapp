@@ -159,8 +159,9 @@ function f_stroke_width(d) {
 }
 
 function add_members(
-    myPlot, fun_line, members, interactiveGroupElem,
+    figElem, fun_line, members,
 ) {
+    let myPlot = d3.select(figElem).select("#plot-group");
 
     // This element will (display) render the lines but they won't be
     // interactive
@@ -184,14 +185,14 @@ function add_members(
         .append("path")
         .classed("line-event", true)
         // Add listeners for mouseover/mouseout event
-        .on("mouseover", onMouseOverMember(interactiveGroupElem))
-        .on("mouseout", onMouseOutMember(interactiveGroupElem))
+        .on("mouseover", onMouseOverMember(figElem))
+        .on("mouseout", onMouseOutMember(figElem))
         .attr("d", (d => fun_line(d)))
         .attr("id", ((d, i) => "m-event" + i));
 }
 
 function add_vertices(
-    myPlot, fun_cx, fun_cy, g, vertices, interactiveGroupElem,
+    figElem, fun_cx, fun_cy, g, vertices,
     {fun_opacity = f_opacity,
     fun_size = f_radius,
     fun_color = f_color,
@@ -199,6 +200,8 @@ function add_vertices(
     selected_k = undefined,
     } = {},
 ) {
+    let myPlot = d3.select(figElem).select("#plot-group");
+
     // This element will render (display) the vertices but they won't be
     // interactive
     myPlot.append('g')
@@ -227,8 +230,8 @@ function add_vertices(
         .append("circle")
         .classed("vertex-event", true)
         // Add listeners for mouseover/mouseout event
-        .on("mouseover", onMouseOverCluster(interactiveGroupElem))
-        .on("mouseout", onMouseOutCluster(interactiveGroupElem))
+        .on("mouseover", onMouseOverCluster(figElem))
+        .on("mouseout", onMouseOutCluster(figElem))
         .attr("cx", (d => fun_cx(d)))
         .attr("cy", (d => fun_cy(d)))
         .attr("r", (d => 2*fun_size(d)) )
@@ -236,20 +239,23 @@ function add_vertices(
 }
 
 function add_k_options(
-    myPlot, fun_cx, fun_cy, g, life_spans, interactiveGroupElem,
+    figElem, fun_cx, fun_cy, g, life_spans,
     {fun_opacity = f_opacity,
     fun_size = (d => 5),
     } = {},
 ) {
+    let myPlot = d3.select(figElem).select("#plot-group");
+
     // This element will render (display) the vertices but they won't be
     // interactive
     myPlot.append('g')
         .attr('id', 'k-options')
-        .selectAll('.k-option')
+        .selectAll('.k-optionO')
         .data(life_spans)
         .enter()
         .append("circle")                  // path: svg element for lines
-        .classed("k-option", true)           // Style
+        .classed("k-optionO", true)           // Style
+        .on("click", onClick(figElem))
         .attr("cx", (d => fun_cx(d)))      // Compute x coord
         .attr("cy", (d => fun_cy(d)))      // Compute y coord
         .attr("r", (d => fun_size(d)) )    // Compute radius
@@ -258,7 +264,7 @@ function add_k_options(
 }
 
 function add_edges(
-    myPlot, fun_edge, g, edges, interactiveGroupElem,
+    figElem, fun_edge, g, edges,
     {fun_opacity = f_opacity,
     fun_size = f_stroke_width,
     fun_color = f_color,
@@ -266,6 +272,7 @@ function add_edges(
     selected_k = undefined,
     } = {},
 ) {
+    let myPlot = d3.select(figElem).select("#plot-group");
 
     myPlot.append('g')
         .attr('id', 'edges')
@@ -349,8 +356,6 @@ export async function draw_meteogram(
     for(var iplot = 0; iplot < data.var_names.length; iplot++ ) {
 
         let figElem = draw_fig(dims, id + "_" + iplot);
-        let myPlot = d3.select(figElem).select("#plot-group");
-        let interactiveGroupElem = document.getElementById(figElem.id + "_input");
 
         // Add x and y axis element
         let {x, y, xk, yk} = add_axes(
@@ -371,9 +376,7 @@ export async function draw_meteogram(
             .x(d => x(d.t))
             .y(d => y(d[data.var_names[iplot]]));
 
-        add_members(
-            myPlot, myLine, data_xy, interactiveGroupElem,
-        );
+        add_members(figElem, myLine, data_xy,);
 
         figs.push(figElem);
     }
@@ -389,7 +392,6 @@ export async function draw_mjo(
 
     let figElem = draw_fig(dims, id);
     let myPlot = d3.select(figElem).select("#plot-group");
-    let interactiveGroupElem = document.getElementById(figElem.id + "_input");
     let vmax = 5;
 
     // x y scales and their range <-> domain
@@ -421,9 +423,7 @@ export async function draw_mjo(
         .x(d => x(d.rmm1))
         .y(d => y(d.rmm2));
 
-    add_members(
-        myPlot, myLine, data_xy, interactiveGroupElem,
-    );
+    add_members(figElem, myLine, data_xy);
 
     // Add mjo classes lines
     draw_mjo_classes(figElem, x, y, vmax=vmax);
@@ -452,8 +452,6 @@ export async function draw_entire_graph_meteogram(
     for(var iplot = 0; iplot < g.d; iplot++ ) {
 
         let figElem = draw_fig(dims, id + "_" + iplot);
-        let interactiveGroupElem = document.getElementById(figElem.id + "_input");
-        let myPlot = d3.select(figElem).select("#plot-group");
 
         // Add x and y axis element
         let {x, y, xk, yk} = add_axes(
@@ -473,17 +471,11 @@ export async function draw_entire_graph_meteogram(
         let cx = (d => x( g.time_axis[d.time_step] ));
         let cy = (d => y( d.info.mean[iplot] ));
 
-        add_vertices(
-            myPlot, cx, cy, g, vertices, interactiveGroupElem,
-            {list_colors : colors}
-        );
+        add_vertices(figElem, cx, cy, g, vertices, {list_colors : colors});
 
         let fun_edge = (d => f_line_edge(d, g, x, y, iplot));
 
-        add_edges(
-            myPlot, fun_edge, g, edges, interactiveGroupElem,
-            {list_colors : colors}
-        );
+        add_edges(figElem, fun_edge, g, edges, {list_colors : colors});
 
         // This element will render the standard deviation of edges
         // myPlot.append('g')
@@ -543,6 +535,55 @@ async function get_relevant_components(filename, {k = -1} = {}) {
         })
 }
 
+
+// export async function draw_fig_aux(
+//     fig_id, data,
+//     {include_k = "yes", kmax = 4, id="fig", dims = dimensions()} = {},
+// ) {
+//     // Load the graph and wait until it is ready
+//     const g =  await load_graph(filename);
+//     const time = g.time_axis;
+//     const members = g.members;
+//     const colors = get_list_colors(g.n_clusters_range.length);
+//     const data =  await load_data(filename);
+
+//     let k_max = d3.min([kmax, g.k_max]);
+
+//     // where we will store all our figs
+//     let figs = [];
+
+//     // document ready return a promise, se we should wait
+//     await $(async function () {
+
+//         // We create a new fig for each variable
+//         for(var iplot = 0; iplot < g.d; iplot++ ) {
+
+//             let figElem = draw_fig(dims, id + "_" + iplot);
+//             let myPlot = d3.select(figElem).select("#plot-group");
+
+//             // Add x and y axis element
+//             let {x, y, xk, yk} = add_axes(
+//                 figElem, data.time, data.members,
+//                 {include_k : include_k, kmax : kmax, iplot : iplot}
+//             );
+
+//             // Add titles and labels  and style ticks
+//             setFigTitle(figElem, " ");
+//             setAxTitle(figElem, "");
+//             setXLabel(figElem, "Time (h)");
+//             setYLabel(
+//                 figElem, data.long_name[iplot] +" (" + data.units[iplot] + ")"
+//             );
+//             style_ticks(figElem);
+
+//             figs.push(figElem);
+//         }
+//         return undefined
+//     })
+//     return figs
+// }
+
+
 export async function draw_relevant_graph_meteogram(
     filename,
     {include_k = "yes", kmax = 4, id="fig", dims = dimensions()} = {},
@@ -575,7 +616,6 @@ export async function draw_relevant_graph_meteogram(
         for(var iplot = 0; iplot < g.d; iplot++ ) {
 
             let figElem = draw_fig(dims, id + "_" + iplot);
-            let interactiveGroupElem = document.getElementById(figElem.id + "_input");
             let myPlot = d3.select(figElem).select("#plot-group");
 
             // Add x and y axis element
@@ -598,22 +638,20 @@ export async function draw_relevant_graph_meteogram(
             // Add k options using life_spans variable
             let cxk = (d => x( g.time_axis[d.t] ));
             let cyk = (d => (parseFloat(yk_offset) + parseFloat(yk( d.k ))).toString());
-            add_k_options(
-                myPlot, cxk, cyk, g, life_spans, interactiveGroupElem,
-            );
+            add_k_options(figElem, cxk, cyk, g, life_spans);
 
             // Add vertices
             let cx = (d => x( g.time_axis[d.time_step] ));
             let cy = (d => y( d.info.mean[iplot] ));
             add_vertices(
-                myPlot, cx, cy, g, vertices, interactiveGroupElem,
+                figElem, cx, cy, g, vertices,
                 {list_colors : colors, selected_k : selected_k}
             );
 
             // Add edges
             let fun_edge = (d => f_line_edge(d, g, x, y, iplot));
             add_edges(
-                myPlot, fun_edge, g, edges, interactiveGroupElem,
+                figElem, fun_edge, g, edges,
                 {list_colors : colors, selected_k : selected_k}
             );
 
@@ -670,7 +708,6 @@ export async function draw_entire_graph_mjo(
     const vmax = 5;
 
     let figElem = draw_fig(dims, id + "_mjo");
-    let interactiveGroupElem = document.getElementById(figElem.id + "_input");
     let myPlot = d3.select(figElem).select("#plot-group");
 
     // Reminder:
@@ -701,18 +738,10 @@ export async function draw_entire_graph_mjo(
 
     let cx = (d => x( d.info.mean[0] ));
     let cy = (d => y( d.info.mean[1] ));
-
-    add_vertices(
-        myPlot, cx, cy, g, vertices, interactiveGroupElem,
-        {list_colors : colors}
-    );
+    add_vertices(figElem, cx, cy, g, vertices, {list_colors : colors} );
 
     let fun_edge = (d => f_line_edge_mjo(d, g, x, y));
-
-    add_edges(
-        myPlot, fun_edge, g, edges, interactiveGroupElem,
-        {list_colors : colors}
-    );
+    add_edges( figElem, fun_edge, g, edges, {list_colors : colors} );
 
     // This element will render the standard deviation of edges
     // myPlot.append('g')
@@ -806,33 +835,42 @@ export async function life_span_plot(
 }
 
 //mouseover event handler function using closure
-function onMouseOverMember(interactiveGroupElem, e, d) {
+function onMouseOverMember(figElem, e, d) {
     return function (e, d) {
-        onMouseMemberAux(e, d, this, interactiveGroupElem, 'lineSelected')
+        onMouseMemberAux(e, d, this, figElem, 'lineSelected')
     }
 }
 
 //mouseout event handler function using closure
-function onMouseOutMember(interactiveGroupElem, e, d) {
+function onMouseOutMember(figElem, e, d) {
     return function (e, d) {
-        onMouseMemberAux(e, d, this, interactiveGroupElem, 'line')
+        onMouseMemberAux(e, d, this, figElem, 'line')
     }
 }
 
 //mouseover event handler function using closure
-function onMouseOverCluster(interactiveGroupElem, e, d) {
+function onMouseOverCluster(figElem, e, d) {
     return function (e, d) {
         onMouseClusterAux(
-            e, d, this, interactiveGroupElem,
+            e, d, this, figElem,
             "vertexSelected", "lineSelectedbyCluster")
     }
 }
 
 //mouseout event handler function using closure
-function onMouseOutCluster(interactiveGroupElem, e, d) {
+function onMouseOutCluster(figElem, e, d) {
     return function (e, d) {
         onMouseClusterAux(
-            e, d, this, interactiveGroupElem,
+            e, d, this, figElem,
+            "vertex", "line")
+    }
+}
+
+//click event handler function using closure
+function onClick(figElem, e, d) {
+    return function (e, d) {
+        onMouseClusterAux(
+            e, d, this, figElem,
             "vertex", "line")
     }
 }

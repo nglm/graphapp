@@ -163,6 +163,10 @@ export function draw_fig(dims = DIMS, fig_id = 'fig') {
     Other comments:
     -- only 'document' and 'svg' elements have a '.getElementById() method
     -- Therefore ids must be unique in the entire document or within a svg element
+    -- the "interactiveGroupElem" is managed by the button/input element
+    and we can retrieve the interactive group of a fig as follows:
+    ----- interactiveGroupElem = document.getElementById(figElem.id + "_input")
+    ----- if (groupId == interactiveGroupElem.value) {}
     ------------------------------------------------*/
 
 
@@ -187,7 +191,7 @@ export function draw_fig(dims = DIMS, fig_id = 'fig') {
     let figElem = document.getElementById(fig_id);
 
 
-    // Button
+    // Button for the interactivegroup
     d3.select(figElem)
         .append('input')
         .attr('id', fig_id + "_input")
