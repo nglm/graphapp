@@ -296,9 +296,6 @@ function add_edges(
 async function load_graph(
     filename
 ) {
-    // For some reasons, when we are in the 'python world', the path
-    // becomes "graphapp" + ...
-    // But not when we are still in the javascript world...
     return await $.get(
         "generate_graph/",             // URL
         {                              // Additional data
@@ -323,7 +320,7 @@ async function load_data(
     filename
 ) {
     return await $.get(
-        "load_data/",             // URL
+        "load_data/",                  // URL
         {                              // Additional data
             filename : PATH_DATA + filename,
         },
@@ -433,36 +430,6 @@ export async function draw_entire_graph_meteogram(
 
         add_edges(figs[iplot], fun_edge, g, edges, {list_colors : colors});
 
-        // This element will render the standard deviation of edges
-        // myPlot.append('g')
-        //     .attr('id', 'edges-std')
-        //     .selectAll('.edge-std')
-        //     .data(edges)
-        //     .enter()
-        //     .append("polygon")
-        //     .classed("edge-std", true)
-        //     // .on("mouseover", onMouseOverCluster(interactiveGroupElem))
-        //     // .on("mouseout", onMouseOutCluster(interactiveGroupElem))
-        //     .attr("points", (d => f_polygon_edge(d, g, x, y, iplot)))
-        //     .attr("opacity", (d => f_opacity(d.life_span, g.life_span_max)/3 ))
-        //     .attr("fill", (d => f_color(d, g, colors)))
-        //     .attr("id", (d => "e-std" + d.key) );
-
-        // // This element will render the standard deviation of vertices
-        // myPlot.append('g')
-        //     .attr('id', 'vertices-std')
-        //     .selectAll('.vertex-std')
-        //     .data(vertices)
-        //     .enter()
-        //     .append("polygon")
-        //     .classed("vertex-std", true)
-        //     // .on("mouseover", onMouseOverCluster(interactiveGroupElem))
-        //     // .on("mouseout", onMouseOutCluster(interactiveGroupElem))
-        //     .attr("points", (d => f_polygon_vertex(d, g, x, y, iplot)))
-        //     .attr("opacity", (d => f_opacity(d.life_span, g.life_span_max)/3 ))
-        //     .attr("fill", (d => f_color(d, g, colors)))
-        //     .attr("id", (d => "v-std" + d.key) );
-
     }
     return figs
 }
@@ -547,36 +514,6 @@ export async function draw_relevant_graph_meteogram(
                 figs[iplot], fun_edge, g, edges,
                 {list_colors : colors, selected_k : selected_k}
             );
-
-            // This element will render the standard deviation of edges
-            // myPlot.append('g')
-            //     .attr('id', 'edges-std')
-            //     .selectAll('.edge-std')
-            //     .data(edges)
-            //     .enter()
-            //     .append("polygon")
-            //     .classed("edge-std", true)
-            //     // .on("mouseover", onMouseOverCluster(interactiveGroupElem))
-            //     // .on("mouseout", onMouseOutCluster(interactiveGroupElem))
-            //     .attr("points", (d => f_polygon_edge(d, g, x, y, iplot)))
-            //     .attr("opacity", (d => f_opacity(d.life_span, g.life_span_max)/3 ))
-            //     .attr("fill", (d => f_color(d, g, colors)))
-            //     .attr("id", (d => "e-std" + d.key) );
-
-            // // This element will render the standard deviation of vertices
-            // myPlot.append('g')
-            //     .attr('id', 'vertices-std')
-            //     .selectAll('.vertex-std')
-            //     .data(vertices)
-            //     .enter()
-            //     .append("polygon")
-            //     .classed("vertex-std", true)
-            //     // .on("mouseover", onMouseOverCluster(interactiveGroupElem))
-            //     // .on("mouseout", onMouseOutCluster(interactiveGroupElem))
-            //     .attr("points", (d => f_polygon_vertex(d, g, x, y, iplot)))
-            //     .attr("opacity", (d => f_opacity(d.life_span, g.life_span_max)/3 ))
-            //     .attr("fill", (d => f_color(d, g, colors)))
-            //     .attr("id", (d => "v-std" + d.key) );
         }
         return undefined
     })
@@ -607,36 +544,6 @@ export async function draw_entire_graph_mjo(
 
     let fun_edge = (d => f_line_edge_mjo(d, g, x, y));
     add_edges( figElem, fun_edge, g, edges, {list_colors : colors} );
-
-    // This element will render the standard deviation of edges
-    // myPlot.append('g')
-    //     .attr('id', 'edges-std')
-    //     .selectAll('.edge-std')
-    //     .data(edges)
-    //     .enter()
-    //     .append("polygon")
-    //     .classed("edge-std", true)
-    //     // .on("mouseover", onMouseOverCluster(interactiveGroupElem))
-    //     // .on("mouseout", onMouseOutCluster(interactiveGroupElem))
-    //     .attr("points", (d => f_polygon_edge(d, g, x, y, iplot)))
-    //     .attr("opacity", (d => f_opacity(d.life_span, g.life_span_max)/3 ))
-    //     .attr("fill", (d => f_color(d, g, colors)))
-    //     .attr("id", (d => "e-std" + d.key) );
-
-    // // This element will render the standard deviation of vertices
-    // myPlot.append('g')
-    //     .attr('id', 'vertices-std')
-    //     .selectAll('.vertex-std')
-    //     .data(vertices)
-    //     .enter()
-    //     .append("polygon")
-    //     .classed("vertex-std", true)
-    //     // .on("mouseover", onMouseOverCluster(interactiveGroupElem))
-    //     // .on("mouseout", onMouseOutCluster(interactiveGroupElem))
-    //     .attr("points", (d => f_polygon_vertex(d, g, x, y, iplot)))
-    //     .attr("opacity", (d => f_opacity(d.life_span, g.life_span_max)/3 ))
-    //     .attr("fill", (d => f_color(d, g, colors)))
-    //     .attr("id", (d => "v-std" + d.key) );
 
     return figElem
 }
