@@ -3,7 +3,7 @@ import { d3fy, d3fy_dict_of_arrays, d3fy_life_span } from "./preprocess.js";
 
 import {
     dimensions, setAxTitle, setFigTitle, setXLabel, setYLabel,
-    draw_mjo_classes, init_fig, style_ticks, get_list_colors, add_axes_meteogram, add_axes_mjo,
+    init_fig, style_ticks, get_list_colors, fig_meteogram, fig_mjo, get_scalers
 } from "./figures.js"
 import { onMouseClusterAux, onMouseMemberAux } from "./interact.js";
 
@@ -349,36 +349,24 @@ export async function draw_meteogram(
     const data =  await load_data(filename);
     // d3 expects a very specific data format
     let data_xy = d3fy(data);
-    // where we will store all our figs
-    let figs = [];
+    // Create or retrieve figs if they were already created
+    let figs = fig_meteogram(
+        id, data,
+        {dims : dims, include_k : include_k, kmax : kmax}
+    );
 
     // We create a new fig for each variable
     for(var iplot = 0; iplot < data.var_names.length; iplot++ ) {
 
-        let figElem = init_fig(dims, id + "_" + iplot);
-
-        // Add x and y axis element
-        let {x, y, xk, yk} = add_axes_meteogram(
-            figElem, data.time, data.members,
-            {include_k:include_k, iplot:iplot}
-        );
-
-        // Add titles and labels  and style ticks
-        setFigTitle(figElem, "");
-        setAxTitle(figElem, "");
-        setXLabel(figElem, "Time (h)");
-        setYLabel(
-            figElem, data.long_name[iplot] +" (" + data.units[iplot] + ")"
-        );
-        style_ticks(figElem);
+        // get d3 scalers
+        let {x, y, xk, yk} = get_scalers(figs[iplot]);
 
         let myLine = d3.line()
             .x(d => x(d.t))
             .y(d => y(d[data.var_names[iplot]]));
 
-        add_members(figElem, myLine, data_xy,);
+        add_members(figs[iplot], myLine, data_xy,);
 
-        figs.push(figElem);
     }
     return figs
 }
@@ -390,21 +378,15 @@ export async function draw_mjo(
     {id="fig", dims = dimensions()} = {},
 ) {
 
-    let figElem = init_fig(dims, id);
-
-    // Add x and y axis element
-    let {x, y, xk, yk} = add_axes_mjo(figElem);
-
     // Load the data and wait until it is ready
     const data =  await load_data(filename);
     let data_xy = d3fy(data);
 
-    // Add titles and labels and style ticks
-    setFigTitle(figElem, "");
-    setAxTitle(figElem, "");
-    setXLabel(figElem, "RMM1");
-    setYLabel(figElem, "RMM2");
-    style_ticks(figElem);
+    // Create or retrieve figs if they were already created
+    let figElem = fig_mjo(id, {dims : dims})
+
+    // get d3 scalers
+    let {x, y, xk, yk} = get_scalers(figElem);
 
     let myLine = d3.line()
         .x(d => x(d.rmm1))
@@ -412,8 +394,6 @@ export async function draw_mjo(
 
     add_members(figElem, myLine, data_xy);
 
-    // Add mjo classes lines
-    draw_mjo_classes(figElem, x, y);
     return figElem
 }
 
@@ -432,37 +412,26 @@ export async function draw_entire_graph_meteogram(
 
     const data =  await load_data(filename);
 
-    // where we will store all our figs
-    let figs = [];
+    // Create or retrieve figs if they were already created
+    let figs = fig_meteogram(
+        id, data,
+        {dims : dims, include_k : include_k, kmax : kmax}
+    );
 
     // We create a new fig for each variable
     for(var iplot = 0; iplot < g.d; iplot++ ) {
 
-        let figElem = init_fig(dims, id + "_" + iplot);
-
-        // Add x and y axis element
-        let {x, y, xk, yk} = add_axes_meteogram(
-            figElem, data.time, data.members,
-            {include_k : include_k, iplot : iplot}
-        );
-
-        // Add titles and labels  and style ticks
-        setFigTitle(figElem, " ");
-        setAxTitle(figElem, "");
-        setXLabel(figElem, "Time (h)");
-        setYLabel(
-            figElem, data.long_name[iplot] +" (" + data.units[iplot] + ")"
-        );
-        style_ticks(figElem);
+        // get d3 scalers
+        let {x, y, xk, yk} = get_scalers(figs[iplot]);
 
         let cx = (d => x( g.time_axis[d.time_step] ));
         let cy = (d => y( d.info.mean[iplot] ));
 
-        add_vertices(figElem, cx, cy, g, vertices, {list_colors : colors});
+        add_vertices(figs[iplot], cx, cy, g, vertices, {list_colors : colors});
 
         let fun_edge = (d => f_line_edge(d, g, x, y, iplot));
 
-        add_edges(figElem, fun_edge, g, edges, {list_colors : colors});
+        add_edges(figs[iplot], fun_edge, g, edges, {list_colors : colors});
 
         // This element will render the standard deviation of edges
         // myPlot.append('g')
@@ -494,7 +463,6 @@ export async function draw_entire_graph_meteogram(
         //     .attr("fill", (d => f_color(d, g, colors)))
         //     .attr("id", (d => "v-std" + d.key) );
 
-        figs.push(figElem);
     }
     return figs
 }
@@ -523,47 +491,6 @@ async function get_relevant_components(filename, {k = -1} = {}) {
 }
 
 
-// export async function init_fig_aux(
-//     fig_id, data,
-//     {include_k = "yes", kmax = 4, id="fig", dims = dimensions()} = {},
-// ) {
-
-//     const data =  await load_data(filename);
-
-//     // where we will store all our figs
-//     let figs = [];
-
-//     // document ready return a promise, se we should wait
-//     await $(async function () {
-
-//         // We create a new fig for each variable
-//         for(var iplot = 0; iplot < g.d; iplot++ ) {
-
-//             let figElem = init_fig(dims, id + "_" + iplot);
-
-//             // Add x and y axis element
-//             let {x, y, xk, yk} = add_axes_meteogram(
-//                 figElem, data.time, data.members,
-//                 {include_k : include_k, kmax : kmax, iplot : iplot}
-//             );
-
-//             // Add titles and labels  and style ticks
-//             setFigTitle(figElem, " ");
-//             setAxTitle(figElem, "");
-//             setXLabel(figElem, "Time (h)");
-//             setYLabel(
-//                 figElem, data.long_name[iplot] +" (" + data.units[iplot] + ")"
-//             );
-//             style_ticks(figElem);
-
-//             figs.push(figElem);
-//         }
-//         return undefined
-//     })
-//     return {figs, axes}
-// }
-
-
 export async function draw_relevant_graph_meteogram(
     filename,
     {include_k = "yes", kmax = 4, id="fig", dims = dimensions()} = {},
@@ -579,10 +506,11 @@ export async function draw_relevant_graph_meteogram(
     const life_spans = d3fy_life_span(g.life_span, {k_max : k_max}).flat();
     let selected_k = d3fy_dict_of_arrays(g.relevant_k);
 
-    console.log("life_spans in draw relevant meteogram", life_spans);
-
-    // where we will store all our figs
-    let figs = [];
+    // Create or retrieve figs if they were already created
+    let figs = fig_meteogram(
+        id, data,
+        {dims : dims, include_k : include_k, kmax : kmax}
+    );
 
     // document ready return a promise, se we should wait
     await $(async function () {
@@ -595,43 +523,28 @@ export async function draw_relevant_graph_meteogram(
         // We create a new fig for each variable
         for(var iplot = 0; iplot < g.d; iplot++ ) {
 
-            let figElem = init_fig(dims, id + "_" + iplot);
-            let myPlot = d3.select(figElem).select("#plot-group");
+            // get d3 scalers
+            let {x, y, xk, yk} = get_scalers(figs[iplot]);
 
-            // Add x and y axis element
-            let {x, y, xk, yk} = add_axes_meteogram(
-                figElem, data.time, data.members,
-                {include_k : include_k, kmax : kmax, iplot : iplot}
-            );
-
-            // Add titles and labels  and style ticks
-            setFigTitle(figElem, " ");
-            setAxTitle(figElem, "");
-            setXLabel(figElem, "Time (h)");
-            setYLabel(
-                figElem, data.long_name[iplot] +" (" + data.units[iplot] + ")"
-            );
-            style_ticks(figElem);
-
-
-            let yk_offset = myPlot.select('#yaxis-k').attr("yoffset");
+            let myPlot = d3.select(figs[iplot]).select("#plot-group");
             // Add k options using life_spans variable
+            let yk_offset = myPlot.select('#yaxis-k').attr("yoffset");
             let cxk = (d => x( g.time_axis[d.t] ));
             let cyk = (d => (parseFloat(yk_offset) + parseFloat(yk( d.k ))).toString());
-            add_k_options(figElem, cxk, cyk, g, life_spans);
+            add_k_options(figs[iplot], cxk, cyk, g, life_spans);
 
             // Add vertices
             let cx = (d => x( g.time_axis[d.time_step] ));
             let cy = (d => y( d.info.mean[iplot] ));
             add_vertices(
-                figElem, cx, cy, g, vertices,
+                figs[iplot], cx, cy, g, vertices,
                 {list_colors : colors, selected_k : selected_k}
             );
 
             // Add edges
             let fun_edge = (d => f_line_edge(d, g, x, y, iplot));
             add_edges(
-                figElem, fun_edge, g, edges,
+                figs[iplot], fun_edge, g, edges,
                 {list_colors : colors, selected_k : selected_k}
             );
 
@@ -664,8 +577,6 @@ export async function draw_relevant_graph_meteogram(
             //     .attr("opacity", (d => f_opacity(d.life_span, g.life_span_max)/3 ))
             //     .attr("fill", (d => f_color(d, g, colors)))
             //     .attr("id", (d => "v-std" + d.key) );
-
-            figs.push(figElem);
         }
         return undefined
     })
@@ -685,17 +596,10 @@ export async function draw_entire_graph_mjo(
     const members = g.members;
     const colors = get_list_colors(g.n_clusters_range.length);
 
-    let figElem = init_fig(dims, id + "_mjo");
+    let figElem = fig_mjo(id, {dims : dims})
 
     // Add x and y axis element
-    let {x, y, xk, yk} = add_axes_mjo(figElem);
-
-    // Add titles and labels  and style ticks
-    setFigTitle(figElem, " ");
-    setAxTitle(figElem, "");
-    setXLabel(figElem, "RMM1");
-    setYLabel(figElem, "RMM2");
-    style_ticks(figElem);
+    let {x, y, xk, yk} = get_scalers(figElem);
 
     let cx = (d => x( d.info.mean[0] ));
     let cy = (d => y( d.info.mean[1] ));
@@ -733,10 +637,6 @@ export async function draw_entire_graph_mjo(
     //     .attr("opacity", (d => f_opacity(d.life_span, g.life_span_max)/3 ))
     //     .attr("fill", (d => f_color(d, g, colors)))
     //     .attr("id", (d => "v-std" + d.key) );
-
-
-    // Add mjo classes lines
-    draw_mjo_classes(figElem, x, y);
 
     return figElem
 }
