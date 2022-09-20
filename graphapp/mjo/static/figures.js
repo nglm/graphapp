@@ -133,7 +133,7 @@ export function setYLabel(figElem, text) {
 
 
 
-export function draw_fig(dims = DIMS, fig_id = 'fig') {
+export function init_fig(dims = DIMS, fig_id = 'fig') {
     /* -------------- fig architecture --------------
     fig01 (div)
     -- buttons/input
@@ -161,11 +161,13 @@ export function draw_fig(dims = DIMS, fig_id = 'fig') {
     ---- mjoClasses
     ------------------------------------------------
     Other comments:
-    -- only 'document' and 'svg' elements have a '.getElementById() method
-    -- Therefore ids must be unique in the entire document or within a svg element
-    -- the "interactiveGroupElem" is managed by the button/input element
-    and we can retrieve the interactive group of a fig as follows:
-    ----- interactiveGroupElem = document.getElementById(figElem.id + "_input")
+    -- Only 'document' and 'svg' elements have a '.getElementById() method.
+    Therefore ids must be unique in the entire document or within a svg element
+    -- All figures generated in a document can be found as follows:
+    ---- let figs = document.getElementsByClassName("container-fig")
+    -- "interactiveGroupElem" is managed by the button/input element within a
+    fig and can be retrieved as follows:
+    ----- let interactiveGroupElem = document.getElementById(figElem.id + "_input")
     ----- if (groupId == interactiveGroupElem.value) {}
     ------------------------------------------------*/
 
@@ -419,10 +421,18 @@ export function add_axes_mjo(
 
     // This element will render the xAxis with the xLabel
     myPlot.select('#xaxis')
+        // add d3 scalers properties as attributes
+        .attr("data-range", [0, plotWidth])
+        .attr("data-domain", [ -vmax, vmax ])
+        .attr("data-scaler", 'linear')
         // Create many sub-groups for the xAxis
         .call(d3.axisBottom(x).tickSizeOuter(0));
 
     myPlot.select('#yaxis')
+        // add d3 scalers properties as attributes
+        .attr("data-range", [plotHeight, 0])
+        .attr("data-domain", [ -vmax, vmax ])
+        .attr("data-scaler", 'linear')
         // Create many sub-groups for the yAxis
         .call(d3.axisLeft(y).tickSizeOuter(0).tickFormat(d => d));
 
@@ -468,8 +478,7 @@ export function add_axes_meteogram(
     if (include_k === "yes") {
         // Additional scales for relevant k
         yk = d3.scaleLinear().range([plotHeightK, 0]);
-        xk = d3.scaleBand().range([0, plotWidth])
-            .padding(0.2);
+        xk = d3.scaleLinear().range([0, plotWidth]);
 
         // Reminder: domain = min/max values of input data
         xk.domain([ date_min, date_max ] );
@@ -486,11 +495,19 @@ export function add_axes_meteogram(
     y.domain([yMinDomain, ymax]);
 
     myPlot.select('#xaxis')
+        // add d3 scalers properties as attributes
+        .attr("data-range", [0, plotWidth])
+        .attr("data-domain", [ date_min, date_max ])
+        .attr("data-scaler", 'linear')
         // Create many sub-groups for the xAxis
         .call(d3.axisBottom(x).tickSizeOuter(0))
         .attr("plotWidth", plotWidth);
 
     myPlot.select('#yaxis')
+        // add d3 scalers properties as attributes
+        .attr("data-range", [plotHeight, 0])
+        .attr("data-domain", [yMinDomain, ymax])
+        .attr("data-scaler", 'linear')
         // Create many sub-groups for the yAxis
         .call(d3.axisLeft(y).tickSizeOuter(0).tickFormat(d => d))
         .attr("plotHeight", plotHeight);
@@ -498,6 +515,10 @@ export function add_axes_meteogram(
     if (include_k === "yes") {
         myPlot.append("g")
             .attr('id', 'xaxis-k')
+            // add d3 scalers properties as attributes
+            .attr("data-range", [0, plotWidth])
+            .attr("data-domain", [ date_min, date_max ])
+            .attr("data-scaler", 'linear')
             .attr("transform", "translate(0, " + plotHeight + ")");
 
         myPlot.select('#xaxis-k')
@@ -505,6 +526,10 @@ export function add_axes_meteogram(
 
         myPlot.append("g")
             .attr('id', 'yaxis-k')
+            // add d3 scalers properties as attributes
+            .attr("data-range", [plotHeightK, 0])
+            .attr("data-domain", [0.5, kmax])
+            .attr("data-scaler", 'linear')
             .attr(
                 "transform",
                 "translate("+(plotWidth - 12)+ ", "+ (plotHeight-plotHeightK) +")")
@@ -519,4 +544,118 @@ export function add_axes_meteogram(
     }
 
     return {x, y, xk, yk}
+}
+
+export function get_scalers(
+    figElem,
+) {
+    let axis, range, domain;
+    let x, y, xk, yk;
+
+    axis = figElem.querySelector("#xaxis");
+    range = axis.dataset.range.split(",").map(Number);
+    domain = axis.dataset.domain.split(",").map(Number);
+    x = d3.scaleLinear().range(range).domain(domain);
+
+    axis = figElem.querySelector("#yaxis");
+    range = axis.dataset.range.split(",").map(Number);
+    domain = axis.dataset.domain.split(",").map(Number);
+    y = d3.scaleLinear().range(range).domain(domain);
+
+    axis = figElem.querySelector("#xaxis-k");
+    if (axis != null) {
+        range = axis.dataset.range.split(",").map(Number);
+        domain = axis.dataset.domain.split(",").map(Number);
+        xk = d3.scaleLinear().range(range).domain(domain);
+    }
+
+    axis = figElem.querySelector("#yaxis-k");
+    if (axis != null) {
+        range = axis.dataset.range.split(",").map(Number);
+        domain = axis.dataset.domain.split(",").map(Number);
+        yk = d3.scaleLinear().range(range).domain(domain);
+    }
+
+    return {x, y, xk, yk}
+}
+
+export function fig_mjo(
+    id,
+    {dims = dimensions()} = {},
+) {
+    let figElem = document.getElementById(id);
+    // if id already exists, return figElem
+    if (figElem != null) {
+        return figElem
+    // otherwise:
+    // - init fig
+    // - draw axes
+    // - draw mjo classes
+    // - set titles and axes labels
+    } else {
+        figElem = init_fig(dims, id);
+
+        // Add x and y axis element
+        let {x, y, xk, yk} = add_axes_mjo(figElem);
+
+        // Add titles and labels and style ticks
+        setFigTitle(figElem, "");
+        setAxTitle(figElem, "");
+        setXLabel(figElem, "RMM1");
+        setYLabel(figElem, "RMM2");
+        style_ticks(figElem);
+
+        // Add mjo classes lines
+        draw_mjo_classes(figElem, x, y);
+        return figElem
+    }
+}
+
+export function fig_meteogram(
+    id, data,
+    {dims = dimensions(), include_k = "yes", kmax = 4,} = {},
+) {
+    let figElem = document.getElementById(id + "_0");
+    let figs = [];
+    let axes = [];
+    let d = data.var_names.length;
+
+    // if id + "_" + 0 already exists, return a list of d figElem with axes
+    if (figElem != null) {
+        for(var iplot = 0; iplot < d; iplot++ ) {
+            figElem = document.getElementById(id + "_" + iplot);
+            figs.push(figElem);
+        }
+
+    } else {
+    // otherwise:
+    // - for each variable
+    // -- init fig
+    // -- draw axes
+    // -- draw mjo classes
+    // -- set titles and axes labels
+
+        for(var iplot = 0; iplot < d; iplot++ ) {
+
+            figElem = init_fig(dims, id + "_" + iplot);
+
+            // Add x and y axis element
+            let {x, y, xk, yk} = add_axes_meteogram(
+                figElem, data.time, data.members,
+                {include_k : include_k, iplot : iplot}
+            );
+
+            // Add titles and labels  and style ticks
+            setFigTitle(figElem, " ");
+            setAxTitle(figElem, "");
+            setXLabel(figElem, "Time (h)");
+            setYLabel(
+                figElem, data.long_name[iplot] +" (" + data.units[iplot] + ")"
+            );
+            style_ticks(figElem);
+
+            figs.push(figElem);
+        }
+    return figs
+    }
 }

@@ -3,7 +3,7 @@ import { d3fy, d3fy_dict_of_arrays, d3fy_life_span } from "./preprocess.js";
 
 import {
     dimensions, setAxTitle, setFigTitle, setXLabel, setYLabel,
-    draw_mjo_classes, draw_fig, style_ticks, get_list_colors, add_axes_meteogram, add_axes_mjo,
+    draw_mjo_classes, init_fig, style_ticks, get_list_colors, add_axes_meteogram, add_axes_mjo,
 } from "./figures.js"
 import { onMouseClusterAux, onMouseMemberAux } from "./interact.js";
 
@@ -355,7 +355,7 @@ export async function draw_meteogram(
     // We create a new fig for each variable
     for(var iplot = 0; iplot < data.var_names.length; iplot++ ) {
 
-        let figElem = draw_fig(dims, id + "_" + iplot);
+        let figElem = init_fig(dims, id + "_" + iplot);
 
         // Add x and y axis element
         let {x, y, xk, yk} = add_axes_meteogram(
@@ -390,7 +390,7 @@ export async function draw_mjo(
     {id="fig", dims = dimensions()} = {},
 ) {
 
-    let figElem = draw_fig(dims, id);
+    let figElem = init_fig(dims, id);
 
     // Add x and y axis element
     let {x, y, xk, yk} = add_axes_mjo(figElem);
@@ -438,7 +438,7 @@ export async function draw_entire_graph_meteogram(
     // We create a new fig for each variable
     for(var iplot = 0; iplot < g.d; iplot++ ) {
 
-        let figElem = draw_fig(dims, id + "_" + iplot);
+        let figElem = init_fig(dims, id + "_" + iplot);
 
         // Add x and y axis element
         let {x, y, xk, yk} = add_axes_meteogram(
@@ -523,7 +523,7 @@ async function get_relevant_components(filename, {k = -1} = {}) {
 }
 
 
-// export async function draw_fig_aux(
+// export async function init_fig_aux(
 //     fig_id, data,
 //     {include_k = "yes", kmax = 4, id="fig", dims = dimensions()} = {},
 // ) {
@@ -539,7 +539,7 @@ async function get_relevant_components(filename, {k = -1} = {}) {
 //         // We create a new fig for each variable
 //         for(var iplot = 0; iplot < g.d; iplot++ ) {
 
-//             let figElem = draw_fig(dims, id + "_" + iplot);
+//             let figElem = init_fig(dims, id + "_" + iplot);
 
 //             // Add x and y axis element
 //             let {x, y, xk, yk} = add_axes_meteogram(
@@ -595,7 +595,7 @@ export async function draw_relevant_graph_meteogram(
         // We create a new fig for each variable
         for(var iplot = 0; iplot < g.d; iplot++ ) {
 
-            let figElem = draw_fig(dims, id + "_" + iplot);
+            let figElem = init_fig(dims, id + "_" + iplot);
             let myPlot = d3.select(figElem).select("#plot-group");
 
             // Add x and y axis element
@@ -685,7 +685,7 @@ export async function draw_entire_graph_mjo(
     const members = g.members;
     const colors = get_list_colors(g.n_clusters_range.length);
 
-    let figElem = draw_fig(dims, id + "_mjo");
+    let figElem = init_fig(dims, id + "_mjo");
 
     // Add x and y axis element
     let {x, y, xk, yk} = add_axes_mjo(figElem);
@@ -754,7 +754,7 @@ export async function life_span_plot(
 
     console.log("life_spans in life span plot", life_spans);
 
-    let figElem = draw_fig(dims, id);
+    let figElem = init_fig(dims, id);
     let myPlot = d3.select(figElem).select("#plot-group");
 
     let x = d3.scaleLinear().range([0, dims.plot.width]),
