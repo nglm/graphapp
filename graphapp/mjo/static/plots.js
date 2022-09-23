@@ -241,7 +241,7 @@ function add_vertices(
 function add_k_options(
     figElem, fun_cx, fun_cy, g, life_spans,
     {fun_opacity = f_opacity,
-    fun_size = (d => 5),
+    fun_size = (d => 7),
     } = {},
 ) {
     let myPlot = d3.select(figElem).select("#plot-group");
@@ -457,6 +457,28 @@ async function get_relevant_components(filename, {k = -1} = {}) {
         })
 }
 
+export async function clear_graph(figElem) {
+    console.log(figElem);
+    let plotGroup = figElem.querySelector('#plot-group');
+    console.log(plotGroup);
+    console.log(plotGroup.querySelector("#vertices"));
+    try {
+        plotGroup.querySelector("#vertices").remove();
+    // There was no such element
+    } catch {}
+    try {
+        plotGroup.querySelector("#vertices-event").remove()
+    } catch {}
+    try {
+        plotGroup.querySelector("#edges").remove()
+    } catch {}
+    try {
+        plotGroup.querySelector("#edges-event").remove()
+    } catch {}
+    try {
+        plotGroup.querySelector("#k-options").remove()
+    } catch {}
+}
 
 export async function draw_relevant_graph_meteogram(
     filename,
@@ -492,8 +514,11 @@ export async function draw_relevant_graph_meteogram(
 
             // get d3 scalers
             let {x, y, xk, yk} = get_scalers(figs[iplot]);
-
             let myPlot = d3.select(figs[iplot]).select("#plot-group");
+
+            // Clear previous relevant graph
+            clear_graph(figs[iplot])
+
             // Add k options using life_spans variable
             let yk_offset = myPlot.select('#yaxis-k').attr("yoffset");
             let cxk = (d => x( g.time_axis[d.t] ));
@@ -517,6 +542,7 @@ export async function draw_relevant_graph_meteogram(
         }
         return undefined
     })
+
     return figs
 }
 
