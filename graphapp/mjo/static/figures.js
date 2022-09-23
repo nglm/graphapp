@@ -134,44 +134,6 @@ export function setYLabel(figElem, text) {
 
 
 export function init_fig(dims = DIMS, fig_id = 'fig') {
-    /* -------------- fig architecture --------------
-    fig01 (div)
-    -- buttons/input
-    -- svg
-    ---- background
-    ---- fig-group
-    ------ figtitle
-    ------ main
-    -------- axes
-
-    axes
-    -- axes-group
-    ---- axtitle
-    ---- main
-    ------ xlabel
-    ------ ylabel
-    ------ plot
-
-    plot
-    -- background
-    -- plot-group
-    ---- xaxis
-    ---- yaxis
-    ---- members
-    ---- mjoClasses
-    ------------------------------------------------
-    Other comments:
-    -- Only 'document' and 'svg' elements have a '.getElementById() method.
-    Therefore ids must be unique in the entire document or within a svg element
-    -- All figures generated in a document can be found as follows:
-    ---- let figs = document.getElementsByClassName("container-fig")
-    -- "interactiveGroupElem" is managed by the button/input element within a
-    fig and can be retrieved as follows:
-    ----- let interactiveGroupElem = document.getElementById(figElem.id + "_input")
-    ----- if (groupId == interactiveGroupElem.value) {}
-    ------------------------------------------------*/
-
-
     // Append 'div'>'svg'>'rect' elements at the end of 'body' to contain our fig
     //
     d3.select("body")
