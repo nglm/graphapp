@@ -18,11 +18,6 @@ def main(request):
 def relevant(request):
     """
     Return relevant vertices and edges as a dictionary
-
-    Note: By convention, data and graph are not stored as Django models
-    but as files directly accessible to the user. This is to ensure that
-    users can easily add their files (e.g. daily meteograms), but also so
-    that users can easily retrieve generated graphs.
     """
     filename = request.GET['filename']
     path_graph = request.GET['path_graph']
@@ -30,6 +25,8 @@ def relevant(request):
     # If k == -1, take the list of relevant k by default
     if selected_k == "-1":
         selected_k = None
+    else:
+        print("selected_k", selected_k)
     print("Loading graph at: ", path_graph + filename + ".pg")
     with open(path_graph + filename + ".pg", "rb") as f:
         g = pickle.load(f)
@@ -43,11 +40,6 @@ def generate_graph(request):
     Generate and save graph (as .pg and .json) if it doesn't already exist
 
     Return the json version of the graph.
-
-    Note: By convention, data and graph are not stored as Django models
-    but as files directly accessible to the user. This is to ensure that
-    users can easily add their files (e.g. daily meteograms), but also so
-    that users can easily retrieve generated graphs.
     """
     filename = request.GET['filename']
     path_data = request.GET['path_data']
@@ -81,11 +73,6 @@ def generate_graph(request):
 def load_data(request):
     """
     Load data (json file), and return it as a json as well
-
-    Note: By convention, data and graph are not stored as Django models
-    but as files directly accessible to the user. This is to ensure that
-    users can easily add their files (e.g. daily meteograms), but also so
-    that users can easily retrieve generated graphs.
     """
     filename = request.GET['filename']
     with open(filename + ".json", "rb") as json_file:
