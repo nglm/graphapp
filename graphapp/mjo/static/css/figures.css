@@ -128,9 +128,10 @@
 }
 
 .k-optionOSelected {
-    stroke-width: 0;
-    stroke-opacity: 1;
+    fill: black;
     stroke-width: 4;
+    stroke: red;
+    stroke-opacity: 1;
 }
 
 .k-optionL {

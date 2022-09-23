@@ -482,7 +482,7 @@ export async function clear_graph(figElem) {
 
 export async function draw_relevant_graph_meteogram(
     filename,
-    {include_k = "yes", kmax = 4, id="fig", dims = dimensions()} = {},
+    {include_k = "yes", k=-1, kmax = 4, id="fig", dims = dimensions()} = {},
 ) {
     // Load the graph and wait until it is ready
     const g =  await load_graph(filename);
@@ -494,6 +494,7 @@ export async function draw_relevant_graph_meteogram(
     let k_max = d3.min([kmax, g.k_max]);
     const life_spans = d3fy_life_span(g.life_span, {k_max : k_max}).flat();
     let selected_k = d3fy_dict_of_arrays(g.relevant_k);
+    console.log('g.relevant_k.k', g.relevant_k.k);
 
     // Create or retrieve figs if they were already created
     let figs = fig_meteogram(
@@ -501,10 +502,16 @@ export async function draw_relevant_graph_meteogram(
         {dims : dims, include_k : include_k, kmax : kmax}
     );
 
+    if (k === -1){
+        k = g.relevant_k.k;
+    }
+
     // document ready return a promise, se we should wait
     await $(async function () {
         // sending_HTTP_request return a promise, so we should wait
-        let relevant_components = await get_relevant_components(filename);
+        let relevant_components = await get_relevant_components(
+            filename, {k : -1}
+        );
 
         let vertices = relevant_components.vertices.flat();
         let edges = relevant_components.edges.flat();
@@ -542,7 +549,6 @@ export async function draw_relevant_graph_meteogram(
         }
         return undefined
     })
-
     return figs
 }
 
@@ -663,7 +669,18 @@ function onMouseOutCluster(figElem, e, d) {
 //click event handler function using closure
 function onClick(figElem, e, d) {
     return function (e, d) {
-        onMouseClusterAux(
+        // Find current selected k values (so element which was clicked
+        // on + currently selected elements for other time steps)
+        // Generate new relevant components
+
+        // Opt. 1:
+        // - Find the previously selected element at this time step
+        // - De-select that element
+        // Opt. 2: Deselect everything basically
+        //
+        // Select element that was clicked on.
+
+        onClickAux(
             e, d, this, figElem,
             "vertex", "line")
     }

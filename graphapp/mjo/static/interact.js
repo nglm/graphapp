@@ -54,11 +54,6 @@ export function onMouseClusterAux(e, d, clusterElem, figElem, classname1, classn
     }
 }
 
-// Select element that was selected.
-// Find the previously selected element at this time step
-// De-select that element
-// Send a request to generate new relevant components
-//
 
 export function onClickAux(e, d, clusterElem, figElem, classname1, classname2) {
     // Get interactive group of the fig that fired the event
