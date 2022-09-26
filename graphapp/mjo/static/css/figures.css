@@ -127,9 +127,16 @@
     fill: black;
 }
 
+.k-optionO-event {
+    stroke-width: 0;
+    stroke-opacity: 0;
+    opacity: 0;
+    position: relative;
+}
+
 .k-optionOSelected {
     fill: black;
-    stroke-width: 4;
+    stroke-width: 3;
     stroke: red;
     stroke-opacity: 1;
 }

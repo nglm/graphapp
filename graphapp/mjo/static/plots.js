@@ -5,7 +5,7 @@ import {
     dimensions, setAxTitle, setFigTitle, setXLabel, setYLabel,
     init_fig, style_ticks, get_list_colors, fig_meteogram, fig_mjo, get_scalers
 } from "./figures.js"
-import { onMouseClusterAux, onMouseMemberAux } from "./interact.js";
+import { onMouseClusterAux, onMouseMemberAux, onClickAux } from "./interact.js";
 
 import {range_rescale, sigmoid, linear} from "./utils.js"
 
@@ -54,7 +54,7 @@ function f_opacity(
     if (selected_k != undefined) {
         // Opacity = 1 if the component is deemed relevant
         let brotherhood_size = get_brotherhood_size(d, {g : g});
-        if (brotherhood_size.includes(selected_k[d.time_step]["k"])) {
+        if (brotherhood_size.includes(selected_k[d.time_step])) {
             opacity = 1;
         // Otherwise the opacity is 0
         } else {
@@ -239,28 +239,54 @@ function add_vertices(
 }
 
 function add_k_options(
-    figElem, fun_cx, fun_cy, g, life_spans,
+    figElem, fun_cx, fun_cy, g, life_spans, selected_k,
     {fun_opacity = f_opacity,
     fun_size = (d => 7),
     } = {},
 ) {
     let myPlot = d3.select(figElem).select("#plot-group");
 
+    function def_class(d) {
+        if (d.k === selected_k[d.t]) {
+            return "k-optionOSelected"
+        } else {
+            return "k-optionO"
+        }
+    }
+
     // This element will render (display) the vertices but they won't be
     // interactive
     myPlot.append('g')
         .attr('id', 'k-options')
+        .attr("data-selected_k", selected_k) // update selected_k attribute
         .selectAll('.k-optionO')
         .data(life_spans)
         .enter()
         .append("circle")                  // path: svg element for lines
-        .classed("k-optionO", true)           // Style
-        .on("click", onClick(figElem))
+        .attr("class", (d => def_class(d)))           // Style
         .attr("cx", (d => fun_cx(d)))      // Compute x coord
         .attr("cy", (d => fun_cy(d)))      // Compute y coord
         .attr("r", (d => fun_size(d)) )    // Compute radius
         .attr("opacity", (d => fun_opacity( d, {g : g} )/2))
-        .attr("id", (d => "k-opt" + d.k));
+        .attr("id", (d => "k-opt_" + d.k + "_" + d.t))
+        .attr("time_step", (d => d.t))
+        .attr("k", (d => d.k));
+
+    // This element won't display anything but will react to the mouse
+    // The area is typically larger than their displayed counterpart
+    myPlot.append('g')
+        .attr('id', 'k-options-event')
+        .selectAll('.k-optionO-event')
+        .data(life_spans)
+        .enter()
+        .append("circle")
+        .classed("k-optionO-event", true)
+        // Add listeners for mouseover/mouseout event
+        .on("click", onClick(figElem))
+        .attr("cx", (d => fun_cx(d)))
+        .attr("cy", (d => fun_cy(d)))
+        .attr("r", (d => fun_size(d)) )
+        .attr("id", (d => "k-opt-event_" + d.k + "_" + d.t));
 }
 
 function add_edges(
@@ -349,7 +375,7 @@ export async function draw_meteogram(
     // Create or retrieve figs if they were already created
     let figs = fig_meteogram(
         id, data,
-        {dims : dims, include_k : include_k, kmax : kmax}
+        {dims : dims, include_k : include_k, kmax : kmax, filename : filename}
     );
 
     // We create a new fig for each variable
@@ -380,7 +406,7 @@ export async function draw_mjo(
     let data_xy = d3fy(data);
 
     // Create or retrieve figs if they were already created
-    let figElem = fig_mjo(id, {dims : dims})
+    let figElem = fig_mjo(id, {dims : dims, filename : filename})
 
     // get d3 scalers
     let {x, y, xk, yk} = get_scalers(figElem);
@@ -412,7 +438,7 @@ export async function draw_entire_graph_meteogram(
     // Create or retrieve figs if they were already created
     let figs = fig_meteogram(
         id, data,
-        {dims : dims, include_k : include_k, kmax : kmax}
+        {dims : dims, include_k : include_k, kmax : kmax, filename : filename}
     );
 
     // We create a new fig for each variable
@@ -439,7 +465,6 @@ async function get_relevant_components(filename, {k = -1} = {}) {
     if (k != -1) {
         k = k.map(String).join(",")
     }
-    console.log("k before request", k);
     return $.get(
         "relevant/",                   // URL
         {                              // Additional data
@@ -463,10 +488,7 @@ async function get_relevant_components(filename, {k = -1} = {}) {
 }
 
 export async function clear_graph(figElem) {
-    console.log(figElem);
     let plotGroup = figElem.querySelector('#plot-group');
-    console.log(plotGroup);
-    console.log(plotGroup.querySelector("#vertices"));
     try {
         plotGroup.querySelector("#vertices").remove();
     // There was no such element
@@ -483,6 +505,9 @@ export async function clear_graph(figElem) {
     try {
         plotGroup.querySelector("#k-options").remove()
     } catch {}
+    try {
+        plotGroup.querySelector("#k-options-event").remove()
+    } catch {}
 }
 
 export async function draw_relevant_graph_meteogram(
@@ -497,18 +522,20 @@ export async function draw_relevant_graph_meteogram(
     const data =  await load_data(filename);
 
     let k_max = d3.min([kmax, g.k_max]);
+    // To draw k options
     const life_spans = d3fy_life_span(g.life_span, {k_max : k_max}).flat();
-    let selected_k = d3fy_dict_of_arrays(g.relevant_k);
-    console.log('g.relevant_k.k', g.relevant_k.k);
+    // To define opacity
+    // let selected_k = d3fy_dict_of_arrays(g.relevant_k);
 
     // Create or retrieve figs if they were already created
     let figs = fig_meteogram(
         id, data,
-        {dims : dims, include_k : include_k, kmax : kmax}
+        {dims : dims, include_k : include_k, kmax : kmax, filename : filename}
     );
 
+    // list of k values to plot
     if (k === -1){
-        k = g.relevant_k.k;
+        k = g.relevant_k.k.map(Number);
     }
 
     // document ready return a promise, se we should wait
@@ -529,27 +556,27 @@ export async function draw_relevant_graph_meteogram(
             let myPlot = d3.select(figs[iplot]).select("#plot-group");
 
             // Clear previous relevant graph
-            clear_graph(figs[iplot])
+            clear_graph(figs[iplot]);
 
             // Add k options using life_spans variable
             let yk_offset = myPlot.select('#yaxis-k').attr("yoffset");
             let cxk = (d => x( g.time_axis[d.t] ));
             let cyk = (d => (parseFloat(yk_offset) + parseFloat(yk( d.k ))).toString());
-            add_k_options(figs[iplot], cxk, cyk, g, life_spans);
+            add_k_options(figs[iplot], cxk, cyk, g, life_spans, k);
 
             // Add vertices
             let cx = (d => x( g.time_axis[d.time_step] ));
             let cy = (d => y( d.info.mean[iplot] ));
             add_vertices(
                 figs[iplot], cx, cy, g, vertices,
-                {list_colors : colors, selected_k : selected_k}
+                {list_colors : colors, selected_k : k}
             );
 
             // Add edges
             let fun_edge = (d => f_line_edge(d, g, x, y, iplot));
             add_edges(
                 figs[iplot], fun_edge, g, edges,
-                {list_colors : colors, selected_k : selected_k}
+                {list_colors : colors, selected_k : k}
             );
         }
         return undefined
@@ -570,7 +597,7 @@ export async function draw_entire_graph_mjo(
     const members = g.members;
     const colors = get_list_colors(g.n_clusters_range.length);
 
-    let figElem = fig_mjo(id, {dims : dims})
+    let figElem = fig_mjo(id, {dims : dims, filename : filename})
 
     // Add x and y axis element
     let {x, y, xk, yk} = get_scalers(figElem);
@@ -595,8 +622,6 @@ export async function life_span_plot(
     const g =  await load_graph(filename);
     const life_spans = d3fy_life_span(g.life_span);
     const colors = get_list_colors(g.n_clusters_range.length);
-
-    console.log("life_spans in life span plot", life_spans);
 
     let figElem = init_fig(dims, id);
     let myPlot = d3.select(figElem).select("#plot-group");
@@ -676,17 +701,19 @@ function onClick(figElem, e, d) {
     return function (e, d) {
         // Find current selected k values (so element which was clicked
         // on + currently selected elements for other time steps)
-        // Generate new relevant components
+        let koptions = figElem.querySelector("#k-options");
+        let selected_k = koptions.dataset.selected_k.split(",").map(Number);
+        //selected_k[d.t] = parseInt(d.k);
+        selected_k[d.t] = d.k;
 
-        // Opt. 1:
-        // - Find the previously selected element at this time step
-        // - De-select that element
-        // Opt. 2: Deselect everything basically
-        //
-        // Select element that was clicked on.
+        // update attribute
+        koptions.dataset.selected_k = selected_k;
 
-        onClickAux(
-            e, d, this, figElem,
-            "vertex", "line")
+        // Generate new relevant components in the current relevant figures
+        // Note that the last 2 characters of the id is "_" + 0/1, that's why we remove it
+        draw_relevant_graph_meteogram(
+            figElem.getAttribute("filename"),
+            {id : figElem.id.slice(0, -2), k : selected_k}
+        );
     }
 }

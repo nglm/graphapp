@@ -43,7 +43,7 @@ export function d3fy_life_span(data, {k_max=Infinity} = {}) {
         if (parseInt(key) <= k_max) {
             // Iterate over time steps
             for (var i = 0; i < value.length; i++ ) {
-                xy.push({t: i, k: key, life_span: value[i]});
+                xy.push({t: i, k: parseInt(key), life_span: value[i]});
             }
             data_xy.push(xy);
         }

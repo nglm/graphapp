@@ -60,6 +60,8 @@ Data and graph are not stored as Django models but as ```.txt```, ```.json``` an
 
 Ideally most of the computations are done in python using the ```PersiGraph``` package. Otherwise in python in the Django views, and otherwise in javascript.
 
+Each figure has an attribute ```filename``` representing the name of the file containing the data
+
 File-based sessions are used to store filenames, data and graph on the server side.
 
 Updating plots according to the user's input
