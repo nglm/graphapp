@@ -435,6 +435,11 @@ export async function draw_entire_graph_meteogram(
 }
 
 async function get_relevant_components(filename, {k = -1} = {}) {
+    // Pass array as string
+    if (k != -1) {
+        k = k.map(String).join(",")
+    }
+    console.log("k before request", k);
     return $.get(
         "relevant/",                   // URL
         {                              // Additional data
@@ -510,7 +515,7 @@ export async function draw_relevant_graph_meteogram(
     await $(async function () {
         // sending_HTTP_request return a promise, so we should wait
         let relevant_components = await get_relevant_components(
-            filename, {k : -1}
+            filename, {k : k}
         );
 
         let vertices = relevant_components.vertices.flat();
