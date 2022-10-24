@@ -460,6 +460,33 @@ export async function draw_entire_graph_meteogram(
     return figs
 }
 
+export async function draw_entire_graph_mjo(
+    filename,
+    {id="fig", dims = dimensions()} = {},
+) {
+    // Load the graph and wait until it is ready
+    const g =  await load_graph(filename);
+    const vertices = g.vertices.flat();
+    const edges = g.edges.flat();
+    const time = g.time_axis;
+    const members = g.members;
+    const colors = get_list_colors(g.n_clusters_range.length);
+
+    let figElem = fig_mjo(id, {dims : dims, filename : filename})
+
+    // Add x and y axis element
+    let {x, y, xk, yk} = get_scalers(figElem);
+
+    let cx = (d => x( d.info.mean[0] ));
+    let cy = (d => y( d.info.mean[1] ));
+    add_vertices(figElem, cx, cy, g, vertices, {list_colors : colors} );
+
+    let fun_edge = (d => f_line_edge_mjo(d, g, x, y));
+    add_edges( figElem, fun_edge, g, edges, {list_colors : colors} );
+
+    return figElem
+}
+
 async function get_relevant_components(filename, {k = -1} = {}) {
     // Pass array as string
     if (k != -1) {
@@ -585,32 +612,7 @@ export async function draw_relevant_graph_meteogram(
 }
 
 
-export async function draw_entire_graph_mjo(
-    filename,
-    {id="fig", dims = dimensions()} = {},
-) {
-    // Load the graph and wait until it is ready
-    const g =  await load_graph(filename);
-    const vertices = g.vertices.flat();
-    const edges = g.edges.flat();
-    const time = g.time_axis;
-    const members = g.members;
-    const colors = get_list_colors(g.n_clusters_range.length);
 
-    let figElem = fig_mjo(id, {dims : dims, filename : filename})
-
-    // Add x and y axis element
-    let {x, y, xk, yk} = get_scalers(figElem);
-
-    let cx = (d => x( d.info.mean[0] ));
-    let cy = (d => y( d.info.mean[1] ));
-    add_vertices(figElem, cx, cy, g, vertices, {list_colors : colors} );
-
-    let fun_edge = (d => f_line_edge_mjo(d, g, x, y));
-    add_edges( figElem, fun_edge, g, edges, {list_colors : colors} );
-
-    return figElem
-}
 
 
 
