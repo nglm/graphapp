@@ -139,7 +139,8 @@ export function init_fig(
     if (parent === undefined) {
         parent = "body";
     }
-    d3.select("body")
+    console.log(parent);
+    d3.select(parent)
         .append('div')
         .attr('id', fig_id)
         .attr('width', dims.fig.width)

@@ -3,67 +3,71 @@
 {% load static %}
 
 {% block content %}
-    <div id="{{ plot_type }}">
+    <div id="members-div">
         <h2>Spaghetti plots</h2>
         <script id="members-script" type="module">
             import {draw_mjo, draw_meteogram} from "{% static './plots.js' %}";
 
             // -----------  Plot members -----------
 
+            console.log(this)
+
             let mjo = await draw_mjo(
-                f , { dims : dims_mjo, id : "mjo", parent : undefined});
+                f , { dims : dims_mjo, id : "mjo", parent : "#members-div"});
 
             let meteogr_rmm = await draw_meteogram(
                 f,
-                {dims : dims_meteogram, id:"mjo_rmm", parent : undefined});
+                {dims : dims_meteogram, id:"mjo_rmm", parent : "#members-div"});
         </script>
     </div>
-    <br>
 
-    <h2>Entire graph</h2>
-    <script id="entire-graph-script" type="module">
-        import {
-            draw_entire_graph_mjo, draw_entire_graph_meteogram
-        } from "{% static './plots.js' %}";
+    <div id="entire-graph-div">
+        <h2>Entire graph</h2>
+        <script id="entire-graph-script" type="module">
+            import {
+                draw_entire_graph_mjo, draw_entire_graph_meteogram
+            } from "{% static './plots.js' %}";
 
-        // -----------  Plot Entire graph -----------
+            // -----------  Plot Entire graph -----------
 
-        let mjo_graph = await draw_entire_graph_mjo(
-            f, {dims : dims_mjo, id: "mjo_graph"});
+            let mjo_graph = await draw_entire_graph_mjo(
+                f, {dims : dims_mjo, id: "mjo_graph", parent : "#entire-graph-div"});
 
-        let meteogr_rmm_graph = await draw_entire_graph_meteogram(
-            f, {dims : dims_meteogram, id : "mjo_rmm_graph"});
-    </script>
+            let meteogr_rmm_graph = await draw_entire_graph_meteogram(
+                f, {dims : dims_meteogram, id : "mjo_rmm_graph", parent : "#entire-graph-div"});
+        </script>
+    </div>
 
-    <br>
+    <div id="life-span-div">
 
-    <h2>Life span</h2>
-    <script id="life-span-script" type="module">
-        import {
-            life_span_plot,
-        } from "{% static './plots.js' %}";
+        <h2>Life span</h2>
+        <script id="life-span-script" type="module">
+            import {
+                life_span_plot,
+            } from "{% static './plots.js' %}";
 
-        // -----------  Plot life span -----------
+            // -----------  Plot life span -----------
 
-        let life_span = await life_span_plot(
-            f, {dims : dims_mjo, id : "life_span"});
-    </script>
+            let life_span = await life_span_plot(
+                f, {dims : dims_mjo, id : "life_span", parent : "#life-span-div"});
+        </script>
+        </div>
 
-    <br>
+    <div id="relevant-div">
 
-    <h2>Relevant components</h2>
-    <script id="relevant-script" type="module">
-        import {
-            draw_relevant_graph_mjo, draw_relevant_graph_meteogram
-        } from "{% static './plots.js' %}";
+        <h2>Relevant components</h2>
+        <script id="relevant-script" type="module">
+            import {
+                draw_relevant_graph_mjo, draw_relevant_graph_meteogram
+            } from "{% static './plots.js' %}";
 
-        // -----------  Plot relevant graph -----------
+            // -----------  Plot relevant graph -----------
 
-        let mjo_rmm_graph_relevant = await draw_relevant_graph_mjo(
-            f, {dims : dims_mjo, id : "mjo_rmm_graph_relevant"});
+            let mjo_rmm_graph_relevant = await draw_relevant_graph_mjo(
+                f, {dims : dims_mjo, id : "mjo_rmm_graph_relevant", parent : "#relevant-div"});
 
-        let meteogr_rmm_graph_relevant = await draw_relevant_graph_meteogram(
-            f, {dims : dims_meteogram, id : "mjo_rmm_graph_relevant"});
+            let meteogr_rmm_graph_relevant = await draw_relevant_graph_meteogram(
+                f, {dims : dims_meteogram, id : "mjo_rmm_graph_relevant", parent : "#relevant-div"});
 
-    </script>
+        </script>
     {% endblock content %}
