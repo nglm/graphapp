@@ -7,7 +7,6 @@ import {
     draw_relevant_graph_mjo, draw_relevant_graph_meteogram,
 } from "./plots.js";
 
-
 export { dimensions, setAxTitle };
 
 export {
@@ -17,60 +16,59 @@ export {
     draw_relevant_graph_mjo, draw_relevant_graph_meteogram,
 };
 
-console.log(dimensions);
 
-const f4 = "z_s2s_rmm_ecmf_prod_rt_2015030500";
+// const f4 = "z_s2s_rmm_ecmf_prod_rt_2015030500";
 
-const plotHeightMeteogram = 400;
-const plotWidthMeteogram = 600;
-const plotWidthMJO = 600;
-const dims_meteogram = dimensions(
-    {plotWidth : plotWidthMeteogram, plotHeight : plotHeightMeteogram}
-    );
-const dims_mjo = dimensions(
-    {plotWidth : plotWidthMJO, plotHeight : plotWidthMJO}
-    );
-const dims_relevant_meteogram = dimensions(
-    {plotWidth : plotWidthMeteogram, plotHeight : plotHeightMeteogram *1.3}
-    );
+// const plotHeightMeteogram = 400;
+// const plotWidthMeteogram = 600;
+// const plotWidthMJO = 600;
+// const dims_meteogram = dimensions(
+//     {plotWidth : plotWidthMeteogram, plotHeight : plotHeightMeteogram}
+//     );
+// const dims_mjo = dimensions(
+//     {plotWidth : plotWidthMJO, plotHeight : plotWidthMJO}
+//     );
+// const dims_relevant_meteogram = dimensions(
+//     {plotWidth : plotWidthMeteogram, plotHeight : plotHeightMeteogram *1.3}
+//     );
 
-const kmax = 8;
+// const kmax = 8;
 
-// -----------  Plot members -----------
+// // -----------  Plot members -----------
 
-let mjo = await draw_mjo(f4,{ dims : dims_mjo, id : "mjo"});
-setAxTitle(mjo, f4);
-let meteogr_rmm = await draw_meteogram(
-    f4, {dims : dims_meteogram, id:"mjo_rmm"});
-
-
-
-// -----------  Plot Entire graph -----------
-
-let mjo_graph = await draw_entire_graph_mjo(
-    f4, {dims : dims_mjo, id: "mjo_graph"});
-
-let meteogr_rmm_graph = await draw_entire_graph_meteogram(
-    f4,
-    {dims : dims_meteogram, id : "mjo_rmm_graph"});
+// let mjo = await draw_mjo(f4,{ dims : dims_mjo, id : "mjo"});
+// setAxTitle(mjo, f4);
+// let meteogr_rmm = await draw_meteogram(
+//     f4, {dims : dims_meteogram, id:"mjo_rmm"});
 
 
 
-// -----------  Plot life span -----------
+// // -----------  Plot Entire graph -----------
 
-let life_span = await life_span_plot(
-    f4, {dims : dims_mjo, id : "life_span"});
-d3.select("body").append('text').html('<br>');
+// let mjo_graph = await draw_entire_graph_mjo(
+//     f4, {dims : dims_mjo, id: "mjo_graph"});
 
-// -----------  Plot relevant graph -----------
+// let meteogr_rmm_graph = await draw_entire_graph_meteogram(
+//     f4,
+//     {dims : dims_meteogram, id : "mjo_rmm_graph"});
 
-let mjo_rmm_graph_relevant = await draw_relevant_graph_mjo(
-    f4,
-    {dims : dims_mjo, id : "mjo_rmm_graph_relevant"});
 
-let meteogr_rmm_graph_relevant = await draw_relevant_graph_meteogram(
-    f4,
-    {dims : dims_meteogram, id : "mjo_rmm_graph_relevant"});
+
+// // -----------  Plot life span -----------
+
+// let life_span = await life_span_plot(
+//     f4, {dims : dims_mjo, id : "life_span"});
+// d3.select("body").append('text').html('<br>');
+
+// // -----------  Plot relevant graph -----------
+
+// let mjo_rmm_graph_relevant = await draw_relevant_graph_mjo(
+//     f4,
+//     {dims : dims_mjo, id : "mjo_rmm_graph_relevant"});
+
+// let meteogr_rmm_graph_relevant = await draw_relevant_graph_meteogram(
+//     f4,
+//     {dims : dims_meteogram, id : "mjo_rmm_graph_relevant"});
 
 
 
