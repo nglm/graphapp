@@ -13,7 +13,11 @@ import multimet as mm
 # Create your views here.
 
 def main(request):
-    return render(request, 'index.html', {"app" : "MJO"})
+    context = {
+        "app" : "MJO",
+        "filename" : "z_s2s_rmm_ecmf_prod_rt_2015030500",
+    }
+    return render(request, 'index.html', context)
 
 def relevant(request):
     """

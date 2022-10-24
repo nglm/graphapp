@@ -1,35 +1,83 @@
-<!DOCTYPE html>
+{% extends "base.html" %}
 
 {% load static %}
 
-<html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+{% block content %}
 
-        <title>D3 Visualization - {{ app }}</title>
+    <!-- Main script -->
+    <script id="main-script" src="{% static 'index.js' %}" path_script="{% static '' %}" type="module">
+        console.log("Hello");
+    </script>
+<!--
+    <script id="figure-script">
 
-        <!-- Define css class styles here on top of our css file 'styles.css' -->
-        <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
-        <link rel="stylesheet" type="text/css" href="{% static 'css/figures.css' %}">
+        // -----------  Figure dimension -----------
 
-        <meta name="description" content=" {{ app }}">
-        <meta name="author" content="Natacha">
-    </head>
+        // const plotHeightMeteogram = 400;
+        // const plotWidthMeteogram = 600;
+        const plotWidthMJO = 600;
+        // const dims_meteogram = dimensions(
+        //     {plotWidth : plotWidthMeteogram, plotHeight : plotHeightMeteogram}
+        //     );
+        // const dims_mjo = dimensions(
+        //     {plotWidth : plotWidthMJO, plotHeight : plotWidthMJO}
+        //     );
+        // const dims_relevant_meteogram = dimensions(
+        //     {plotWidth : plotWidthMeteogram, plotHeight : plotHeightMeteogram *1.3}
+        //     );
 
-    <body>
-        <!-- <script> tag is used to embed a client-side script (JavaScript). -->
-        <!-- D3 libraries -->
+        console.log("Hei! hei");
 
-        <script src="https://cdn.jsdelivr.net/npm/d3-path@3"></script>
-        <script src="https://cdn.jsdelivr.net/npm/d3-shape@3"></script>
-        <script src="https://d3js.org/d3.v7.min.js" charset="utf-8"></script>
+        const kmax = 8;
+        const f = document.getElementById('filename').textContent;
+    </script>
 
-        <!-- jQuery libraries -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script id="members-script">
 
-        <!-- Main script -->
-        <script id="main-script" src="{% static 'index.js' %}" path_script="{% static '' %}" type="module" charset="utf-8"> </script>
+        // -----------  Plot members -----------
 
-    </body>
-</html>
+        console.log(plotWidthMJO);
+
+        // let mjo = draw_mjo(f ,{ dims : dims_mjo, id : "mjo"});
+        // setAxTitle(mjo, f4);
+        // let meteogr_rmm = draw_meteogram(
+        //     f, {dims : dims_meteogram, id:"mjo_rmm"});
+
+    </script> -->
+<!--
+    <script id="entire-graph-script" type="text/javascript">
+
+        // -----------  Plot Entire graph -----------
+
+        let mjo_graph = draw_entire_graph_mjo(
+            f, {dims : dims_mjo, id: "mjo_graph"});
+
+        let meteogr_rmm_graph = draw_entire_graph_meteogram(
+            f,
+            {dims : dims_meteogram, id : "mjo_rmm_graph"});
+
+
+    </script>
+    <script id="life-span-script" type="text/javascript">
+
+        // -----------  Plot life span -----------
+
+        let life_span = life_span_plot(
+            f, {dims : dims_mjo, id : "life_span"});
+        d3.select("body").append('text').html('<br>');
+
+    </script>
+    <script id="relevant-script" type="text/javascript">
+
+        // -----------  Plot relevant graph -----------
+
+        let mjo_rmm_graph_relevant = draw_relevant_graph_mjo(
+            f,
+            {dims : dims_mjo, id : "mjo_rmm_graph_relevant"});
+
+        let meteogr_rmm_graph_relevant = draw_relevant_graph_meteogram(
+            f,
+            {dims : dims_meteogram, id : "mjo_rmm_graph_relevant"});
+
+    </script> -->
+    {% endblock content %}

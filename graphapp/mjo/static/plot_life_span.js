@@ -8,17 +8,6 @@ import {
 } from "./plots.js";
 
 
-export { dimensions, setAxTitle };
-
-export {
-    draw_mjo, draw_meteogram,
-    draw_entire_graph_mjo, draw_entire_graph_meteogram,
-    life_span_plot,
-    draw_relevant_graph_mjo, draw_relevant_graph_meteogram,
-};
-
-console.log(dimensions);
-
 const f4 = "z_s2s_rmm_ecmf_prod_rt_2015030500";
 
 const plotHeightMeteogram = 400;
