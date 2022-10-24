@@ -28,7 +28,6 @@ def relevant(request):
     else:
         # From string to list of int
         selected_k = list(map(int, selected_k.split(",")))
-        print("selected_k", selected_k)
     print("Loading graph at: ", path_graph + filename + ".pg")
     with open(path_graph + filename + ".pg", "rb") as f:
         g = pickle.load(f)
