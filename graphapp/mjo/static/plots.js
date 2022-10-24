@@ -543,8 +543,6 @@ export async function draw_relevant_graph_meteogram(
 ) {
     // Load the graph and wait until it is ready
     const g =  await load_graph(filename);
-    const time = g.time_axis;
-    const members = g.members;
     const colors = get_list_colors(g.n_clusters_range.length);
     const data =  await load_data(filename);
 
@@ -611,8 +609,55 @@ export async function draw_relevant_graph_meteogram(
     return figs
 }
 
+export async function draw_relevant_graph_mjo(
+    filename,
+    {k=-1, id="fig", dims = dimensions()} = {},
+) {
+    // Load the graph and wait until it is ready
+    const g =  await load_graph(filename);
+    const colors = get_list_colors(g.n_clusters_range.length);
 
+    // Create or retrieve figs if they were already created
+    let figElem =  fig_mjo(id, {dims : dims, filename : filename});
 
+    // list of k values to plot
+    if (k === -1){
+        k = g.relevant_k.k.map(Number);
+    }
+
+    // document ready return a promise, se we should wait
+    await $(async function () {
+        // sending_HTTP_request return a promise, so we should wait
+        let relevant_components = await get_relevant_components(
+            filename, {k : k}
+        );
+
+        let vertices = relevant_components.vertices.flat();
+        let edges = relevant_components.edges.flat();
+
+        // get d3 scalers
+        let {x, y, xk, yk} = get_scalers(figElem);
+
+        // Clear previous relevant graph
+        clear_graph(figElem);
+
+        // Add vertices
+        let cx = (d => x( d.info.mean[0] ));
+        let cy = (d => y( d.info.mean[1] ));
+        add_vertices(
+            figElem, cx, cy, g, vertices,
+            {list_colors : colors, selected_k : k}
+        );
+
+        // Add edges
+        let fun_edge = (d => f_line_edge_mjo(d, g, x, y));
+        add_edges( figElem, fun_edge, g, edges,
+            {list_colors : colors, selected_k : k}
+        );
+        return undefined
+    })
+    return figElem
+}
 
 
 
