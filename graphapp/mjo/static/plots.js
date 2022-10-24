@@ -366,7 +366,10 @@ async function load_data(
 
 export async function draw_meteogram(
     filename,
-    {include_k = "blank", kmax = 4, id="fig", dims = dimensions()} = {},
+    {
+        include_k = "blank", kmax = 4, id="fig", dims = dimensions(),
+        parent = undefined,
+    } = {},
 ) {
     // Load the data and wait until it is ready
     const data =  await load_data(filename);
@@ -375,7 +378,9 @@ export async function draw_meteogram(
     // Create or retrieve figs if they were already created
     let figs = fig_meteogram(
         id, data,
-        {dims : dims, include_k : include_k, kmax : kmax, filename : filename}
+        {
+            dims : dims, include_k : include_k, kmax : kmax,
+            filename : filename, parent : parent}
     );
 
     // We create a new fig for each variable
@@ -398,7 +403,7 @@ export async function draw_meteogram(
 
 export async function draw_mjo(
     filename,
-    {id="fig", dims = dimensions()} = {},
+    {id="fig", dims = dimensions(), parent = undefined} = {},
 ) {
 
     // Load the data and wait until it is ready
@@ -406,7 +411,9 @@ export async function draw_mjo(
     let data_xy = d3fy(data);
 
     // Create or retrieve figs if they were already created
-    let figElem = fig_mjo(id, {dims : dims, filename : filename})
+    let figElem = fig_mjo(
+        id,
+        {dims : dims, filename : filename, parent : parent})
 
     // get d3 scalers
     let {x, y, xk, yk} = get_scalers(figElem);
@@ -423,7 +430,10 @@ export async function draw_mjo(
 
 export async function draw_entire_graph_meteogram(
     filename,
-    {include_k = "yes", kmax = 4, id="fig", dims = dimensions()} = {},
+    {
+        include_k = "yes", kmax = 4, id="fig", dims = dimensions(),
+        parent = undefined,
+    } = {},
 ) {
     // Load the graph and wait until it is ready
     const g =  await load_graph(filename);
@@ -438,7 +448,9 @@ export async function draw_entire_graph_meteogram(
     // Create or retrieve figs if they were already created
     let figs = fig_meteogram(
         id, data,
-        {dims : dims, include_k : include_k, kmax : kmax, filename : filename}
+        {
+            dims : dims, include_k : include_k, kmax : kmax,
+            filename : filename, parent : parent}
     );
 
     // We create a new fig for each variable
@@ -462,7 +474,7 @@ export async function draw_entire_graph_meteogram(
 
 export async function draw_entire_graph_mjo(
     filename,
-    {id="fig", dims = dimensions()} = {},
+    {id="fig", dims = dimensions(), parent = undefined} = {},
 ) {
     // Load the graph and wait until it is ready
     const g =  await load_graph(filename);
@@ -472,7 +484,8 @@ export async function draw_entire_graph_mjo(
     const members = g.members;
     const colors = get_list_colors(g.n_clusters_range.length);
 
-    let figElem = fig_mjo(id, {dims : dims, filename : filename})
+    let figElem = fig_mjo(id,
+        {dims : dims, filename : filename, parent : parent})
 
     // Add x and y axis element
     let {x, y, xk, yk} = get_scalers(figElem);
@@ -539,7 +552,10 @@ export async function clear_graph(figElem) {
 
 export async function draw_relevant_graph_meteogram(
     filename,
-    {include_k = "yes", k=-1, kmax = 4, id="fig", dims = dimensions()} = {},
+    {
+        include_k = "yes", k=-1, kmax = 4, id="fig", dims = dimensions(),
+        parent = undefined,
+    } = {},
 ) {
     // Load the graph and wait until it is ready
     const g =  await load_graph(filename);
@@ -555,7 +571,9 @@ export async function draw_relevant_graph_meteogram(
     // Create or retrieve figs if they were already created
     let figs = fig_meteogram(
         id, data,
-        {dims : dims, include_k : include_k, kmax : kmax, filename : filename}
+        {
+            dims : dims, include_k : include_k, kmax : kmax,
+            filename : filename, parent : parent}
     );
 
     // list of k values to plot
@@ -611,14 +629,15 @@ export async function draw_relevant_graph_meteogram(
 
 export async function draw_relevant_graph_mjo(
     filename,
-    {k=-1, id="fig", dims = dimensions()} = {},
+    {k=-1, id="fig", dims = dimensions(), parent = undefined} = {},
 ) {
     // Load the graph and wait until it is ready
     const g =  await load_graph(filename);
     const colors = get_list_colors(g.n_clusters_range.length);
 
     // Create or retrieve figs if they were already created
-    let figElem =  fig_mjo(id, {dims : dims, filename : filename});
+    let figElem =  fig_mjo(
+        id, {dims : dims, filename : filename, parent : parent});
 
     // list of k values to plot
     if (k === -1){
@@ -663,14 +682,14 @@ export async function draw_relevant_graph_mjo(
 
 export async function life_span_plot(
     filename,
-    {id="fig", dims = dimensions()} = {},
+    {id="fig", dims = dimensions(), parent = undefined} = {},
 ) {
     // Load the graph and wait until it is ready
     const g =  await load_graph(filename);
     const life_spans = d3fy_life_span(g.life_span);
     const colors = get_list_colors(g.n_clusters_range.length);
 
-    let figElem = init_fig(dims, id);
+    let figElem = init_fig(dims, id, undefined, parent);
     let myPlot = d3.select(figElem).select("#plot-group");
 
     let x = d3.scaleLinear().range([0, dims.plot.width]),

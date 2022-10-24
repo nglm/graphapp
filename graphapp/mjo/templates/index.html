@@ -3,18 +3,21 @@
 {% load static %}
 
 {% block content %}
-    <h2>Spaghetti plots</h2>
-    <script id="members-script" type="module">
-        import {draw_mjo, draw_meteogram} from "{% static './plots.js' %}";
+    <div id="{{ plot_type }}">
+        <h2>Spaghetti plots</h2>
+        <script id="members-script" type="module">
+            import {draw_mjo, draw_meteogram} from "{% static './plots.js' %}";
 
-        // -----------  Plot members -----------
+            // -----------  Plot members -----------
 
-        let mjo = await draw_mjo(f ,{ dims : dims_mjo, id : "mjo"});
+            let mjo = await draw_mjo(
+                f , { dims : dims_mjo, id : "mjo", parent : undefined});
 
-        let meteogr_rmm = await draw_meteogram(
-            f, {dims : dims_meteogram, id:"mjo_rmm"});
-    </script>
-
+            let meteogr_rmm = await draw_meteogram(
+                f,
+                {dims : dims_meteogram, id:"mjo_rmm", parent : undefined});
+        </script>
+    </div>
     <br>
 
     <h2>Entire graph</h2>

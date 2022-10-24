@@ -133,9 +133,12 @@ export function setYLabel(figElem, text) {
 
 
 
-export function init_fig(dims = DIMS, fig_id = 'fig', filename = undefined) {
+export function init_fig(
+    dims = DIMS, fig_id = 'fig', filename = undefined, parent = undefined) {
     // Append 'div'>'svg'>'rect' elements at the end of 'body' to contain our fig
-    //
+    if (parent === undefined) {
+        parent = "body";
+    }
     d3.select("body")
         .append('div')
         .attr('id', fig_id)
@@ -544,7 +547,7 @@ export function get_scalers(
 
 export function fig_mjo(
     id,
-    {dims = dimensions(), filename = undefined} = {},
+    {dims = dimensions(), filename = undefined, parent = undefined} = {},
 ) {
     let figElem = document.getElementById(id);
     // if id already exists, return figElem
@@ -556,7 +559,7 @@ export function fig_mjo(
     // - draw mjo classes
     // - set titles and axes labels
     } else {
-        figElem = init_fig(dims, id, filename);
+        figElem = init_fig(dims, id, filename, parent);
 
         // Add x and y axis element
         let {x, y, xk, yk} = add_axes_mjo(figElem);
@@ -578,7 +581,7 @@ export function fig_meteogram(
     id, data,
     {
         dims = dimensions(), include_k = "yes", kmax = 4,
-        filename = undefined,
+        filename = undefined, parent = undefined,
     } = {},
 ) {
     let figElem = document.getElementById(id + "_0");
@@ -603,7 +606,7 @@ export function fig_meteogram(
 
         for(var iplot = 0; iplot < d; iplot++ ) {
 
-            figElem = init_fig(dims, id + "_" + iplot, filename);
+            figElem = init_fig(dims, id + "_" + iplot, filename, parent);
 
             // Add x and y axis element
             let {x, y, xk, yk} = add_axes_meteogram(

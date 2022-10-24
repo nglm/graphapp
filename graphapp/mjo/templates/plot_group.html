@@ -1,0 +1,16 @@
+
+<div id="{{ plot_type }}">
+    <h2>{{ plot_title }}</h2>
+    {% block script_type %}
+    <script id="{{ plot_type }}-script" type="module">
+        import {draw_mjo, draw_meteogram} from "{% static './plots.js' %}";
+
+        // -----------  Plot members -----------
+
+        let mjo = await draw_mjo(f ,{ dims : dims_mjo, id : "mjo"});
+
+        let meteogr_rmm = await draw_meteogram(
+            f, {dims : dims_meteogram, id:"mjo_rmm"});
+    </script>
+    {% endblock script_type %}
+</div>
