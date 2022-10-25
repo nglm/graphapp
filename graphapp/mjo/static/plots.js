@@ -380,7 +380,7 @@ export async function draw_meteogram(
         id, data,
         {
             dims : dims, include_k : include_k, kmax : kmax,
-            filename : filename, parent : parent}
+            filename : filename, plot_type : "members", parent : parent}
     );
 
     // We create a new fig for each variable
@@ -413,7 +413,10 @@ export async function draw_mjo(
     // Create or retrieve figs if they were already created
     let figElem = fig_mjo(
         id,
-        {dims : dims, filename : filename, parent : parent})
+        {
+            dims : dims, filename : filename, plot_type : "members",
+            parent : parent
+        })
 
     // get d3 scalers
     let {x, y, xk, yk} = get_scalers(figElem);
@@ -450,7 +453,7 @@ export async function draw_entire_graph_meteogram(
         id, data,
         {
             dims : dims, include_k : include_k, kmax : kmax,
-            filename : filename, parent : parent}
+            filename : filename, plot_type : "entire_graph", parent : parent}
     );
 
     // We create a new fig for each variable
@@ -485,7 +488,10 @@ export async function draw_entire_graph_mjo(
     const colors = get_list_colors(g.n_clusters_range.length);
 
     let figElem = fig_mjo(id,
-        {dims : dims, filename : filename, parent : parent})
+        {
+            dims : dims, filename : filename, plot_type : "entire_graph",
+            parent : parent
+        })
 
     // Add x and y axis element
     let {x, y, xk, yk} = get_scalers(figElem);
@@ -573,7 +579,7 @@ export async function draw_relevant_graph_meteogram(
         id, data,
         {
             dims : dims, include_k : include_k, kmax : kmax,
-            filename : filename, parent : parent}
+            filename : filename, plot_type : "relevant", parent : parent}
     );
 
     // list of k values to plot
@@ -637,7 +643,10 @@ export async function draw_relevant_graph_mjo(
 
     // Create or retrieve figs if they were already created
     let figElem =  fig_mjo(
-        id, {dims : dims, filename : filename, parent : parent});
+        id, {
+            dims : dims, filename : filename, plot_type : "relevant",
+            parent : parent
+        });
 
     // list of k values to plot
     if (k === -1){
@@ -689,7 +698,11 @@ export async function life_span_plot(
     const life_spans = d3fy_life_span(g.life_span);
     const colors = get_list_colors(g.n_clusters_range.length);
 
-    let figElem = init_fig(dims, id, undefined, parent);
+    let figElem = init_fig(
+        {
+            dims : dims, fig_id : id, filename : filename,
+            plot_type : "life_span_plot", parent : parent,
+        });
     let myPlot = d3.select(figElem).select("#plot-group");
 
     let x = d3.scaleLinear().range([0, dims.plot.width]),
@@ -778,6 +791,11 @@ function onClick(figElem, e, d) {
         // Generate new relevant components in the current relevant figures
         // Note that the last 2 characters of the id is "_" + 0/1, that's why we remove it
         draw_relevant_graph_meteogram(
+            figElem.getAttribute("filename"),
+            {id : figElem.id.slice(0, -2), k : selected_k}
+        );
+
+        draw_relevant_graph_mjo(
             figElem.getAttribute("filename"),
             {id : figElem.id.slice(0, -2), k : selected_k}
         );

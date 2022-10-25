@@ -109,7 +109,23 @@ export function dimensions({
     return {fig, labels, axes, plot}
 }
 
+// Some standards fig dimensions
+
+// Compute fig dimensions
+const plotHeightMeteogram = 400;
+const plotWidthMeteogram = 600;
+const plotWidthMJO = 600;
+
 export const DIMS = dimensions();
+export const DIMS_meteogram = dimensions(
+    {plotWidth : plotWidthMeteogram, plotHeight : plotHeightMeteogram}
+    );
+export const DIMS_meteogram_with_k = dimensions(
+    {plotWidth : plotWidthMeteogram, plotHeight : plotHeightMeteogram *1.3}
+    );
+export const DIMS_mjo = dimensions(
+    {plotWidth : plotWidthMJO, plotHeight : plotWidthMJO}
+    );
 
 export function setInnerHTMLById(elem, id, text) {
     let e = document.getElementById(elem.id+"_svg")
@@ -134,7 +150,8 @@ export function setYLabel(figElem, text) {
 
 
 export function init_fig(
-    dims = DIMS, fig_id = 'fig', filename = undefined, parent = undefined) {
+    {dims=DIMS, fig_id='fig', filename=undefined, parent=undefined}
+) {
     // Append 'div'>'svg'>'rect' elements at the end of 'body' to contain our fig
     if (parent === undefined) {
         parent = "body";
@@ -548,7 +565,9 @@ export function get_scalers(
 
 export function fig_mjo(
     id,
-    {dims = dimensions(), filename = undefined, parent = undefined} = {},
+    {
+        dims = dimensions(), filename = undefined,
+        plot_type = undefined, parent = undefined} = {},
 ) {
     let figElem = document.getElementById(id);
     // if id already exists, return figElem
@@ -560,7 +579,11 @@ export function fig_mjo(
     // - draw mjo classes
     // - set titles and axes labels
     } else {
-        figElem = init_fig(dims, id, filename, parent);
+        figElem = init_fig(
+            {
+                dims : dims, fig_id : id, filename : filename,
+                parent : parent,
+            });
 
         // Add x and y axis element
         let {x, y, xk, yk} = add_axes_mjo(figElem);
@@ -582,7 +605,7 @@ export function fig_meteogram(
     id, data,
     {
         dims = dimensions(), include_k = "yes", kmax = 4,
-        filename = undefined, parent = undefined,
+        filename = undefined, plot_type = undefined, parent = undefined,
     } = {},
 ) {
     let figElem = document.getElementById(id + "_0");
@@ -607,7 +630,10 @@ export function fig_meteogram(
 
         for(var iplot = 0; iplot < d; iplot++ ) {
 
-            figElem = init_fig(dims, id + "_" + iplot, filename, parent);
+            figElem = init_fig({
+                dims : dims, fig_id : id + "_" + iplot, filename : filename,
+                parent : parent,
+            });
 
             // Add x and y axis element
             let {x, y, xk, yk} = add_axes_meteogram(

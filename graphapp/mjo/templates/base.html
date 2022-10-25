@@ -44,24 +44,9 @@
             </script>
 
             <script id="local_variables" type="module">
-                import { dimensions} from "{% static './figures.js' %}";
-
-                // Compute fig dimensions
-                const plotHeightMeteogram = 400;
-                const plotWidthMeteogram = 600;
-                const plotWidthMJO = 600;
-                const dims_meteogram = dimensions(
-                    {plotWidth : plotWidthMeteogram, plotHeight : plotHeightMeteogram}
-                    );
-                globalThis.dims_mjo = dimensions(
-                    {plotWidth : plotWidthMJO, plotHeight : plotWidthMJO}
-                    );
-                globalThis.dims_meteogram = dimensions(
-                    {plotWidth : plotWidthMeteogram, plotHeight : plotHeightMeteogram}
-                    );
-                const dims_relevant_meteogram = dimensions(
-                    {plotWidth : plotWidthMeteogram, plotHeight : plotHeightMeteogram *1.3}
-                    );
+                import {DIMS_mjo, DIMS_meteogram_with_k} from "{% static './figures.js' %}";
+                globalThis.dims_mjo = DIMS_mjo;
+                globalThis.dims_meteogram = DIMS_meteogram_with_k;
             </script>
         {% endblock js_variables %}
 
