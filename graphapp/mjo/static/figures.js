@@ -150,19 +150,26 @@ export function setYLabel(figElem, text) {
 
 
 export function init_fig(
-    {dims=DIMS, fig_id='fig', filename=undefined, parent=undefined}
+    {
+        dims=DIMS, fig_id="fig", filename=undefined,
+        data_type = undefined, plot_type = undefined, parent=undefined}
 ) {
     // Append 'div'>'svg'>'rect' elements at the end of 'body' to contain our fig
     if (parent === undefined) {
         parent = "body";
     }
-    console.log(parent);
+
+    // if (fig_id === undefined) {
+    //     fig_id = data_type + "_" + plot_type
+    // }
     d3.select(parent)
         .append('div')
         .attr('id', fig_id)
         .attr('width', dims.fig.width)
         .attr('height', dims.fig.height)
         .attr('filename', filename)
+        .attr('data_type', data_type)
+        .attr('plot_type', plot_type)
         .classed('container-fig', true)
         .append('svg')
         .attr('id', fig_id + "_svg")
@@ -564,11 +571,11 @@ export function get_scalers(
 }
 
 export function fig_mjo(
-    id,
     {
-        dims = dimensions(), filename = undefined,
-        plot_type = undefined, parent = undefined} = {},
+        id = undefined, dims = DIMS_mjo, filename = undefined,
+        data_type = undefined, parent = undefined} = {},
 ) {
+
     let figElem = document.getElementById(id);
     // if id already exists, return figElem
     if (figElem != null) {
@@ -579,10 +586,16 @@ export function fig_mjo(
     // - draw mjo classes
     // - set titles and axes labels
     } else {
+
+        let plot_type = "mjo";
+        if (id === undefined) {
+            id = data_type + "_" + plot_type
+        }
+
         figElem = init_fig(
             {
                 dims : dims, fig_id : id, filename : filename,
-                parent : parent,
+                data_type : data_type, plot_type : plot_type, parent : parent,
             });
 
         // Add x and y axis element
@@ -602,10 +615,11 @@ export function fig_mjo(
 }
 
 export function fig_meteogram(
-    id, data,
+    data,
     {
-        dims = dimensions(), include_k = "yes", kmax = 4,
-        filename = undefined, plot_type = undefined, parent = undefined,
+        id = undefined, dims = DIMS_meteogram_with_k, include_k = "yes",
+        kmax = 4, filename = undefined, data_type = undefined,
+        parent = undefined,
     } = {},
 ) {
     let figElem = document.getElementById(id + "_0");
@@ -628,10 +642,16 @@ export function fig_meteogram(
     // -- draw mjo classes
     // -- set titles and axes labels
 
+        let plot_type = "meteogram"
+        if (id === undefined) {
+            id = data_type + "_" + plot_type
+        }
+
         for(var iplot = 0; iplot < d; iplot++ ) {
 
             figElem = init_fig({
                 dims : dims, fig_id : id + "_" + iplot, filename : filename,
+                data_type : data_type, plot_type : plot_type,
                 parent : parent,
             });
 
