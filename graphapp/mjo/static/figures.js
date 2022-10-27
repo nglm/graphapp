@@ -154,14 +154,11 @@ export function init_fig(
         dims=DIMS, fig_id="fig", filename=undefined,
         data_type = undefined, plot_type = undefined, parent=undefined}
 ) {
-    // Append 'div'>'svg'>'rect' elements at the end of 'body' to contain our fig
+    // Append 'div'>'svg'>'rect' elements to 'parent' to contain our fig
     if (parent === undefined) {
         parent = "body";
     }
 
-    // if (fig_id === undefined) {
-    //     fig_id = data_type + "_" + plot_type
-    // }
     d3.select(parent)
         .append('div')
         .attr('id', fig_id)

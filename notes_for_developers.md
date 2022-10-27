@@ -4,10 +4,15 @@ Notes for developers and design choices
 Architecture of the HTML pages
 -------------------------------------------------------------------------------
 
+### Template
+
+- Each section (spaghetti plots / entire graph / lifespan / relevant) has its own ```div```.
+- Clicking on the title of each section will hide / show the plots in that section
+
 ### Figure element
 
 ```
-fig (div)
+fig (div) (class "container-fig")
     buttons/input (input)
     svg (svg)
         background (rect)
@@ -39,11 +44,12 @@ plot (svg)
 
 - Only ```document``` and ```svg``` elements have a ```.getElementById()``` method.
 Therefore ids must be unique in the entire document or within a svg element
-- All figures generated in a document can be found as follows
+- All figures generated in a document are of class ```container-fig``` and can be found as follows
 
   ```javascript
   let figs = document.getElementsByClassName("container-fig")
   ```
+- Each fig, (so ```div``` of class ```container-fig```) have a ```filename```, ```data_type``` (```members```, ```entire_graph```, ```life_span```, ```relevant```) and ```plot_type``` (```meteogram```, ```mjo```) attributes
 
 - ```interactiveGroupElem``` is managed by the button/input element within a
 fig and can be retrieved as follows:

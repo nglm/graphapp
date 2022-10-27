@@ -833,7 +833,6 @@ function onClick(figElem, e, d) {
         // on + currently selected elements for other time steps)
         let koptions = figElem.querySelector("#k-options");
         let selected_k = koptions.dataset.selected_k.split(",").map(Number);
-        //selected_k[d.t] = parseInt(d.k);
         selected_k[d.t] = d.k;
 
         // update attribute
@@ -841,6 +840,26 @@ function onClick(figElem, e, d) {
 
         // Generate new relevant components in the current relevant figures
         // Note that the last 2 characters of the id is "_" + 0/1, that's why we remove it
+
+        // Find figures that have to be updated
+        // based on the interactive group and data_type
+        // let figs = document.getElementsByClassName("container-fig")
+        // let interactGroupId = document.getElementById(figElem.id + "_input").value
+        // for (let i = 0; i < figs.length; i++) {
+        //     let groupId = document.getElementById(figs[i].id + "_input").value
+        //     if (
+        //         (groupId == interactGroupId.value)
+        //         && (figs[i].getAttribute('data_type') === "relevant")
+        //     ) {
+        //         draw_relevant_graph(
+        //             figElem.getAttribute("filename"),
+        //             {id : figElem.id.slice(0, -2), k : selected_k}
+        //         );
+
+        //     }
+        // }
+
+
         draw_relevant_graph_meteogram(
             figElem.getAttribute("filename"),
             {id : figElem.id.slice(0, -2), k : selected_k}
