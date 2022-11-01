@@ -1,0 +1,11 @@
+{% load static %}
+
+<script id="{{ data_type }}-script" type="module">
+    import {draw_{{ data_type }}} from "{% static './plots.js' %}";
+
+    await draw_{{ data_type }}(
+        f , { dims : dims_mjo, parent : "#{{ data_type }}-div", plot_type : "mjo"});
+    await draw_{{ data_type }}(
+        f,
+        {dims : dims_meteogram, parent : "#{{ data_type }}-div", plot_type : "meteogram"});
+</script>

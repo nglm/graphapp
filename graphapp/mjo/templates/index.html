@@ -3,59 +3,29 @@
 {% load static %}
 
 {% block content %}
-    <div id="members-div">
-        <h2>Spaghetti plots</h2>
-        <script id="members-script" type="module">
-            import {draw_members} from "{% static './plots.js' %}";
 
-            // -----------  Plot members -----------
-            await draw_members(
-                f , { dims : dims_mjo, parent : "#members-div", plot_type : "mjo"});
-            await draw_members(
-                f,
-                {dims : dims_meteogram, parent : "#members-div", plot_type : "meteogram"});
-        </script>
-    </div>
+    {% with "members" as data_type %}
+    {% with "Spaghetti plot" as plot_title %}
+    {% include "plot_group.html" %}
+    {% endwith %}
+    {% endwith %}
 
-    <div id="entire-graph-div">
-        <h2>Entire graph</h2>
-        <script id="entire-graph-script" type="module">
-            import {draw_entire_graph} from "{% static './plots.js' %}";
+    {% with "entire_graph" as data_type %}
+    {% with "Entire graph" as plot_title %}
+    {% include "plot_group.html" %}
+    {% endwith %}
+    {% endwith %}
 
-            // -----------  Plot Entire graph -----------
-            await draw_entire_graph(
-                f, {dims : dims_mjo, parent : "#entire-graph-div", plot_type : "mjo"});
+    {% with "life_span" as data_type %}
+    {% with "Life span" as plot_title %}
+    {% include "plot_group.html" %}
+    {% endwith %}
+    {% endwith %}
 
-            await draw_entire_graph(
-                f, {dims : dims_meteogram, parent : "#entire-graph-div", plot_type : "meteogram"});
-        </script>
-    </div>
+    {% with "relevant_graph" as data_type %}
+    {% with "Relevant components" as plot_title %}
+    {% include "plot_group.html" %}
+    {% endwith %}
+    {% endwith %}
 
-    <div id="life-span-div">
-
-        <h2>Life span</h2>
-        <script id="life-span-script" type="module">
-            import { life_span_plot, } from "{% static './plots.js' %}";
-
-            // -----------  Plot life span -----------
-
-            await life_span_plot(
-                f, {dims : dims_mjo, parent : "#life-span-div"});
-        </script>
-    </div>
-
-    <div id="relevant-div">
-
-        <h2>Relevant components</h2>
-        <script id="relevant-script" type="module">
-            import { draw_relevant_graph } from "{% static './plots.js' %}";
-
-            // -----------  Plot relevant graph -----------
-            await draw_relevant_graph(
-                f, {dims : dims_mjo, parent : "#relevant-div", plot_type : "mjo"});
-
-            await draw_relevant_graph(
-                f, {dims : dims_meteogram, parent : "#relevant-div", plot_type : "meteogram"});
-
-        </script>
-    {% endblock content %}
+{% endblock content %}

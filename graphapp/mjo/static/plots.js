@@ -613,7 +613,7 @@ export async function draw_relevant_graph_meteogram(
         data,
         {
             id : id, dims : dims, include_k : include_k, kmax : kmax,
-            filename : filename, data_type : "relevant", parent : parent}
+            filename : filename, data_type : "relevant_graph", parent : parent}
     );
 
     // list of k values to plot
@@ -678,7 +678,7 @@ export async function draw_relevant_graph_mjo(
     // Create or retrieve figs if they were already created
     let figElem =  fig_mjo(
         {
-            id : id, dims : dims, filename : filename, data_type : "relevant",
+            id : id, dims : dims, filename : filename, data_type : "relevant_graph",
             parent : parent
         });
 
@@ -740,7 +740,7 @@ export async function draw_relevant_graph(
     }
 }
 
-export async function life_span_plot(
+export async function draw_life_span(
     filename,
     {id=undefined, dims = DIMS_mjo, parent = undefined} = {},
 ) {
@@ -872,7 +872,7 @@ function onClick(figElem, e, d) {
                 // And in the same interactive group
                 if (
                     (groupId === interactGroupId)
-                    && (figs[i].getAttribute('data_type') === "relevant")
+                    && (figs[i].getAttribute('data_type') === "relevant_graph")
                 ) {
 
                     let ignore = false
