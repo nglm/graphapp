@@ -826,48 +826,80 @@ function onMouseOutCluster(figElem, e, d) {
     }
 }
 
-//click event handler function using closure
+/**
+ * Update relevant components figures
+ *
+ * Update selected k options
+ * Update relevant components graphs
+ *
+ * @param {*} figElem - DOM element of the fig that fired the event
+ * @param {*} e - event
+ * @param {*} d - datapoint associated with the event
+ */
 function onClick(figElem, e, d) {
+    //click event handler function using closure
     return function (e, d) {
+
+        // ------------------ Update selected k options -----------------------
+
         // Find current selected k values (so element which was clicked
         // on + currently selected elements for other time steps)
         let koptions = figElem.querySelector("#k-options");
         let selected_k = koptions.dataset.selected_k.split(",").map(Number);
-        selected_k[d.t] = d.k;
 
-        // update attribute
-        koptions.dataset.selected_k = selected_k;
+        // do something only if a new k has really been selected.
+        if (selected_k[d.t] !=  d.k) {
 
-        // Generate new relevant components in the current relevant figures
-        // Note that the last 2 characters of the id is "_" + 0/1, that's why we remove it
+            selected_k[d.t] = d.k;
 
-        // Find figures that have to be updated
-        // based on the interactive group and data_type
-        // let figs = document.getElementsByClassName("container-fig")
-        // let interactGroupId = document.getElementById(figElem.id + "_input").value
-        // for (let i = 0; i < figs.length; i++) {
-        //     let groupId = document.getElementById(figs[i].id + "_input").value
-        //     if (
-        //         (groupId == interactGroupId.value)
-        //         && (figs[i].getAttribute('data_type') === "relevant")
-        //     ) {
-        //         draw_relevant_graph(
-        //             figElem.getAttribute("filename"),
-        //             {id : figElem.id.slice(0, -2), k : selected_k}
-        //         );
+            // update attribute
+            koptions.dataset.selected_k = selected_k;
 
-        //     }
-        // }
+            // ---------- Update relevant components graphs -----------------------
 
+            // All figs in the body
+            let figs = document.getElementsByClassName("container-fig");
+            // Interactive group of the fig that fired the event
+            let interactGroupId = document.getElementById(figElem.id + "_input").value;
+            let to_ignore = [];
 
-        draw_relevant_graph_meteogram(
-            figElem.getAttribute("filename"),
-            {id : figElem.id.slice(0, -2), k : selected_k}
-        );
+            // Sort figures based on their interactive group and data_type
+            for (let i = 0; i < figs.length; i++) {
 
-        draw_relevant_graph_mjo(
-            figElem.getAttribute("filename"),
-            {id : figElem.id.slice(0, -2), k : selected_k}
-        );
+                let groupId = document.getElementById(figs[i].id + "_input").value;
+
+                // Consider current fig only if it is a relevant type
+                // And in the same interactive group
+                if (
+                    (groupId === interactGroupId)
+                    && (figs[i].getAttribute('data_type') === "relevant")
+                ) {
+
+                    let ignore = false
+                    let id = figs[i].id;
+                    let plot_type = figs[i].getAttribute('plot_type');
+
+                    // Ignore current fig if id matches an already drawn
+                    // figure from a group of meteograms
+                    if (plot_type === "meteogram") {
+                        // Remove "_" + 0/1 at the end of id
+                        id = id.slice(0, -2);
+                        if (to_ignore.includes(id)){
+                            ignore = true;
+                        } else {
+                            to_ignore.push(id)
+                        }
+                    }
+
+                    // Update relevant graph
+                    if (!ignore) {
+                        draw_relevant_graph(
+                            figs[i].getAttribute("filename"),
+                            {id : id, k : selected_k, plot_type : plot_type}
+                        );
+                    }
+                }
+            }
+        }
     }
 }
