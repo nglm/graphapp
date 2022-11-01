@@ -1,10 +1,26 @@
+
+<script id="{{ data_type }}-display">
+    function show_{{ data_type }}() {
+        let e = document.getElementById('{{ data_type }}-figs');
+        if (e.style.display === "inline") {
+            e.style.display = "none";
+        } else {
+            e.style.display = "inline";
+        }
+    }
+</script>
+
+
 <div id="{{ data_type }}-div">
-    <h2>{{ plot_title }}</h2>
-    {% block script_type %}
-    {% if data_type == "life_span" %}
-        {% include "script2.html" %}
-    {% else %}
-        {% include "script1.html" %}
-    {% endif %}
-    {% endblock script_type %}
+    <h2 id="{{ data_type }}-title" onclick="show_{{ data_type }}()">{{ plot_title }}</h2>
+
+    <div id="{{ data_type }}-figs" style="display:inline">
+        {% block script_type %}
+        {% if data_type == "life_span" %}
+            {% include "script2.html" %}
+        {% else %}
+            {% include "script1.html" %}
+        {% endif %}
+        {% endblock script_type %}
+    </div>
 </div>
