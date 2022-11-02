@@ -17,7 +17,11 @@ button {
     cursor: pointer;
 }
 
-
+h2:hover {
+	cursor: pointer;
+	background-color: #ffeb93;
+	padding: 10px;
+}
 
 /* ------- Styles of custom classes ------- */
 
@@ -31,7 +35,7 @@ p#info {
 
 p#info:hover {
     cursor: help;
-    background-color: #a58a10;
+    background-color: #e8d57e;
 }
 
 /* ------- Styles of specific id ------- */
