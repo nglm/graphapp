@@ -1,3 +1,8 @@
+:root {
+    --button-col-hover: #e8d57e;
+}
+
+
 
 /* ------- Styles of existing types ------- */
 body {
@@ -36,6 +41,22 @@ p#info {
 p#info:hover {
     cursor: help;
     background-color: #e8d57e;
+}
+
+/* ------- Styles of existing types with specific class ------- */
+
+div.clear-selection-button {
+    position: fixed;
+    font-size: 40px;
+    top: 20px;
+	right: 20px;
+	padding: 5px;
+    background-color: rgb(225, 225, 225);
+}
+
+div.clear-selection-button:hover {
+    background-color: var(--button-col-hover);
+	padding: 10px;
 }
 
 /* ------- Styles of specific id ------- */

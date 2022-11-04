@@ -5,7 +5,7 @@ import {
     dimensions, setAxTitle, setFigTitle, setXLabel, setYLabel,
     init_fig, style_ticks, get_list_colors, fig_meteogram, fig_mjo, get_scalers, DIMS_mjo
 } from "./figures.js"
-import { onMouseClusterAux, onMouseMemberAux, onClickAux } from "./interact.js";
+import { onEventClusterAux, onEventMemberAux} from "./interact.js";
 
 import {range_rescale, sigmoid, linear} from "./utils.js"
 
@@ -187,6 +187,7 @@ function add_members(
         // Add listeners for mouseover/mouseout event
         .on("mouseover", onMouseOverMember(figElem))
         .on("mouseout", onMouseOutMember(figElem))
+        .on("click", onClickMember(figElem))
         .attr("d", (d => fun_line(d)))
         .attr("id", ((d, i) => "m-event" + i));
 }
@@ -232,9 +233,10 @@ function add_vertices(
         // Add listeners for mouseover/mouseout event
         .on("mouseover", onMouseOverCluster(figElem))
         .on("mouseout", onMouseOutCluster(figElem))
+        .on("click", onClickCluster(figElem))
         .attr("cx", (d => fun_cx(d)))
         .attr("cy", (d => fun_cy(d)))
-        .attr("r", (d => 2*fun_size(d)) )
+        .attr("r", (d => 4*fun_size(d)) )
         .attr("id", (d => "v-event" + d.key));
 }
 
@@ -282,7 +284,7 @@ function add_k_options(
         .append("circle")
         .classed("k-optionO-event", true)
         // Add listeners for mouseover/mouseout event
-        .on("click", onClick(figElem))
+        .on("click", onClickK(figElem))
         .attr("cx", (d => fun_cx(d)))
         .attr("cy", (d => fun_cy(d)))
         .attr("r", (d => fun_size(d)) )
@@ -797,32 +799,61 @@ export async function draw_life_span(
 //mouseover event handler function using closure
 function onMouseOverMember(figElem, e, d) {
     return function (e, d) {
-        onMouseMemberAux(e, d, this, figElem, 'lineSelected')
+        onEventMemberAux(
+            e, d, this, figElem, 'lineHovered',
+            {deselect : false}
+        )
     }
 }
 
-//mouseout event handler function using closure
+//mouseover event handler function using closure
 function onMouseOutMember(figElem, e, d) {
     return function (e, d) {
-        onMouseMemberAux(e, d, this, figElem, 'line')
+        onEventMemberAux(
+            e, d, this, figElem, 'lineHovered',
+            {select : false}
+        )
+    }
+}
+
+//mouseover event handler function using closure
+function onClickMember(figElem, e, d) {
+    return function (e, d) {
+        onEventMemberAux(
+            e, d, this, figElem, 'lineClicked',
+        )
     }
 }
 
 //mouseover event handler function using closure
 function onMouseOverCluster(figElem, e, d) {
     return function (e, d) {
-        onMouseClusterAux(
+        onEventClusterAux(
             e, d, this, figElem,
-            "vertexSelected", "lineSelectedbyCluster")
+            'vertexHovered', 'lineClusterHovered',
+            {deselect : false}
+        )
     }
 }
 
 //mouseout event handler function using closure
 function onMouseOutCluster(figElem, e, d) {
     return function (e, d) {
-        onMouseClusterAux(
+        onEventClusterAux(
             e, d, this, figElem,
-            "vertex", "line")
+            'vertexHovered', 'lineClusterHovered',
+            {select : false}
+        )
+    }
+}
+
+//mouseover event handler function using closure
+function onClickCluster(figElem, e, d) {
+    return function (e, d) {
+        onEventClusterAux(
+            e, d, this, figElem,
+            'vertexClicked', 'lineClustered',
+        )
     }
 }
 
@@ -836,7 +867,7 @@ function onMouseOutCluster(figElem, e, d) {
  * @param {*} e - event
  * @param {*} d - datapoint associated with the event
  */
-function onClick(figElem, e, d) {
+function onClickK(figElem, e, d) {
     //click event handler function using closure
     return function (e, d) {
 
@@ -855,7 +886,7 @@ function onClick(figElem, e, d) {
             // update attribute
             koptions.dataset.selected_k = selected_k;
 
-            // ---------- Update relevant components graphs -----------------------
+            // -------- Update relevant components graphs ---------------------
 
             // All figs in the body
             let figs = document.getElementsByClassName("container-fig");

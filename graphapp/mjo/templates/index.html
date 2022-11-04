@@ -28,4 +28,14 @@
     {% endwith %}
     {% endwith %}
 
+    <!-- Clear button -->
+    <script type="module">
+        import {clearSelection} from "{% static './interact.js' %}";
+        globalThis.clearSelection = clearSelection;
+    </script>
+
+    <div class="clear-selection-button" onclick="clearSelection()">Clear Selection</div>
+    <div class="-button" onclick="clearSelection()">Clear Selection</div>
+
+
 {% endblock content %}
