@@ -35,7 +35,16 @@ async function deselectElems(
     } while (to_deselect.length > 0)
 }
 
-function setDefaultClass( svgElem, classDefault ) {
+/**
+ * Remove all classes except the default one
+ *
+ * Note that this assume that the default one is already one of the class
+ * of the elements we want to update
+ *
+ * @param {*} svgElem svg element inside the figure that we want to update
+ * @param {*} classDefault class to which all elements should go back
+ */
+function setDefaultClass(svgElem, classDefault ) {
     // This will select everything as everything has the default class in
     // addition to more specific ones
     let to_deselect = svgElem.getElementsByClassName(classDefault);
