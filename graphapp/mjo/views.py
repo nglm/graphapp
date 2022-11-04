@@ -4,7 +4,7 @@ from django.http import HttpResponse, JsonResponse
 
 import pickle
 from os.path import exists
-from os import listdir
+from os import listdir, getcwd
 import json
 
 from persigraph.utils.d3 import serialize
@@ -14,9 +14,15 @@ import multimet as mm
 # Create your views here.
 
 def main(request):
+
+    # Find all files in the data folder
+    filenames = listdir("./data/data")
+    # Select only relevant ones, and remove extension
+    filenames = [f[:-4] for f in filenames if f.endswith(".txt")]
     context = {
         "app" : "MJO",
-        "filename" : "z_s2s_rmm_ecmf_prod_rt_2015030500",
+        "filenames" : filenames,
+        "filename" : filenames[0],
     }
     return render(request, 'index.html', context)
 
