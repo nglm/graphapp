@@ -4,6 +4,7 @@ from django.http import HttpResponse, JsonResponse
 
 import pickle
 from os.path import exists
+from os import listdir
 import json
 
 from persigraph.utils.d3 import serialize
@@ -84,3 +85,11 @@ def load_data(request):
         print("Loading data at", filename + ".json")
         dict_from_json = json.load(json_file)
     return JsonResponse(dict_from_json, safe=False)
+
+def find_files(request):
+    """
+    Find file names and return it as a json
+    """
+    path = request.GET['path']
+    filenames = listdir(path)
+    return JsonResponse(filenames, safe=False)

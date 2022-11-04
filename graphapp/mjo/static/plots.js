@@ -365,6 +365,25 @@ async function load_data(
         })
 }
 
+export async function find_files() {
+    return await $.get(
+        "find_files/",                  // URL
+        {                              // Additional data
+            path : PATH_DATA,
+        },
+        function(data) {       // Callback on success
+            // "data" is the value returned by the python function
+            return data
+        })
+        .fail(function(data, status) {
+            console.log('Calling find_files failed', data, status);
+            return data
+        })
+        .always(function(data) {
+            return data
+        })
+}
+
 
 export async function draw_meteogram(
     filename,

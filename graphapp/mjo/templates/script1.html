@@ -4,8 +4,8 @@
     import {draw_{{ data_type }}} from "{% static './plots.js' %}";
 
     await draw_{{ data_type }}(
-        f , { dims : dims_mjo, parent : "#{{ data_type }}-figs", plot_type : "mjo"});
+        "{{ filename }}" , { dims : dims_mjo, parent : "#{{ data_type }}-figs", plot_type : "mjo"});
     await draw_{{ data_type }}(
-        f,
+        "{{ filename }}" ,
         {dims : dims_meteogram, parent : "#{{ data_type }}-figs", plot_type : "meteogram"});
 </script>

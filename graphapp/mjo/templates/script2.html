@@ -4,5 +4,5 @@
     import {draw_{{ data_type }}} from "{% static './plots.js' %}";
 
     await draw_{{ data_type }}(
-        f , { dims : dims_mjo, parent : "#{{ data_type }}-figs"});
+        "{{ filename }}" , { dims : dims_mjo, parent : "#{{ data_type }}-figs"});
 </script>

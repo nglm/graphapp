@@ -41,7 +41,7 @@
             {{ filename|json_script:"filename" }}
             <script id="main-script" path_script = "{% static '' %}">
                 // Make the current filename accessible to javascript
-                const f = JSON.parse(document.getElementById('filename').textContent);
+                //const f = JSON.parse(document.getElementById('filename').textContent);
             </script>
 
             <!-- Computed from js modules (using globalThis) -->
