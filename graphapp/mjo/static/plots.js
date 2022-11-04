@@ -523,7 +523,7 @@ export async function draw_entire_graph_mjo(
     return figElem
 }
 
-export async function draw_entire_graph(
+export function draw_entire_graph(
     filename,
     {
         plot_type = "meteogram", include_k = "yes", kmax = 4, id=undefined,
@@ -723,7 +723,7 @@ export async function draw_relevant_graph_mjo(
     return figElem
 }
 
-export async function draw_relevant_graph(
+export function draw_relevant_graph(
     filename,
     {
         plot_type = "meteogram", include_k = "yes", kmax = 4, k=-1, id=undefined,
@@ -739,6 +739,52 @@ export async function draw_relevant_graph(
             id : id, dims : dims, parent : parent, include_k: include_k,
             kmax : kmax, k : k
         })
+    }
+}
+
+export function redraw_relevant_graph(selected_k=-1, interactGroupId=1){
+    // -------- Update relevant components graphs ---------------------
+
+    // All figs in the body
+    let figs = document.getElementsByClassName("container-fig");
+    let to_ignore = [];
+
+    // Sort figures based on their interactive group and data_type
+    for (let i = 0; i < figs.length; i++) {
+
+        let groupId = document.getElementById(figs[i].id + "_input").value;
+
+        // Consider current fig only if it is a relevant type
+        // And in the same interactive group
+        if (
+            (groupId == interactGroupId)
+            && (figs[i].getAttribute('data_type') === "relevant_graph")
+        ) {
+
+            let ignore = false
+            let id = figs[i].id;
+            let plot_type = figs[i].getAttribute('plot_type');
+
+            // Ignore current fig if id matches an already drawn
+            // figure from a group of meteograms
+            if (plot_type === "meteogram") {
+                // Remove "_" + 0/1 at the end of id
+                id = id.slice(0, -2);
+                if (to_ignore.includes(id)){
+                    ignore = true;
+                } else {
+                    to_ignore.push(id)
+                }
+            }
+
+            // Update relevant graph
+            if (!ignore) {
+                draw_relevant_graph(
+                    figs[i].getAttribute("filename"),
+                    {id : id, plot_type : plot_type, k :selected_k}
+                );
+            }
+        }
     }
 }
 
@@ -888,49 +934,10 @@ function onClickK(figElem, e, d) {
 
             // -------- Update relevant components graphs ---------------------
 
-            // All figs in the body
-            let figs = document.getElementsByClassName("container-fig");
+
             // Interactive group of the fig that fired the event
             let interactGroupId = document.getElementById(figElem.id + "_input").value;
-            let to_ignore = [];
-
-            // Sort figures based on their interactive group and data_type
-            for (let i = 0; i < figs.length; i++) {
-
-                let groupId = document.getElementById(figs[i].id + "_input").value;
-
-                // Consider current fig only if it is a relevant type
-                // And in the same interactive group
-                if (
-                    (groupId === interactGroupId)
-                    && (figs[i].getAttribute('data_type') === "relevant_graph")
-                ) {
-
-                    let ignore = false
-                    let id = figs[i].id;
-                    let plot_type = figs[i].getAttribute('plot_type');
-
-                    // Ignore current fig if id matches an already drawn
-                    // figure from a group of meteograms
-                    if (plot_type === "meteogram") {
-                        // Remove "_" + 0/1 at the end of id
-                        id = id.slice(0, -2);
-                        if (to_ignore.includes(id)){
-                            ignore = true;
-                        } else {
-                            to_ignore.push(id)
-                        }
-                    }
-
-                    // Update relevant graph
-                    if (!ignore) {
-                        draw_relevant_graph(
-                            figs[i].getAttribute("filename"),
-                            {id : id, k : selected_k, plot_type : plot_type}
-                        );
-                    }
-                }
-            }
+            redraw_relevant_graph(selected_k, interactGroupId);
         }
     }
 }

@@ -146,6 +146,13 @@
     fill: black;
 }
 
+.k-optionO:hover {
+    fill: black;
+    stroke-width: 3;
+    stroke: var(--col-hover);
+    stroke-opacity: 1;
+}
+
 .k-optionO-event {
     stroke-width: 0;
     stroke-opacity: 0;

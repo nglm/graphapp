@@ -31,11 +31,13 @@
     <!-- Clear button -->
     <script type="module">
         import {clearSelection} from "{% static './interact.js' %}";
+        import {redraw_relevant_graph} from "{% static './plots.js' %}";
         globalThis.clearSelection = clearSelection;
+        globalThis.redraw_relevant_graph = redraw_relevant_graph;
     </script>
 
-    <div class="clear-selection-button" onclick="clearSelection()">Clear Selection</div>
-    <div class="-button" onclick="clearSelection()">Clear Selection</div>
+    <div class="button" onclick="clearSelection()" style="top:20px">Clear Selection</div>
+    <div class="button" onclick="redraw_relevant_graph()" style="top:100px">Default Selected k</div>
 
 
 {% endblock content %}
