@@ -48,6 +48,7 @@ p#info:hover {
 div.clear-selection-button {
     position: fixed;
     font-size: 40px;
+	cursor: pointer;
     top: 20px;
 	right: 20px;
 	padding: 5px;

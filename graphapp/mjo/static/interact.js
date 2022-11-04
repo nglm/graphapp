@@ -11,7 +11,7 @@ async function selectElems(svgElem, ids, classSelected){
             svgElem.getElementById(id)
                 .classList.add(classSelected);
         }
-    } catch {console.error();}
+    } catch {}
 }
 
 /**
@@ -25,12 +25,14 @@ async function deselectElems(
     svgElem, classSelected, classDefault=undefined,
 ){
     let to_deselect = svgElem.getElementsByClassName(classSelected);
-    for (var e of to_deselect) {
-        e.classList.remove(classSelected);
-        if (!(classDefault === undefined)) {
-            e.classList.add(classDefault)
+    // For an unknown reason this "do..While" loop is necessary otherwise
+    // only roughly half of the list is properly treated...
+    do {
+        for (var e of to_deselect) {
+            e.classList.remove(classSelected);
         }
-    }
+        to_deselect = svgElem.getElementsByClassName(classSelected);
+    } while (to_deselect.length > 0)
 }
 
 function setDefaultClass( svgElem, classDefault ) {
@@ -59,10 +61,10 @@ async function updateSelection(
         await selectElems( svgElem, ids, classSelected);
     } else {
         if (deselect) {
-            deselectElems( svgElem, classSelected, classDefault);
+            await deselectElems( svgElem, classSelected, classDefault);
         }
         if (select) {
-            selectElems( svgElem, ids, classSelected);
+            await selectElems( svgElem, ids, classSelected);
         }
     }
 }
