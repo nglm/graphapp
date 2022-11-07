@@ -350,7 +350,8 @@ async function load_data(
     return await $.get(
         "load_data/",                  // URL
         {                              // Additional data
-            filename : PATH_DATA + filename,
+            filename : filename,
+            path_data : PATH_DATA,
         },
         function(data) {       // Callback on success
             // "data" is the value returned by the python function
@@ -475,6 +476,7 @@ export async function draw_entire_graph_meteogram(
     } = {},
 ) {
     // Load the graph and wait until it is ready
+    const data =  await load_data(filename);
     const g =  await load_graph(filename);
     const vertices = g.vertices.flat();
     const edges = g.edges.flat();
@@ -482,7 +484,7 @@ export async function draw_entire_graph_meteogram(
     const members = g.members;
     const colors = get_list_colors(g.n_clusters_range.length);
 
-    const data =  await load_data(filename);
+
 
     // Create or retrieve figs if they were already created
     let figs = fig_meteogram(
@@ -619,9 +621,10 @@ export async function draw_relevant_graph_meteogram(
     } = {},
 ) {
     // Load the graph and wait until it is ready
+    const data =  await load_data(filename);
     const g =  await load_graph(filename);
     const colors = get_list_colors(g.n_clusters_range.length);
-    const data =  await load_data(filename);
+
 
     let k_max = d3.min([kmax, g.k_max]);
     // To draw k options

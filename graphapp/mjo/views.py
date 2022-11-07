@@ -19,10 +19,15 @@ def main(request):
     filenames = listdir("./data/data")
     # Select only relevant ones, and remove extension
     filenames = [f[:-4] for f in filenames if f.endswith(".txt")]
+    if "filename" in request.GET:
+        filename = request.GET['filename']
+    else:
+        filename = filenames[0]
+    filename = "z_s2s_rmm_ecmf_prod_rt_2016020400"
     context = {
         "app" : "MJO",
         "filenames" : filenames,
-        "filename" : filenames[0],
+        "filename" : filename,
     }
     return render(request, 'index.html', context)
 
@@ -60,15 +65,13 @@ def generate_graph(request):
     # check if graph exists and if so, do nothing
     if not (exists(path_graph + filename + ".pg") and exists(path_graph + filename + ".json")):
 
-        # Preprocess data and extract members and time
-        print("Generating graph from: ", path_data + filename + ".txt")
-        data_dict = mm.preprocess.mjo(
-            filename = path_data + filename + ".txt",
-        )
+        with open(path_data + filename + ".json", "rb") as json_file:
+            data_dict = json.load(json_file)
         members = data_dict['members']
         time = data_dict['time']
 
         # Generate graph
+        print("Generating graph for ", filename)
         g = pg.PersistentGraph(members, time_axis=time, k_max=5)
         g.construct_graph()
         # Save as .pg and .json
@@ -85,10 +88,28 @@ def generate_graph(request):
 def load_data(request):
     """
     Load data (json file), and return it as a json as well
+
+    If the json file is not found, create it first based on the txt file.
+    The json file is a preprocessed version of the raw data contained in the
+    txt file.
     """
     filename = request.GET['filename']
-    with open(filename + ".json", "rb") as json_file:
-        print("Loading data at", filename + ".json")
+    path_data = request.GET['path_data']
+    # ------- Process and save the raw data if not already done ---------------
+    if not exists(path_data + filename + ".json"):
+        # Preprocess data and extract members and time
+        print("Processing raw data from: ", path_data + filename + ".txt")
+        data_dict = mm.preprocess.mjo(
+            filename =filename + ".txt",
+            path_data = path_data
+        )
+        data_json = mm.preprocess.jsonify(data_dict)
+        with open(path_data + filename + ".json", 'w', encoding='utf-8') as f:
+            json.dump(data_json, f, ensure_ascii=False, indent=4)
+
+    # ------- Return the json file containing the processed data --------------
+    with open(path_data + filename + ".json", "rb") as json_file:
+        print("Loading data at", path_data + filename + ".json")
         dict_from_json = json.load(json_file)
     return JsonResponse(dict_from_json, safe=False)
 

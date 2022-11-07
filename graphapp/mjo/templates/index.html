@@ -6,18 +6,24 @@
 
     <label for="files"></label>
 
+    <!-- Find value using
+    let e = document.getElementById("files");
+    e.value;
+    -->
 
     <select name="files" id="files">
         {% for f in filenames %}
-            <option value="{{ f}}" >{{ f }}</option>
+            {% if filename == f %}
+                <option value="{{ f }}" selected>{{ f }}</option>
+            {% else %}
+                <option value="{{ f }}" >{{ f }}</option>
+            {% endif %}
         {% endfor %}
     </select>
 
     <!-- Title with current filename -->
     {% block title %}
-        {% if filename %}
-            <h1>{{ filename }}</h1>
-        {% endif %}
+        <h1>{{ filename }}</h1>
     {% endblock title %}
 
     {% with "members" as data_type %}
@@ -48,6 +54,7 @@
     <script type="module">
         import {clearSelection} from "{% static './interact.js' %}";
         import {redraw_relevant_graph} from "{% static './plots.js' %}";
+        globalThis.filename = document.getElementById("files").value;
         globalThis.clearSelection = clearSelection;
         globalThis.redraw_relevant_graph = redraw_relevant_graph;
     </script>

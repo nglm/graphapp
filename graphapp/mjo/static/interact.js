@@ -78,6 +78,15 @@ async function updateSelection(
     }
 }
 
+/**
+ * Clear current selection of members/clusters by keeping only default class
+ *
+ * This function assumes that all members and clusters already have the
+ * default class (but that they may have additional ones)
+ *
+ * @param {*} classClusterDefault Default class for clusters
+ * @param {*} classMemberDefault Default class for members
+ */
 export function clearSelection(
     classClusterDefault="vertex", classMemberDefault="line",
 ){
@@ -91,6 +100,29 @@ export function clearSelection(
     }
 }
 
+export function selectFile(){
+    // Get current value
+    let f = document.getElementById("files").value;
+    // Find all figures in the document
+    let figs = document.getElementsByClassName("container-fig");
+    for (let i = 0; i < figs.length; i++) {
+        // Within the outter svg element of each fig, all ids are unique
+        let svgElem = document.getElementById(figs[i].id + "_svg");
+        setDefaultClass( svgElem, classClusterDefault);
+        setDefaultClass( svgElem, classMemberDefault);
+    }
+}
+
+/**
+ * Helper function called to (de-)select members and clusters on cluster events
+ * @param {*} e
+ * @param {*} d
+ * @param {*} clusterElem
+ * @param {*} figElem DOM element of the "container-fig" that contains
+ * the element that fired the event
+ * @param {*} classClusterSelected
+ * @param {*} classMemberSelected
+ */
 export function onEventClusterAux(
     e, d, clusterElem, figElem,
     classClusterSelected, classMemberSelected,
