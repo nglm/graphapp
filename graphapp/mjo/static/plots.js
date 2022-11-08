@@ -325,7 +325,7 @@ async function load_graph(
     filename
 ) {
     return await $.get(
-        "generate_graph/",             // URL
+        "load_graph/",             // URL
         {                              // Additional data
             filename : filename,
             path_data : PATH_DATA,
@@ -336,7 +336,7 @@ async function load_graph(
             return data
         })
         .fail(function(data, status) {
-            console.log('Calling generate_graph failed', data, status);
+            console.log('Calling load_graph failed', data, status);
             return data
         })
         .always(function(data, status) {
