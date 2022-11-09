@@ -110,7 +110,14 @@ export async function selectFile(){
             filename : f,
         },
         function(data) {       // Callback on success
-            // "data" is the value returned by the python function
+            // Django send an evaluation of the template (so with the right
+            // context values) but without evaluating the javascript scripts
+            // (so what generate plots)
+            // this jQuery method "html" evaluate the raw html sent by django
+            // in order to run scripts and put this into the "#all-plots"
+            // div
+            // Note that we only process the "plots.html" part of the template
+            // and re-evaluate only the content of the "#all-plots" div
             $("#all-plots").html(data);
             return data
         })
