@@ -100,17 +100,27 @@ export function clearSelection(
     }
 }
 
-export function selectFile(){
+export async function selectFile(){
     // Get current value
+    var parser = new DOMParser();
     let f = document.getElementById("files").value;
-    // Find all figures in the document
-    let figs = document.getElementsByClassName("container-fig");
-    for (let i = 0; i < figs.length; i++) {
-        // Within the outter svg element of each fig, all ids are unique
-        let svgElem = document.getElementById(figs[i].id + "_svg");
-        setDefaultClass( svgElem, classClusterDefault);
-        setDefaultClass( svgElem, classMemberDefault);
-    }
+    await $.get(
+        "",                  // URL
+        {                              // Additional data
+            filename : f,
+        },
+        function(data) {       // Callback on success
+            // "data" is the value returned by the python function
+            $("#main-content").html(data);
+            return data
+        })
+        .fail(function(data, status) {
+            console.log('Calling main failed', data, status);
+            return data
+        })
+        .always(function(data) {
+            return data
+        })
 }
 
 /**

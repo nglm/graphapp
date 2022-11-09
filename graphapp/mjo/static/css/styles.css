@@ -59,6 +59,10 @@ div.button:hover {
 	padding: 10px;
 }
 
+select#files{
+	font-size: 35px;
+}
+
 /* ------- Styles of specific id ------- */
 
 

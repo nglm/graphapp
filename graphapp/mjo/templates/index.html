@@ -4,60 +4,19 @@
 
 {% block content %}
 
-    <label for="files"></label>
-
-    <!-- Find value using
-    let e = document.getElementById("files");
-    e.value;
-    -->
-
-    <select name="files" id="files">
-        {% for f in filenames %}
-            {% if filename == f %}
-                <option value="{{ f }}" selected>{{ f }}</option>
-            {% else %}
-                <option value="{{ f }}" >{{ f }}</option>
-            {% endif %}
-        {% endfor %}
-    </select>
-
-    <!-- Title with current filename -->
-    {% block title %}
-        <h1>{{ filename }}</h1>
-    {% endblock title %}
-
-    {% with "members" as data_type %}
-    {% with "Spaghetti plot" as plot_title %}
-    {% include "plot_group.html" %}
-    {% endwith %}
-    {% endwith %}
-
-    {% with "entire_graph" as data_type %}
-    {% with "Entire graph" as plot_title %}
-    {% include "plot_group.html" %}
-    {% endwith %}
-    {% endwith %}
-
-    {% with "life_span" as data_type %}
-    {% with "Life span" as plot_title %}
-    {% include "plot_group.html" %}
-    {% endwith %}
-    {% endwith %}
-
-    {% with "relevant_graph" as data_type %}
-    {% with "Relevant components" as plot_title %}
-    {% include "plot_group.html" %}
-    {% endwith %}
-    {% endwith %}
-
     <!-- buttons -->
     <script type="module">
-        import {clearSelection} from "{% static './interact.js' %}";
+        import {clearSelection, selectFile} from "{% static './interact.js' %}";
         import {redraw_relevant_graph} from "{% static './plots.js' %}";
-        globalThis.filename = document.getElementById("files").value;
         globalThis.clearSelection = clearSelection;
+        globalThis.selectFile = selectFile;
         globalThis.redraw_relevant_graph = redraw_relevant_graph;
     </script>
+
+
+    <div id="main-content">
+        {% include "plots.html" %}
+    </div>
 
     <div class="button" onclick="clearSelection()" style="top:20px">Clear Selection</div>
     <div class="button" onclick="redraw_relevant_graph()" style="top:100px">Default Selected k</div>

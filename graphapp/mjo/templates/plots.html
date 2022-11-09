@@ -1,0 +1,43 @@
+{% block plots %}
+    <label for="files"></label>
+    <select name="files" id="files" onchange="selectFile()">
+        {% for f in filenames %}
+            {% if filename == f %}
+                <option value="{{ f }}" selected>{{ f }}</option>
+            {% else %}
+                <option value="{{ f }}" >{{ f }}</option>
+            {% endif %}
+        {% endfor %}
+    </select>
+
+
+    <!-- Title with current filename -->
+    {% block title %}
+        <h1>{{ filename }}</h1>
+    {% endblock title %}
+
+    {% with "members" as data_type %}
+    {% with "Spaghetti plot" as plot_title %}
+    {% include "plot_group.html" %}
+    {% endwith %}
+    {% endwith %}
+
+    {% with "entire_graph" as data_type %}
+    {% with "Entire graph" as plot_title %}
+    {% include "plot_group.html" %}
+    {% endwith %}
+    {% endwith %}
+
+    {% with "life_span" as data_type %}
+    {% with "Life span" as plot_title %}
+    {% include "plot_group.html" %}
+    {% endwith %}
+    {% endwith %}
+
+    {% with "relevant_graph" as data_type %}
+    {% with "Relevant components" as plot_title %}
+    {% include "plot_group.html" %}
+    {% endwith %}
+    {% endwith %}
+
+{% endblock plots %}

@@ -14,22 +14,22 @@ import multimet as mm
 # Create your views here.
 
 def main(request):
-
     # Find all files in the data folder
     filenames = listdir("./data/data")
     # Select only relevant ones, and remove extension
     filenames = [f[:-4] for f in filenames if f.endswith(".txt")]
-    if "filename" in request.GET:
-        filename = request.GET['filename']
-    else:
-        filename = filenames[0]
-    filename = "z_s2s_rmm_ecmf_prod_rt_2016020400"
     context = {
         "app" : "MJO",
         "filenames" : filenames,
-        "filename" : filename,
+        "filename" : filenames[0],
     }
-    return render(request, 'index.html', context)
+    if "filename" in request.GET:
+        print("view has been called with GET + filename")
+        context["filename"] = request.GET['filename']
+        return render(request, 'index.html', context)
+    else:
+        print("view has been called with GET")
+        return render(request, 'index.html', context)
 
 def relevant(request):
     """
