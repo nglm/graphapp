@@ -111,7 +111,7 @@ export async function selectFile(){
         },
         function(data) {       // Callback on success
             // "data" is the value returned by the python function
-            $("#main-content").html(data);
+            $("#all-plots").html(data);
             return data
         })
         .fail(function(data, status) {

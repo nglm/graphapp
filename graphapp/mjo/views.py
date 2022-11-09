@@ -24,11 +24,9 @@ def main(request):
         "filename" : filenames[0],
     }
     if "filename" in request.GET:
-        print("view has been called with GET + filename")
         context["filename"] = request.GET['filename']
-        return render(request, 'index.html', context)
+        return render(request, 'plots.html', context)
     else:
-        print("view has been called with GET")
         return render(request, 'index.html', context)
 
 def relevant(request):
