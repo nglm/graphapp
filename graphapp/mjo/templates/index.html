@@ -20,15 +20,17 @@
         {% include "plots.html" %}
     </div>
 
-    <div class="button" onclick="clearSelection()" style="top:20px">Clear Selection</div>
-    <div class="button" onclick="redraw_relevant_graph()" style="top:100px">Default Selected k</div>
-    <div id="legend" class="legend" style="top:200px">
-        Legend
+    <div id="legend" class="legend" style="top:20px">
+        Legend <br>
         number of clusters:
         <script type="module">
             add_legend();
         </script>
     </div>
+
+    <div class="button" onclick="clearSelection()" style="top:180px">Clear Selection</div>
+    <div class="button" onclick="redraw_relevant_graph()" style="top:250px">Default Selected k</div>
+
 
 
 {% endblock content %}

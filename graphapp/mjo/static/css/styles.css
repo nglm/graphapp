@@ -1,5 +1,8 @@
 :root {
     --button-col-hover: #e8d57e;
+	--font-small: 20px;
+	--font-medium: 27px;
+	--font-big: 35px;
 }
 
 
@@ -40,14 +43,14 @@ p#info:hover {
 }
 
 select#files{
-	font-size: 35px;
+	font-size: var(--font-medium);
 }
 
 /* ------- Styles of existing types with specific class ------- */
 
 div.button {
     position: fixed;
-    font-size: 40px;
+    font-size: var(--font-medium);
 	cursor: pointer;
 	right: 20px;
 	padding: 5px;
@@ -61,13 +64,15 @@ div.button:hover {
 }
 
 div.legend{
-    font-size: 40px;
+    font-size: var(--font-small);
     position: fixed;
+	text-align: right;
 	right: 20px;
 }
 
 div.legendK {
-    font-size: 30px;
+    font-size: var(--font-small);
+	text-align: right;
 }
 
 /* ------- Styles of specific id ------- */
