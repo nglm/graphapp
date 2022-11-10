@@ -672,3 +672,18 @@ export function fig_meteogram(
     }
     return figs
 }
+
+export function add_legend({kmax=4, parent=undefined} = {}){
+
+    if (parent === undefined) {
+        parent = "#legend";
+    }
+    for (var k = 1; k<= kmax; k++) {
+
+        d3.select(parent)
+            .append("div")
+            .attr("class", "legendK")
+            .style("color", COLOR_BREWER[k])
+            .html("&#x25CF : k = " + k);
+    }
+}

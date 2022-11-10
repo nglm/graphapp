@@ -18,10 +18,6 @@ p {
 	line-height: 1.6em;
 }
 
-button {
-    cursor: pointer;
-}
-
 h2:hover {
 	cursor: pointer;
 	background-color: #ffeb93;
@@ -43,6 +39,10 @@ p#info:hover {
     background-color: #e8d57e;
 }
 
+select#files{
+	font-size: 35px;
+}
+
 /* ------- Styles of existing types with specific class ------- */
 
 div.button {
@@ -51,6 +51,7 @@ div.button {
 	cursor: pointer;
 	right: 20px;
 	padding: 5px;
+	border-radius: 10px;
     background-color: rgb(225, 225, 225);
 }
 
@@ -59,8 +60,14 @@ div.button:hover {
 	padding: 10px;
 }
 
-select#files{
-	font-size: 35px;
+div.legend{
+    font-size: 40px;
+    position: fixed;
+	right: 20px;
+}
+
+div.legendK {
+    font-size: 30px;
 }
 
 /* ------- Styles of specific id ------- */

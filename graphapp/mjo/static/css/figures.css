@@ -29,8 +29,8 @@
     width: 40px;
     font-size: 24px;
     padding: 0px 0px;
+    display: none;
 }
-
 
 
 .fig {
@@ -228,32 +228,6 @@
 .edgeSelected-std {
     stroke-width: 0;
 }
-
-
-
-.bar {
-    width: 25px;
-    margin-right: 5px;
-    background-color: #9606ac;
-    float: left;
-    cursor: pointer;
-    }
-
-    /* Now defining Pseudo-class using '.myclass:myspeudoclass' */
-    /* see css cheat sheet for list of pseudo classes */
-
-    .bar:last-child {
-    margin-right: 0;
-    }
-
-    .bar:hover {
-    background-color: #927A94;
-    }
-
-    .bar:visited {
-        background-color: #d50606;
-        }
-
 
 .mjoClass {
     fill: none;
