@@ -1,29 +1,29 @@
 :root {
-    --button-col-hover: #e8d57e;
-	--font-small: 20px;
-	--font-medium: 27px;
-	--font-big: 35px;
+    --button-col-hover: #9fdbeb;
+	--font-small: 17px;
+	--font-medium: 25px;
+	--font-big: 30px;
 }
 
-
+/* ------- Common style for all elements ------- */
+* {
+    font-family: Arial, sans-serif;
+    border-radius: 10px;
+}
 
 /* ------- Styles of existing types ------- */
 body {
 	margin: 0;
 	padding: 40px;
-	font-family: "Raleway", sans-serif;
-	font-size: 13px;
 }
 
-p {
-	font-family: "Merriweather", serif;
-	font-size: 1.1em;
-	line-height: 1.6em;
+h2 {
+	width: 60%;
 }
 
 h2:hover {
 	cursor: pointer;
-	background-color: #ffeb93;
+	background-color: var(--button-col-hover);
 	padding: 10px;
 }
 
@@ -32,18 +32,9 @@ h2:hover {
 
 /* ------- Styles of existing types with specific id ------- */
 
-p#info {
-	width: 600px;
-	margin-bottom: 60px;
-}
-
-p#info:hover {
-    cursor: help;
-    background-color: #e8d57e;
-}
-
 select#files{
 	font-size: var(--font-medium);
+	/* background-color: rgb(233, 233, 233); */
 }
 
 /* ------- Styles of existing types with specific class ------- */
@@ -52,10 +43,11 @@ div.button {
     position: fixed;
     font-size: var(--font-medium);
 	cursor: pointer;
+	border: 5px solid var(--button-col-hover);
 	right: 20px;
 	padding: 5px;
 	border-radius: 10px;
-    background-color: rgb(225, 225, 225);
+    background-color: rgb(241, 238, 238);
 }
 
 div.button:hover {
