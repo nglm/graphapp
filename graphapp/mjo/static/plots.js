@@ -539,22 +539,25 @@ export function draw_entire_graph(
     filename,
     {
         plot_type = "meteogram", include_k = "yes", kmax = 4, id=undefined,
-        dims = undefined, parent = undefined,
+        dims = undefined, parent = undefined, method = "", score = "",
     } = {},
 ) {
     if (plot_type === "mjo") {
         return draw_entire_graph_mjo(filename, {
-            id : id, dims : dims, parent : parent
+            id : id, dims : dims, parent : parent, method : method,
+            score : score
         })
     } else {
         return draw_entire_graph_meteogram(filename, {
             id : id, dims : dims, parent : parent, include_k: include_k,
-            kmax : kmax,
+            kmax : kmax, method : method, score : score,
         })
     }
 }
 
-async function get_relevant_components(filename, {k = -1} = {}) {
+async function get_relevant_components(
+    filename,
+    {k = -1, method = "", score = ""} = {}) {
     // Pass array as string
     if (k != -1) {
         k = k.map(String).join(",")
@@ -563,6 +566,8 @@ async function get_relevant_components(filename, {k = -1} = {}) {
         "relevant/",                   // URL
         {                              // Additional data
             filename : filename,
+            method: method,
+            score: score,
             k: k,
             path_graph : PATH_GRAPH
         },
@@ -640,7 +645,7 @@ export async function draw_relevant_graph_meteogram(
     await $(async function () {
         // sending_HTTP_request return a promise, so we should wait
         let relevant_components = await get_relevant_components(
-            filename, {k : k}
+            filename, {k : k, method : method, score : score}
         );
 
         let vertices = relevant_components.vertices.flat();
@@ -709,7 +714,7 @@ export async function draw_relevant_graph_mjo(
     await $(async function () {
         // sending_HTTP_request return a promise, so we should wait
         let relevant_components = await get_relevant_components(
-            filename, {k : k}
+            filename, {k : k, method : method, score : score}
         );
 
         let vertices = relevant_components.vertices.flat();
@@ -743,17 +748,18 @@ export function draw_relevant_graph(
     filename,
     {
         plot_type = "meteogram", include_k = "yes", kmax = 4, k=-1, id=undefined,
-        dims = undefined, parent = undefined,
+        dims = undefined, parent = undefined, method = "", score = "",
     } = {},
 ) {
     if (plot_type === "mjo") {
         return draw_relevant_graph_mjo(filename, {
-            id : id, dims : dims, parent : parent, k : k
+            id : id, dims : dims, parent : parent, k : k,
+            method : method, score : score,
         })
     } else {
         return draw_relevant_graph_meteogram(filename, {
             id : id, dims : dims, parent : parent, include_k: include_k,
-            kmax : kmax, k : k
+            kmax : kmax, k : k, method : method, score : score,
         })
     }
 }
