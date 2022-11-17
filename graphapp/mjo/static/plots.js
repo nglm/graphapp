@@ -9,21 +9,6 @@ import { onEventClusterAux, onEventMemberAux} from "./interact.js";
 
 import {range_rescale, sigmoid, linear} from "./utils.js"
 
-    // <!-- simple dot marker definition -->
-    // <marker id="dot" viewBox="0 0 10 10" refX="5" refY="5"
-    //     markerWidth="5" markerHeight="5">
-    // <circle cx="5" cy="5" r="5" fill="red" />
-    // </marker>
-    // </defs>
-
-    // <!-- Coordinate axes with a arrowhead in both direction -->
-    // <polyline points="10,10 10,90 90,90" fill="none" stroke="black"
-    // marker-start="url(#arrow)" marker-end="url(#arrow)"  />
-
-    // <!-- Data line with polymarkers -->
-    // <polyline points="15,80 29,50 43,60 57,30 71,40 85,15" fill="none" stroke="grey"
-    // marker-start="url(#dot)" marker-mid="url(#dot)"  marker-end="url(#dot)" />
-
 export const PATH_SCRIPT = document.getElementById("main-script").getAttribute("path_script");
 const ROOT_DATA = 'data/'
 export const PATH_DATA = ROOT_DATA + "data/";
@@ -322,12 +307,15 @@ function add_edges(
 // Give filename
 // Return json graph (both as .json)
 async function load_graph(
-    filename
+    filename,
+    {method = "", score = ""} = {},
 ) {
     return await $.get(
-        "load_graph/",             // URL
+        "load_graph/",                 // URL
         {                              // Additional data
             filename : filename,
+            method: method,
+            score: score,
             path_data : PATH_DATA,
             path_graph : PATH_GRAPH
         },
@@ -472,12 +460,12 @@ export async function draw_entire_graph_meteogram(
     filename,
     {
         include_k = "yes", kmax = 4, id=undefined, dims = undefined,
-        parent = undefined,
+        parent = undefined, method = "", score = "",
     } = {},
 ) {
     // Load the graph and wait until it is ready
     const data =  await load_data(filename);
-    const g =  await load_graph(filename);
+    const g =  await load_graph(filename, {method : method, score : score});
     const vertices = g.vertices.flat();
     const edges = g.edges.flat();
     const time = g.time_axis;
@@ -515,10 +503,13 @@ export async function draw_entire_graph_meteogram(
 
 export async function draw_entire_graph_mjo(
     filename,
-    {id=undefined, dims = undefined, parent = undefined} = {},
+    {
+        id=undefined, dims = undefined, parent = undefined,
+        method = "", score = "",
+    } = {},
 ) {
     // Load the graph and wait until it is ready
-    const g =  await load_graph(filename);
+    const g =  await load_graph(filename, {method : method, score : score});
     const vertices = g.vertices.flat();
     const edges = g.edges.flat();
     const time = g.time_axis;
@@ -617,12 +608,12 @@ export async function draw_relevant_graph_meteogram(
     filename,
     {
         include_k = "yes", k=-1, kmax = 4, id=undefined, dims = undefined,
-        parent = undefined,
+        parent = undefined, method = "", score = "",
     } = {},
 ) {
     // Load the graph and wait until it is ready
     const data =  await load_data(filename);
-    const g =  await load_graph(filename);
+    const g =  await load_graph(filename, {method : method, score : score});
     const colors = get_list_colors(g.n_clusters_range.length);
 
 
@@ -693,10 +684,13 @@ export async function draw_relevant_graph_meteogram(
 
 export async function draw_relevant_graph_mjo(
     filename,
-    {k=-1, id=undefined, dims = undefined, parent = undefined} = {},
+    {
+        k=-1, id=undefined, dims = undefined, parent = undefined,
+        method = "", score = "",
+    } = {},
 ) {
     // Load the graph and wait until it is ready
-    const g =  await load_graph(filename);
+    const g =  await load_graph(filename, {method : method, score : score});
     const colors = get_list_colors(g.n_clusters_range.length);
 
     // Create or retrieve figs if they were already created
@@ -812,10 +806,13 @@ export function redraw_relevant_graph(selected_k=-1, interactGroupId=1){
 
 export async function draw_life_span(
     filename,
-    {id=undefined, dims = DIMS_mjo, parent = undefined} = {},
+    {
+        id=undefined, dims = DIMS_mjo, parent = undefined,
+        method = "", score = "",
+    } = {},
 ) {
     // Load the graph and wait until it is ready
-    const g =  await load_graph(filename);
+    const g =  await load_graph(filename, {method : method, score : score});
     const life_spans = d3fy_life_span(g.life_span);
     const colors = get_list_colors(g.n_clusters_range.length);
 

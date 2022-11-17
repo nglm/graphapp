@@ -1,15 +1,28 @@
 {% block plots %}
-    <label for="files"></label>
-    <select name="files" id="files" onchange="selectFile()">
-        {% for f in filenames %}
-            {% if filename == f %}
-                <option value="{{ f }}" selected>{{ f }}</option>
-            {% else %}
-                <option value="{{ f }}" >{{ f }}</option>
-            {% endif %}
-        {% endfor %}
-    </select>
 
+    {% with "files" as option_name %}
+    {% with filenames as options %}
+    {% with filename as option %}
+    {% include "select.html" %}
+    {% endwith %}
+    {% endwith %}
+    {% endwith %}
+
+    {% with "methods" as option_name %}
+    {% with methods as options %}
+    {% with method as option %}
+    {% include "select.html" %}
+    {% endwith %}
+    {% endwith %}
+    {% endwith %}
+
+    {% with "scores" as option_name %}
+    {% with scores as options %}
+    {% with score as option %}
+    {% include "select.html" %}
+    {% endwith %}
+    {% endwith %}
+    {% endwith %}
 
     <!-- Title with current filename -->
     {% comment %}

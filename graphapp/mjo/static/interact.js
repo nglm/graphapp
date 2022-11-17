@@ -100,13 +100,17 @@ export function clearSelection(
     }
 }
 
-export async function selectFile(){
+export async function selectOption(){
     // Get current value
     let f = document.getElementById("files").value;
+    let m = document.getElementById("methods").value;
+    let s = document.getElementById("scores").value;
     await $.get(
         "",                  // URL
         {                              // Additional data
             filename : f,
+            method : m,
+            score : s
         },
         function(data) {       // Callback on success
             // Django send an evaluation of the template (so with the right
@@ -120,7 +124,7 @@ export async function selectFile(){
             return data
         })
         .fail(function(data, status) {
-            console.log('Calling main failed', data, status);
+            console.log('Calling main after selectOption failed', data, status);
             return data
         })
         .always(function(data) {

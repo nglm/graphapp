@@ -1,0 +1,11 @@
+<label for={{ option_name }}></label>
+<select name={{ option_name }} id={{ option_name }} onchange="selectOption()">
+    {% for o in options %}
+        {% if option == o %}
+            <option value="{{ o }}" selected>{{ o }}</option>
+        {% else %}
+            <option value="{{ o }}" >{{ o }}</option>
+        {% endif %}
+    {% endfor %}
+</select>
+

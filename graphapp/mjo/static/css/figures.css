@@ -1,13 +1,4 @@
-:root {
-    --col-click: red;
-    --col-hover:  rgb(6, 245, 6);
-    --lw: 0.5;
-    --lw-hover: 3;
-    --lw-click: 4;
-    --r-hover: 10;
-    --r-click: 10;
-}
-
+@import  url("base.css");
 
 /* ------- Styles of existing types ------- */
 
