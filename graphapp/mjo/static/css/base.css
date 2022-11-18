@@ -25,10 +25,11 @@
 
 /* ------- Styles of existing types ------- */
 body {
-	padding: 40px;
+	padding: 5px;
 }
 
 h2 {
+    padding: 5px;
     font-size: var(--font-big);
 	width: auto;
 }
@@ -36,7 +37,6 @@ h2 {
 h2:hover {
 	cursor: pointer;
 	background-color: var(--button-col-hover);
-	padding: 10px;
 }
 
 select{
