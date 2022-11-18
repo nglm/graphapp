@@ -803,7 +803,11 @@ export function redraw_relevant_graph(selected_k=-1, interactGroupId=1){
             if (!ignore) {
                 draw_relevant_graph(
                     figs[i].getAttribute("filename"),
-                    {id : id, plot_type : plot_type, k :selected_k}
+                    {
+                        id : id, plot_type : plot_type, k :selected_k,
+                        method : figs[i].getAttribute("method"),
+                        score : figs[i].getAttribute("score"),
+                    }
                 );
             }
         }
@@ -826,6 +830,7 @@ export async function draw_life_span(
         {
             dims : dims, fig_id : id, filename : filename,
             data_type : "life_span", plot_type : "meteogram", parent : parent,
+            method : method, score : score,
         });
     let myPlot = d3.select(figElem).select("#plot-group");
 
