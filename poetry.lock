@@ -222,7 +222,7 @@ scipy = "^1.9.0"
 type = "git"
 url = "git@github.com:nglm/persigraph.git"
 reference = "HEAD"
-resolved_reference = "e5f5046bd4b3bfe845a963c023b946f507ad680f"
+resolved_reference = "7979ecae8cc7dc0859fb0db5cfdf0dd2a2cdc594"
 
 [[package]]
 name = "pillow"

@@ -9,7 +9,7 @@
 
 /* ------- Styles of existing types with specific class ------- */
 
-div.button {
+.button {
     position: fixed;
     font-size: var(--font-medium);
 	cursor: pointer;
@@ -17,22 +17,22 @@ div.button {
 	right: 20px;
 	padding: 5px;
 	border-radius: 10px;
-    background-color: rgb(241, 238, 238);
+    background-color: var(--button-col-background);
 }
 
-div.button:hover {
+.button:hover {
     background-color: var(--button-col-hover);
 	padding: 10px;
 }
 
-div.legend{
+.legend{
     font-size: var(--font-small);
     position: fixed;
 	text-align: right;
 	right: 20px;
 }
 
-div.legendK {
+.legendK {
     font-size: var(--font-small);
 	text-align: right;
 }

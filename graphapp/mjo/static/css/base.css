@@ -7,6 +7,7 @@
     --lw-click: 4;
     --r-hover: 10;
     --r-click: 10;
+    --button-col-background: rgb(241, 238, 238);
     --button-col-hover: #bbe6f2;
 	--font-small: 17px;
 	--font-medium: 25px;
@@ -38,5 +39,10 @@ h2:hover {
 
 select{
 	font-size: var(--font-medium);
-	/* background-color: rgb(233, 233, 233); */
+    padding: 5px;
+    background-color: var(--button-col-background);
+	cursor: pointer;
+	border: 5px solid var(--button-col-hover);
+	border-radius: 10px;
 }
+
