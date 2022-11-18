@@ -12,23 +12,25 @@
 	--font-small: 17px;
 	--font-medium: 25px;
 	--font-big: 30px;
+    --min-width: 60%
 }
 
 /* ------- Common style for all elements ------- */
 * {
     font-family: Arial, sans-serif;
     border-radius: 10px;
+    margin: 0px;
 }
 
 
 /* ------- Styles of existing types ------- */
 body {
-	margin: 0;
 	padding: 40px;
 }
 
 h2 {
-	width: 60%;
+    font-size: var(--font-big);
+	width: auto;
 }
 
 h2:hover {
