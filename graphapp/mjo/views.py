@@ -25,6 +25,7 @@ def read_request(request):
         "method" : METHODS[0],
         "scores" : SCORES,
         "score" : SCORES[0],
+        "window": 1,
     }
     if "filename" in request.GET:
         context["filename"] = request.GET['filename']
@@ -34,6 +35,9 @@ def read_request(request):
     if "score" in request.GET:
         if request.GET['score'] != "":
             context["score"] = request.GET['score']
+    if "window" in request.GET:
+        if request.GET['window'] != "":
+            context["window"] = request.GET['window']
     return context
 
 def main(request):

@@ -39,7 +39,7 @@ h2:hover {
 	background-color: var(--button-col-hover);
 }
 
-select{
+select {
 	font-size: var(--font-medium);
     padding: 5px;
     background-color: var(--button-col-background);

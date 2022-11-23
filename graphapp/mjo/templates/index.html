@@ -15,6 +15,29 @@
         globalThis.add_legend = add_legend;
     </script>
 
+    {% with "files" as option_name %}
+    {% with filenames as options %}
+    {% with filename as option %}
+    {% include "select.html" %}
+    {% endwith %}
+    {% endwith %}
+    {% endwith %}
+
+    {% with "methods" as option_name %}
+    {% with methods as options %}
+    {% with method as option %}
+    {% include "select.html" %}
+    {% endwith %}
+    {% endwith %}
+    {% endwith %}
+
+    {% with "scores" as option_name %}
+    {% with scores as options %}
+    {% with score as option %}
+    {% include "select.html" %}
+    {% endwith %}
+    {% endwith %}
+    {% endwith %}
 
     <div id="all-plots">
         {% include "plots.html" %}
@@ -30,6 +53,21 @@
 
     <div class="button" onclick="clearSelection()" style="top:180px">Clear selection</div>
     <div class="button" onclick="redraw_relevant_graph()" style="top:250px">Default k values</div>
+    <div class="slider-container"  style="top:350px">
+        <div class="slider-value"> 36 </div>
+        <input
+            type="range" class="slider-range" id="windows"  onchange="selectOption()"
+            step="1" value="1" min="1" max="50"
+        >
+
+    </div>
+
+    <div>
+        <input
+            type="range"
+            step="1" value="1" min="1" max="50"
+        >
+    </div>
 
 
 

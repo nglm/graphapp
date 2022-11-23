@@ -105,12 +105,14 @@ export async function selectOption(){
     let f = document.getElementById("files").value;
     let m = document.getElementById("methods").value;
     let s = document.getElementById("scores").value;
+    let w = document.getElementById("windows").value;
     await $.get(
         "",                  // URL
         {                              // Additional data
             filename : f,
             method : m,
-            score : s
+            score : s,
+            window : w,
         },
         function(data) {       // Callback on success
             // Django send an evaluation of the template (so with the right
