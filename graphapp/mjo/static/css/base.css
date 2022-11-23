@@ -12,7 +12,9 @@
 	--font-small: 17px;
 	--font-medium: 25px;
 	--font-big: 30px;
-    --min-width: 60%
+    --min-width: 60%;
+    --slider-width: 250px;
+    --slider-rotate: translate(-125px, 125px) rotate(90deg);
 }
 
 /* ------- Common style for all elements ------- */
@@ -48,3 +50,7 @@ select {
 	border-radius: 10px;
 }
 
+.side-bar-right {
+    position: fixed;
+	right: 20px;
+}
