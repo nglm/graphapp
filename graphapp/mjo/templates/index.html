@@ -6,11 +6,12 @@
 
     <!-- buttons -->
     <script type="module">
-        import {clearSelection, selectOption} from "{% static './interact.js' %}";
+        import {clearSelection, selectOption, updateSliderValue} from "{% static './interact.js' %}";
         import {redraw_relevant_graph} from "{% static './plots.js' %}";
         import {add_legend} from "{% static './figures.js' %}"
         globalThis.clearSelection = clearSelection;
         globalThis.selectOption = selectOption;
+        globalThis.updateSliderValue = updateSliderValue;
         globalThis.redraw_relevant_graph = redraw_relevant_graph;
         globalThis.add_legend = add_legend;
     </script>
@@ -54,20 +55,14 @@
     <div class="button" onclick="clearSelection()" style="top:180px">Clear selection</div>
     <div class="button" onclick="redraw_relevant_graph()" style="top:250px">Default k values</div>
     <div class="slider-container"  style="top:350px">
-        <div class="slider-value"> 36 </div>
+        <div id="time_window" class="slider-value"> 1 </div>
         <input
-            type="range" class="slider-range" id="windows"  onchange="selectOption()"
-            step="1" value="1" min="1" max="50"
-        >
-
-    </div>
-
-    <div>
-        <input
-            type="range"
+            id="windows" type="range" class="slider-range"
+            onchange="selectOption()" oninput="updateSliderValue('windows', 'time_window')"
             step="1" value="1" min="1" max="50"
         >
     </div>
+
 
 
 

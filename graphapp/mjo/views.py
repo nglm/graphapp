@@ -25,7 +25,7 @@ def read_request(request):
         "method" : METHODS[0],
         "scores" : SCORES,
         "score" : SCORES[0],
-        "window": 1,
+        "time_window": 1,
     }
     if "filename" in request.GET:
         context["filename"] = request.GET['filename']
@@ -35,17 +35,17 @@ def read_request(request):
     if "score" in request.GET:
         if request.GET['score'] != "":
             context["score"] = request.GET['score']
-    if "window" in request.GET:
-        if request.GET['window'] != "":
-            context["window"] = request.GET['window']
+    if "time_window" in request.GET:
+        if request.GET['time_window'] != "":
+            context["time_window"] = request.GET['time_window']
     return context
 
 def main(request):
     context = read_request(request)
     # Render default view (with buttons etc.)
     if (
-        "filename" not in request.GET and "method" not in request.GET
-        and "score" not in request.GET
+        "filename" not in request.GET or "method" not in request.GET
+        or "score" not in request.GET
     ):
         return render(request, 'index.html', context)
     # Render only the main content with the specific options selected
@@ -60,8 +60,12 @@ def relevant(request):
     filename = context['filename']
     method = context['method']
     score = context['score']
+    w = context['time_window']
     path_graph = request.GET['path_graph']
-    full_name = path_graph + filename + "_" + method + "_" + score
+    full_name = (
+        path_graph + filename + "_" + method + "_" + score
+        + "_" + str(w)
+    )
 
     selected_k = request.GET["k"]
     # If k == -1, take the list of relevant k by default
@@ -96,11 +100,14 @@ def generate_data(filename, path_data=""):
         mm.utils.save_as_json(data_dict, filename, path=path_data)
 
 def generate_graph(
-    filename, method="", score="", path_data="", path_graph=""):
+    filename, method="", score="", path_data="", path_graph="", w=""):
     """
     Generate and save graph (as .pg and .json) if it doesn't already exist
     """
-    full_name = path_graph + filename + "_" + method + "_" + score
+    full_name = (
+        path_graph + filename + "_" + method + "_" + score
+        + "_" + str(w)
+    )
     if not ( exists(full_name + ".pg") and exists(full_name + ".json") ):
 
         # Make sure data has been processed first
@@ -116,7 +123,7 @@ def generate_graph(
         print("Generating graph: ", full_name + ".pg")
         g = pg.PersistentGraph(
             members, time_axis=time, model_class=method, score_type=score,
-            k_max=5,
+            k_max=5, time_window=w
         )
         g.construct_graph()
 
@@ -137,15 +144,19 @@ def load_graph(request):
     filename = context['filename']
     method = context['method']
     score = context['score']
+    w = context['time_window']
     path_data = request.GET['path_data']
     path_graph = request.GET['path_graph']
 
-    full_name = path_graph + filename + "_" + method + "_" + score
+    full_name = (
+        path_graph + filename + "_" + method + "_" + score
+        + "_" + str(w)
+    )
 
     # Make sure graph exists, otherwise generate it
     generate_graph(
         filename, method=method, score=score,
-        path_data=path_data, path_graph=path_graph
+        path_data=path_data, path_graph=path_graph, w=w
     )
 
     # Return json version of graph

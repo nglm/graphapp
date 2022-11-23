@@ -112,7 +112,7 @@ export async function selectOption(){
             filename : f,
             method : m,
             score : s,
-            window : w,
+            time_window : w,
         },
         function(data) {       // Callback on success
             // Django send an evaluation of the template (so with the right
@@ -132,6 +132,11 @@ export async function selectOption(){
         .always(function(data) {
             return data
         })
+}
+
+export async function updateSliderValue(rangeId, valueId){
+    let value = document.getElementById(rangeId).value;
+    $(String("#"+valueId)).html(value);
 }
 
 /**
