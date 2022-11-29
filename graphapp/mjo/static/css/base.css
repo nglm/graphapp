@@ -14,12 +14,13 @@
 	--font-big: 30px;
     --min-width: 60%;
     --slider-width: 250px;
-    --slider-rotate: translate(-125px, 125px) rotate(90deg);
+    --slider-rotate: translate(125px, 125px) rotate(90deg);
 }
 
 /* ------- Common style for all elements ------- */
 * {
     font-family: Arial, sans-serif;
+    font-size: var(--font-medium);
     border-radius: 10px;
     margin: 0px;
 }
@@ -50,7 +51,11 @@ select {
 	border-radius: 10px;
 }
 
-.side-bar-right {
+.right-bar {
     position: fixed;
+    top:5%;
 	right: 20px;
+    height: 80%;
+    margin: 0px;
+    width: 10%;
 }

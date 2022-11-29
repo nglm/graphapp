@@ -9,12 +9,23 @@
 
 /* ------- Styles of existing types with specific class ------- */
 
+.right-bar-elem {
+	float: right;
+	text-align: right;
+	margin: 5px;
+}
+
+.button-container {
+	width: 60%;
+}
+
 .button {
     font-size: var(--font-medium);
 	cursor: pointer;
-	margin: 0px;
 	border: 5px solid var(--button-col-hover);
 	padding: 5px;
+	text-align: center;
+	width: 100%;
     background-color: var(--button-col-background);
 }
 
@@ -37,9 +48,16 @@
 /* style to associate with a regular div, where we write text */
 /* this has nothing to do with the "<input type="range"> tag  */
 .slider-value{
-	position: absolute;
-	right: 20px;     /* How far from the right border of the slider-container */
+	/* position: relative; */
     font-size: var(--font-medium);
+	text-align: right;
+	padding: 20px;
+	/* text-align: center;
+	top: 50%; */
+}
+
+.vertical-slider-value{
+	right: 20px;
 }
 
 /* style to associate with the "<input type="range"> tag */
@@ -48,7 +66,7 @@
 .slider-range{
 	-webkit-appearance: none;  /* Override default CSS styles */
 	appearance: none;
-	position: absolute;
+	position: relative;
 	/* Dimensions of the range bar */
 	width : var(--slider-width);
 	height : 5px;
@@ -58,7 +76,7 @@
 	background-color:var(--button-col-background);
 }
 
-.vertical-slider{
+.vertical-slider-range{
 	/* to get a vertical slider. the X,Y translation  */
 	/* corresponds to half of the width of the slider */
 	/* because it rotates from the center...          */
@@ -97,14 +115,12 @@
 }
 
 .legend{
-    font-size: var(--font-small);
-    position: fixed;
+    font-size: var(--font-medium);
 	text-align: right;
-	right: 20px;
 }
 
 .legendK {
-    font-size: var(--font-small);
+    font-size: var(--font-medium);
 	text-align: right;
 }
 

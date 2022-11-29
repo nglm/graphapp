@@ -16,60 +16,82 @@
         globalThis.add_legend = add_legend;
     </script>
 
-    {% with "files" as option_name %}
-    {% with filenames as options %}
-    {% with filename as option %}
-    {% include "select.html" %}
-    {% endwith %}
-    {% endwith %}
-    {% endwith %}
+    <div class="top-bar">
+        {% with "files" as option_name %}
+        {% with filenames as options %}
+        {% with filename as option %}
+        {% include "select.html" %}
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
 
-    {% with "methods" as option_name %}
-    {% with methods as options %}
-    {% with method as option %}
-    {% include "select.html" %}
-    {% endwith %}
-    {% endwith %}
-    {% endwith %}
+        {% with "methods" as option_name %}
+        {% with methods as options %}
+        {% with method as option %}
+        {% include "select.html" %}
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
 
-    {% with "scores" as option_name %}
-    {% with scores as options %}
-    {% with score as option %}
-    {% include "select.html" %}
-    {% endwith %}
-    {% endwith %}
-    {% endwith %}
+        {% with "scores" as option_name %}
+        {% with scores as options %}
+        {% with score as option %}
+        {% include "select.html" %}
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
 
-    <div class="slider-container" >
-        <div id="time_window" class="slider-value"> 1 </div>
-        <input
-            id="windows" type="range" class="slider-range"
-            onchange="selectOption()" oninput="updateSliderValue('windows', 'time_window')"
-            step="1" value="1" min="1" max="50"
-        >
+        <span class="slider-container" >
+            <span> Time window: </span>
+            <span id="time_window" class="slider-value"> 1 </span>
+            <input
+                id="windows" type="range" class="slider-range"
+                onchange="selectOption()" oninput="updateSliderValue('windows', 'time_window')"
+                step="1" value="1" min="1" max="50"
+            >
+        </span>
     </div>
+
+
 
     <div id="all-plots">
         {% include "plots.html" %}
     </div>
 
-    <div id="legend" class="legend side-bar-right " style="top:20px">
-        Legend <br>
-        number of clusters:
-        <script type="module">
-            add_legend();
-        </script>
-    </div>
+    <div id="right-bar" class="right-bar">
 
-    <div class="button side-bar-right" onclick="clearSelection()" style="top:180px">Clear selection</div>
-    <div class="button side-bar-right" onclick="redraw_relevant_graph()" style="top:250px">Default k values</div>
-    <div class="slider-container side-bar-right" style="top:350px">
-        <div id="member_selected" class="slider-value"> 1 </div>
-        <input
-            id="members" type="range" class="slider-range vertical-slider"
-            oninput="updateSliderValue('members', 'member_selected')"
-            step="1" value="1" min="1" max="50"
-        >
+        <div id="legend" class="legend right-bar-elem">
+            Legend <br>
+            number of clusters:
+            <script type="module">
+                add_legend();
+            </script>
+            <br>
+        </div>
+
+        <div class="button-container right-bar-elem">
+            <div class="button" onclick="clearSelection()">
+                Clear selection
+            </div>
+        </div>
+
+        <div class="button-container right-bar-elem">
+            <div class="button" onclick="redraw_relevant_graph()">
+                Default k values
+            </div>
+        </div>
+
+        <div class="slider-container right-bar-elem">
+            <br>
+            <span> Selected member: </span>
+            <input
+                id="members" type="range" class="slider-range vertical-slider-range"
+                oninput="updateSliderValue('members', 'member_selected')"
+                step="1" value="1" min="1" max="50"
+            >
+            <div id="member_selected" class="slider-value vertical-slider-value"> 1 </div>
+            <br>
+        </div>
     </div>
 
 
