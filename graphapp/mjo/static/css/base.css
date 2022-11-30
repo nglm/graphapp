@@ -12,7 +12,7 @@
 	--font-small: 17px;
 	--font-medium: 25px;
 	--font-big: 30px;
-    --min-width: 60%;
+    --min-width: 85%;
     --slider-width: 250px;
     --slider-rotate: translate(125px, 125px) rotate(90deg);
 }
@@ -57,5 +57,6 @@ select {
 	right: 20px;
     height: 80%;
     margin: 0px;
-    width: 10%;
+    width: 250px;
+    max-width: 15%;
 }

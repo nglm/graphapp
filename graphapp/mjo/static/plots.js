@@ -5,7 +5,7 @@ import {
     dimensions, setAxTitle, setFigTitle, setXLabel, setYLabel,
     init_fig, style_ticks, get_list_colors, fig_meteogram, fig_mjo, get_scalers, DIMS_mjo
 } from "./figures.js"
-import { onEventClusterAux, onEventMemberAux} from "./interact.js";
+import { onEventClusterAux, onEventMemberAux, updateSliderValue} from "./interact.js";
 
 import {range_rescale, sigmoid, linear} from "./utils.js"
 
@@ -915,6 +915,8 @@ function onMouseOutMember(figElem, e, d) {
 //mouseover event handler function using closure
 function onClickMember(figElem, e, d) {
     return function (e, d) {
+        $("#member_selected").html(this.id.slice(7));
+        $("#members_range").attr('value', this.id.slice(7));
         onEventMemberAux(
             e, d, this, figElem, 'lineClicked',
         )

@@ -6,12 +6,15 @@
 
     <!-- buttons -->
     <script type="module">
-        import {clearSelection, selectOption, updateSliderValue} from "{% static './interact.js' %}";
+        import {
+            clearSelection, selectOption, updateSliderValue, sliderMember,
+        } from "{% static './interact.js' %}";
         import {redraw_relevant_graph} from "{% static './plots.js' %}";
         import {add_legend} from "{% static './figures.js' %}"
         globalThis.clearSelection = clearSelection;
         globalThis.selectOption = selectOption;
         globalThis.updateSliderValue = updateSliderValue;
+        globalThis.sliderMember = sliderMember;
         globalThis.redraw_relevant_graph = redraw_relevant_graph;
         globalThis.add_legend = add_legend;
     </script>
@@ -84,12 +87,17 @@
         <div class="slider-container right-bar-elem">
             <br>
             <span> Selected member: </span>
+            <span id="member_selected" class="slider-value slider-value"> 1 </span>
             <input
-                id="members" type="range" class="slider-range vertical-slider-range"
-                oninput="updateSliderValue('members', 'member_selected')"
+                id="members_range" type="range" class="slider-range"
+                oninput="
+                    updateSliderValue('members_range', 'member_selected');
+                    sliderMember('lineHovered');
+                    "
+                onchange="sliderMember('lineClicked');"
                 step="1" value="1" min="1" max="50"
             >
-            <div id="member_selected" class="slider-value vertical-slider-value"> 1 </div>
+
             <br>
         </div>
     </div>

@@ -1,5 +1,5 @@
 /**
- * Update the class of elements that should be selected
+ * Add classSelected to the list of given elements
  *
  * @param {*} svgElem svg element inside the figure that we want to update
  * @param {*} ids ids of elements that should now be selected
@@ -15,14 +15,16 @@ async function selectElems(svgElem, ids, classSelected){
 }
 
 /**
- * Update the class of elements that should be deselected
+ * Find 'classSelected' elements and remove their classSelected class
+ *
+ * This assume that elements already have a default class, that remains when
+ * they are not selected
  *
  * @param {*} svgElem svg element inside the figure that we want to update
  * @param {*} classSelected class of selected elements
- * @param {*} classDefault class of non-selected elements
  */
 async function deselectElems(
-    svgElem, classSelected, classDefault=undefined,
+    svgElem, classSelected
 ){
     let to_deselect = svgElem.getElementsByClassName(classSelected);
     // For an unknown reason this "do..While" loop is necessary otherwise
@@ -59,21 +61,22 @@ function setDefaultClass(svgElem, classDefault ) {
  * @param {*} svgElem svg element inside the figure that we want to update
  * @param {*} ids ids of elements that should now be selected
  * @param {*} classSelected class of selected elements
- * @param {*} classDefault class of non-selected elements
  */
 async function updateSelection(
-    svgElem, ids, classSelected, classDefault=undefined,
+    svgElem, ids, classSelected,
     {deselect = true, select = true} = {},
 ){
+    // First deselect all already selected elements (w/ 'classSelected' class)
+    // And then select only those which were given (add 'classSelected' class)
     if (select && deselect){
-        await deselectElems( svgElem, classSelected, classDefault);
-        await selectElems( svgElem, ids, classSelected);
+        await deselectElems( svgElem, classSelected );
+        await selectElems( svgElem, ids, classSelected );
     } else {
         if (deselect) {
-            await deselectElems( svgElem, classSelected, classDefault);
+            await deselectElems( svgElem, classSelected );
         }
         if (select) {
-            await selectElems( svgElem, ids, classSelected);
+            await selectElems( svgElem, ids, classSelected );
         }
     }
 }
@@ -139,6 +142,34 @@ export async function updateSliderValue(rangeId, valueId){
     $(String("#"+valueId)).html(value);
 }
 
+
+/**
+ * Function associated with the member slider
+ */
+export function sliderMember(classMemberSelected) {
+    let figs = document.getElementsByClassName("container-fig");
+    // Correspondance between the range value and the m id
+    let m_id = "m" + document.getElementById('members_range').value;
+
+    for (let i = 0; i < figs.length; i++) {
+
+        // Within the outter svg element of each fig, all ids are unique
+        let svgElem = document.getElementById(figs[i].id + "_svg");
+
+        // Consider current fig only if it is a relevant type
+        let data_type = figs[i].getAttribute('data_type');
+
+        // Deal with spaghetti plots and their members
+        if (data_type === "members"){
+            // ids of members in that cluster
+            updateSelection(
+                svgElem, [m_id], classMemberSelected,
+                {select : true, deselect : true}
+            );
+        }
+    }
+}
+
 /**
  * Helper function called to (de-)select members and clusters on cluster events
  * @param {*} e
@@ -146,15 +177,14 @@ export async function updateSliderValue(rangeId, valueId){
  * @param {*} clusterElem
  * @param {*} figElem DOM element of the "container-fig" that contains
  * the element that fired the event
- * @param {*} classClusterSelected
- * @param {*} classMemberSelected
+ * @param {*} classClusterSelected class of selected cluster elements (e.g. clicked or hovered?)
+ * @param {*} classMemberSelected class of selected member elements
  */
 export function onEventClusterAux(
     e, d, clusterElem, figElem,
     classClusterSelected, classMemberSelected,
     {
         select = true, deselect = true,
-        classClusterDefault=undefined, classMemberDefault=undefined,
     } = {}
 ) {
     // Get interactive group of the fig that fired the event
@@ -177,7 +207,7 @@ export function onEventClusterAux(
         // Deal with graph plots and their vertices
         if ((groupId == interactiveGroup) && (data_type === "entire_graph")){
             updateSelection(
-                svgElem, [v_id], classClusterSelected, classClusterDefault,
+                svgElem, [v_id], classClusterSelected,
                 {select : select, deselect : deselect}
             );
         }
@@ -185,7 +215,7 @@ export function onEventClusterAux(
         if ((groupId == interactiveGroup) && (data_type === "relevant_graph")){
 
             updateSelection(
-                svgElem, [v_id], classClusterSelected, classClusterDefault,
+                svgElem, [v_id], classClusterSelected,
                 {select : select, deselect : deselect}
             );
         }
@@ -195,7 +225,7 @@ export function onEventClusterAux(
             // ids of members in that cluster
             let m_ids = d.members.map((m) => ("m" + m));
             updateSelection(
-                svgElem, m_ids, classMemberSelected, classMemberDefault,
+                svgElem, m_ids, classMemberSelected,
                 {select : select, deselect : deselect}
             );
         }
@@ -205,7 +235,7 @@ export function onEventClusterAux(
 export function onEventMemberAux(
     e, d, memberElem, figElem,
     classMemberSelected,
-    {select = true, deselect = true, classMemberDefault = undefined} = {}
+    {select = true, deselect = true,} = {}
 ) {
     // Get interactive group of the fig that fired the event
     let interactiveGroup = document.getElementById(figElem.id + "_input").value;
@@ -228,7 +258,7 @@ export function onEventMemberAux(
         if ((groupId == interactiveGroup) && (data_type === "members")){
             // ids of members in that cluster
             updateSelection(
-                svgElem, [m_id], classMemberSelected, classMemberDefault,
+                svgElem, [m_id], classMemberSelected,
                 {select : select, deselect : deselect}
             );
         }
