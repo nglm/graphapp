@@ -15,6 +15,7 @@ import multimet as mm
 FILENAMES = [f[:-4] for f in listdir("./data/data") if f.endswith(".txt")]
 METHODS = pg.CLUSTERING_METHODS
 SCORES = pg.SCORES
+DATA_REPRESENTATIONS = ["RMM", "RMM-squared_radius"]
 
 def read_request(request):
     context = {
@@ -25,6 +26,8 @@ def read_request(request):
         "method" : METHODS[0],
         "scores" : SCORES,
         "score" : SCORES[0],
+        "drepresentations" : DATA_REPRESENTATIONS,
+        "drepresentation" : DATA_REPRESENTATIONS[0],
         "time_window": 1,
     }
     if "filename" in request.GET:
@@ -35,6 +38,9 @@ def read_request(request):
     if "score" in request.GET:
         if request.GET['score'] != "":
             context["score"] = request.GET['score']
+    if "drepresentation" in request.GET:
+        if request.GET['drepresentation'] != "":
+            context["drepresentation"] = request.GET['drepresentation']
     if "time_window" in request.GET:
         if request.GET['time_window'] != "":
             context["time_window"] = request.GET['time_window']
@@ -60,11 +66,12 @@ def relevant(request):
     filename = context['filename']
     method = context['method']
     score = context['score']
+    drep = context["drepresentation"]
     w = context['time_window']
     path_graph = request.GET['path_graph']
     full_name = (
         path_graph + filename + "_" + method + "_" + score
-        + "_" + str(w)
+        + "_" + drep + "_" + str(w)
     )
 
     selected_k = request.GET["k"]
@@ -100,13 +107,13 @@ def generate_data(filename, path_data=""):
         mm.utils.save_as_json(data_dict, filename, path=path_data)
 
 def generate_graph(
-    filename, method="", score="", path_data="", path_graph="", w=""):
+    filename, method="", score="", drep="", path_data="", path_graph="", w=""):
     """
     Generate and save graph (as .pg and .json) if it doesn't already exist
     """
     full_name = (
         path_graph + filename + "_" + method + "_" + score
-        + "_" + str(w)
+        + "_" + drep + "_" + str(w)
     )
     if not ( exists(full_name + ".pg") and exists(full_name + ".json") ):
 
@@ -121,9 +128,10 @@ def generate_graph(
 
         # Generate graph
         print("Generating graph: ", full_name + ".pg")
+        squared_radius = "squared_radius" in drep
         g = pg.PersistentGraph(
             members, time_axis=time, model_class=method, score_type=score,
-            k_max=5, time_window=w
+            k_max=5, squared_radius=squared_radius, time_window=w
         )
         g.construct_graph()
 
@@ -144,18 +152,19 @@ def load_graph(request):
     filename = context['filename']
     method = context['method']
     score = context['score']
+    drep = context["drepresentation"]
     w = context['time_window']
     path_data = request.GET['path_data']
     path_graph = request.GET['path_graph']
 
     full_name = (
         path_graph + filename + "_" + method + "_" + score
-        + "_" + str(w)
+        + "_" + drep + "_" + str(w)
     )
 
     # Make sure graph exists, otherwise generate it
     generate_graph(
-        filename, method=method, score=score,
+        filename, method=method, score=score, drep=drep,
         path_data=path_data, path_graph=path_graph, w=w
     )
 

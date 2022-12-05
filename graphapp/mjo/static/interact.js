@@ -108,6 +108,7 @@ export async function selectOption(){
     let f = document.getElementById("files").value;
     let m = document.getElementById("methods").value;
     let s = document.getElementById("scores").value;
+    let drep = document.getElementById("data_representation").value;
     let w = document.getElementById("windows").value;
     await $.get(
         "",                  // URL
@@ -115,6 +116,7 @@ export async function selectOption(){
             filename : f,
             method : m,
             score : s,
+            drepresentation : drep,
             time_window : w,
         },
         function(data) {       // Callback on success

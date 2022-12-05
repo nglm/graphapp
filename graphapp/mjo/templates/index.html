@@ -44,6 +44,14 @@
         {% endwith %}
         {% endwith %}
 
+        {% with "data_representation" as option_name %}
+        {% with drepresentations as options %}
+        {% with drepresentation as option %}
+        {% include "select.html" %}
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
+
         <span class="slider-container" >
             <span> Time window: </span>
             <span id="time_window" class="slider-value"> 1 </span>

@@ -308,7 +308,7 @@ function add_edges(
 // Return json graph (both as .json)
 async function load_graph(
     filename,
-    {method = "", score = "", time_window = ""} = {},
+    {method = "", score = "", time_window = "", drepresentation=""} = {},
 ) {
     return await $.get(
         "load_graph/",                 // URL
@@ -316,6 +316,7 @@ async function load_graph(
             filename : filename,
             method: method,
             score: score,
+            drepresentation : drepresentation,
             time_window : time_window,
             path_data : PATH_DATA,
             path_graph : PATH_GRAPH
@@ -461,14 +462,17 @@ export async function draw_entire_graph_meteogram(
     filename,
     {
         include_k = "yes", kmax = 4, id=undefined, dims = undefined,
-        parent = undefined, method = "", score = "", time_window = "",
+        parent = undefined, method = "", score = "", drepresentation = "",
+        time_window = "",
     } = {},
 ) {
     // Load the graph and wait until it is ready
     const data =  await load_data(filename);
     const g =  await load_graph(
         filename,
-        {method : method, score : score, time_window : time_window,
+        {
+            method : method, score : score, drepresentation : drepresentation,
+            time_window : time_window,
     });
     const vertices = g.vertices.flat();
     const edges = g.edges.flat();
@@ -483,7 +487,9 @@ export async function draw_entire_graph_meteogram(
         data,
         {
             id : id, dims : dims, include_k : include_k, kmax : kmax,
-            filename : filename, data_type : "entire_graph", parent : parent}
+            filename : filename, data_type : "entire_graph",
+            method : method, score : score, drepresentation : drepresentation,
+            time_window : time_window, parent : parent}
     );
 
     // We create a new fig for each variable
@@ -509,13 +515,15 @@ export async function draw_entire_graph_mjo(
     filename,
     {
         id=undefined, dims = undefined, parent = undefined,
-        method = "", score = "", time_window = "",
+        method = "", score = "", drepresentation = "", time_window = "",
     } = {},
 ) {
     // Load the graph and wait until it is ready
     const g =  await load_graph(
         filename,
-        {method : method, score : score, time_window : time_window,
+        {
+            method : method, score : score, drepresentation:drepresentation,
+            time_window : time_window,
     });
     const vertices = g.vertices.flat();
     const edges = g.edges.flat();
@@ -525,7 +533,9 @@ export async function draw_entire_graph_mjo(
 
     let figElem = fig_mjo(
         {
-            id : id, dims : dims, filename : filename, data_type : "entire_graph",
+            id : id, dims : dims, filename : filename,
+            data_type : "entire_graph", method : method, score : score,
+            drepresentation : drepresentation, time_window : time_window,
             parent : parent
         })
 
@@ -547,26 +557,30 @@ export function draw_entire_graph(
     {
         plot_type = "meteogram", include_k = "yes", kmax = 4, id=undefined,
         dims = undefined, parent = undefined, method = "", score = "",
-        time_window = "",
+        drepresentation = "", time_window = "",
     } = {},
 ) {
     if (plot_type === "mjo") {
         return draw_entire_graph_mjo(filename, {
             id : id, dims : dims, parent : parent, method : method,
-            score : score, time_window : time_window,
+            score : score, drepresentation : drepresentation,
+            time_window : time_window,
         })
     } else {
         return draw_entire_graph_meteogram(filename, {
             id : id, dims : dims, parent : parent, include_k: include_k,
             kmax : kmax, method : method, score : score,
-            time_window : time_window,
+            drepresentation : drepresentation, time_window : time_window,
         })
     }
 }
 
 async function get_relevant_components(
     filename,
-    {k = -1, method = "", score = ""} = {}) {
+    {
+        k = -1, method = "", score = "", drepresentation = "",
+        time_window = "",
+    } = {}) {
     // Pass array as string
     if (k != -1) {
         k = k.map(String).join(",")
@@ -577,6 +591,8 @@ async function get_relevant_components(
             filename : filename,
             method: method,
             score: score,
+            drepresentation : drepresentation,
+            time_window : time_window,
             k: k,
             path_graph : PATH_GRAPH
         },
@@ -622,14 +638,17 @@ export async function draw_relevant_graph_meteogram(
     filename,
     {
         include_k = "yes", k=-1, kmax = 4, id=undefined, dims = undefined,
-        parent = undefined, method = "", score = "", time_window = "",
+        parent = undefined, method = "", score = "", drepresentation = "",
+        time_window = "",
     } = {},
 ) {
     // Load the graph and wait until it is ready
     const data =  await load_data(filename);
     const g =  await load_graph(
         filename,
-        {method : method, score : score, time_window : time_window,}
+        {
+            method : method, score : score, drepresentation : drepresentation,
+            time_window : time_window,}
     );
     const colors = get_list_colors(g.n_clusters_range.length);
 
@@ -645,7 +664,9 @@ export async function draw_relevant_graph_meteogram(
         data,
         {
             id : id, dims : dims, include_k : include_k, kmax : kmax,
-            filename : filename, data_type : "relevant_graph", parent : parent}
+            filename : filename, data_type : "relevant_graph",
+            method : method, score : score, drepresentation : drepresentation,
+            time_window : time_window, parent : parent}
     );
 
     // list of k values to plot
@@ -657,7 +678,10 @@ export async function draw_relevant_graph_meteogram(
     await $(async function () {
         // sending_HTTP_request return a promise, so we should wait
         let relevant_components = await get_relevant_components(
-            filename, {k : k, method : method, score : score}
+            filename, {
+                k : k, method : method, score : score,
+                drepresentation : drepresentation, time_window : time_window
+            }
         );
 
         let vertices = relevant_components.vertices.flat();
@@ -703,20 +727,24 @@ export async function draw_relevant_graph_mjo(
     filename,
     {
         k=-1, id=undefined, dims = undefined, parent = undefined,
-        method = "", score = "", time_window = "",
+        method = "", score = "", drepresentation = "", time_window = "",
     } = {},
 ) {
     // Load the graph and wait until it is ready
     const g =  await load_graph(
         filename,
-        {method : method, score : score, time_window : time_window,}
+        {
+            method : method, score : score, drepresentation : drepresentation,
+            time_window : time_window,}
     );
     const colors = get_list_colors(g.n_clusters_range.length);
 
     // Create or retrieve figs if they were already created
     let figElem =  fig_mjo(
         {
-            id : id, dims : dims, filename : filename, data_type : "relevant_graph",
+            id : id, dims : dims, filename : filename,
+            data_type : "relevant_graph", method : method, score : score,
+            drepresentation : drepresentation, time_window : time_window,
             parent : parent
         });
 
@@ -729,7 +757,9 @@ export async function draw_relevant_graph_mjo(
     await $(async function () {
         // sending_HTTP_request return a promise, so we should wait
         let relevant_components = await get_relevant_components(
-            filename, {k : k, method : method, score : score}
+            filename, {
+                k : k, method : method, score : score,
+                drepresentation : drepresentation, time_window : time_window}
         );
 
         let vertices = relevant_components.vertices.flat();
@@ -764,19 +794,20 @@ export function draw_relevant_graph(
     {
         plot_type = "meteogram", include_k = "yes", kmax = 4, k=-1, id=undefined,
         dims = undefined, parent = undefined, method = "", score = "",
-        time_window = "",
+        drepresentation = "", time_window = "",
     } = {},
 ) {
     if (plot_type === "mjo") {
         return draw_relevant_graph_mjo(filename, {
             id : id, dims : dims, parent : parent, k : k,
-            method : method, score : score, time_window : time_window,
+            method : method, score : score, drepresentation : drepresentation,
+            time_window : time_window,
         })
     } else {
         return draw_relevant_graph_meteogram(filename, {
             id : id, dims : dims, parent : parent, include_k: include_k,
             kmax : kmax, k : k, method : method, score : score,
-            time_window : time_window,
+            drepresentation : drepresentation, time_window : time_window,
         })
     }
 }
@@ -824,6 +855,8 @@ export function redraw_relevant_graph(selected_k=-1, interactGroupId=1){
                         id : id, plot_type : plot_type, k :selected_k,
                         method : figs[i].getAttribute("method"),
                         score : figs[i].getAttribute("score"),
+                        drepresentation : figs[i].getAttribute("drepresentation"),
+                        time_window : figs[i].getAttribute("time_window"),
                     }
                 );
             }
@@ -835,13 +868,15 @@ export async function draw_life_span(
     filename,
     {
         id=undefined, dims = DIMS_mjo, parent = undefined,
-        method = "", score = "", time_window = "",
+        method = "", score = "", drepresentation = "", time_window = "",
     } = {},
 ) {
     // Load the graph and wait until it is ready
     const g =  await load_graph(
         filename,
-        {method : method, score : score, time_window : time_window,}
+        {
+            method : method, score : score, drepresentation : drepresentation,
+            time_window : time_window,}
     );
     const life_spans = d3fy_life_span(g.life_span);
     const colors = get_list_colors(g.n_clusters_range.length);
@@ -850,7 +885,8 @@ export async function draw_life_span(
         {
             dims : dims, fig_id : id, filename : filename,
             data_type : "life_span", plot_type : "meteogram", parent : parent,
-            method : method, score : score, time_window : time_window,
+            method : method, score : score, drepresentation : drepresentation,
+            time_window : time_window,
         });
     let myPlot = d3.select(figElem).select("#plot-group");
 

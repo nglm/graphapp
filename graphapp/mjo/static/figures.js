@@ -153,7 +153,8 @@ export function init_fig(
     {
         dims=DIMS, fig_id="fig", filename=undefined,
         data_type = undefined, plot_type = undefined, parent=undefined,
-        method = undefined, score = undefined,
+        method = undefined, score = undefined, drepresentation = undefined,
+        time_window = undefined,
     }
 ) {
     // Append 'div'>'svg'>'rect' elements to 'parent' to contain our fig
@@ -171,6 +172,8 @@ export function init_fig(
         .attr('plot_type', plot_type)
         .attr('method', method)
         .attr('score', score)
+        .attr('drepresentation', drepresentation)
+        .attr('time_window', time_window)
         .classed('container-fig', true)
         .append('svg')
         .attr('id', fig_id + "_svg")
@@ -575,7 +578,8 @@ export function fig_mjo(
     {
         id = undefined, dims = DIMS_mjo, filename = undefined,
         data_type = undefined, parent = undefined,
-        method = undefined, score = undefined,
+        method = undefined, score = undefined, drepresentation = undefined,
+        time_window = undefined,
     } = {},
 ) {
 
@@ -599,7 +603,8 @@ export function fig_mjo(
             {
                 dims : dims, fig_id : id, filename : filename,
                 data_type : data_type, plot_type : plot_type, parent : parent,
-                method : method, score : score
+                method : method, score : score,
+                drepresentation : drepresentation, time_window : time_window,
             });
 
         // Add x and y axis element
@@ -624,6 +629,7 @@ export function fig_meteogram(
         id = undefined, dims = DIMS_meteogram_with_k, include_k = "yes",
         kmax = 4, filename = undefined, data_type = undefined,
         parent = undefined, method = undefined, score = undefined,
+        drepresentation = undefined, time_window = undefined,
     } = {},
 ) {
     let figElem = document.getElementById(id + "_0");
@@ -656,7 +662,8 @@ export function fig_meteogram(
             figElem = init_fig({
                 dims : dims, fig_id : id + "_" + iplot, filename : filename,
                 data_type : data_type, plot_type : plot_type,
-                parent : parent, method : method, score : score
+                parent : parent, method : method, score : score,
+                drepresentation : drepresentation, time_window : time_window,
             });
 
             // Add x and y axis element
