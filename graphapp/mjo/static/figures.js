@@ -147,15 +147,38 @@ export function setYLabel(figElem, text) {
     setInnerHTMLById(figElem, "ylabel", text);
 }
 
+export function set_fig_attrs(
+    figs,
+    attrs = {
+        filename = undefined, data_type = undefined, plot_type = undefined,
+        method = undefined, score = undefined, drepresentation = undefined,
+        time_window = undefined,
+    } = {}
+){
+    if (figs.constructor != Array){
+        figs = [figs];
+    }
+    for (var figElem of figs) {
+        for (const [key, value] of Object.entries(attrs)) {
+            if (value != undefined){
+                figElem.setAttribute(key, value);
+            }
+        }
+    }
+}
 
+export function set_fig_id(figs, id=undefined ) {
+    let data_type = figs[i].getAttribute("data_type");
+    let plot_type = figs[i].getAttribute("plot_type");
+    if (id === undefined) {
+        id = data_type + "_" + plot_type
+    }
+}
 
 export function init_fig(
     {
-        dims=DIMS, fig_id="fig", filename=undefined,
-        data_type = undefined, plot_type = undefined, parent=undefined,
-        method = undefined, score = undefined, drepresentation = undefined,
-        time_window = undefined,
-    }
+        dims=DIMS, fig_id="fig", parent=undefined,
+    } = {}
 ) {
     // Append 'div'>'svg'>'rect' elements to 'parent' to contain our fig
     if (parent === undefined) {
@@ -167,13 +190,6 @@ export function init_fig(
         .attr('id', fig_id)
         .attr('width', dims.fig.width)
         .attr('height', dims.fig.height)
-        .attr('filename', filename)
-        .attr('data_type', data_type)
-        .attr('plot_type', plot_type)
-        .attr('method', method)
-        .attr('score', score)
-        .attr('drepresentation', drepresentation)
-        .attr('time_window', time_window)
         .classed('container-fig', true)
         .append('svg')
         .attr('id', fig_id + "_svg")
@@ -186,7 +202,6 @@ export function init_fig(
         .classed("fig", true);
 
     let figElem = document.getElementById(fig_id);
-
 
     // Button for the interactivegroup
     d3.select(figElem)
@@ -576,10 +591,7 @@ export function get_scalers(
 
 export function fig_mjo(
     {
-        id = undefined, dims = DIMS_mjo, filename = undefined,
-        data_type = undefined, parent = undefined,
-        method = undefined, score = undefined, drepresentation = undefined,
-        time_window = undefined,
+        id = undefined, dims = DIMS_mjo, parent = undefined,
     } = {},
 ) {
 
@@ -594,18 +606,8 @@ export function fig_mjo(
     // - set titles and axes labels
     } else {
 
-        let plot_type = "mjo";
-        if (id === undefined) {
-            id = data_type + "_" + plot_type
-        }
-
-        figElem = init_fig(
-            {
-                dims : dims, fig_id : id, filename : filename,
-                data_type : data_type, plot_type : plot_type, parent : parent,
-                method : method, score : score,
-                drepresentation : drepresentation, time_window : time_window,
-            });
+        figElem = init_fig( { dims : dims, fig_id : id, parent : parent, });
+        set_fig_attrs(figElem, {plot_type : "mjo"});
 
         // Add x and y axis element
         let {x, y, xk, yk} = add_axes_mjo(figElem);
@@ -627,9 +629,7 @@ export function fig_meteogram(
     data,
     {
         id = undefined, dims = DIMS_meteogram_with_k, include_k = "yes",
-        kmax = 4, filename = undefined, data_type = undefined,
-        parent = undefined, method = undefined, score = undefined,
-        drepresentation = undefined, time_window = undefined,
+        kmax = 4, parent = undefined,
     } = {},
 ) {
     let figElem = document.getElementById(id + "_0");
@@ -652,24 +652,17 @@ export function fig_meteogram(
     // -- draw mjo classes
     // -- set titles and axes labels
 
-        let plot_type = "meteogram"
-        if (id === undefined) {
-            id = data_type + "_" + plot_type
-        }
-
         for(var iplot = 0; iplot < d; iplot++ ) {
 
-            figElem = init_fig({
-                dims : dims, fig_id : id + "_" + iplot, filename : filename,
-                data_type : data_type, plot_type : plot_type,
-                parent : parent, method : method, score : score,
-                drepresentation : drepresentation, time_window : time_window,
-            });
+            figElem = init_fig(
+                { dims : dims, fig_id : id + "_" + iplot, parent : parent}
+            );
+            set_fig_attrs(figElem, {plot_type : "meteogram"});
 
             // Add x and y axis element
             let {x, y, xk, yk} = add_axes_meteogram(
                 figElem, data.time, data.members,
-                {include_k : include_k, iplot : iplot}
+                {include_k : include_k, kmax : kmax, iplot : iplot}
             );
 
             // Add titles and labels  and style ticks

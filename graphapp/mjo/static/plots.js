@@ -3,7 +3,8 @@ import { d3fy, d3fy_dict_of_arrays, d3fy_life_span } from "./preprocess.js";
 
 import {
     dimensions, setAxTitle, setFigTitle, setXLabel, setYLabel,
-    init_fig, style_ticks, get_list_colors, fig_meteogram, fig_mjo, get_scalers, DIMS_mjo
+    init_fig, style_ticks, get_list_colors, fig_meteogram, fig_mjo, get_scalers,
+    DIMS_mjo, set_fig_attrs
 } from "./figures.js"
 import { onEventClusterAux, onEventMemberAux, updateSliderValue} from "./interact.js";
 
@@ -36,16 +37,9 @@ function f_opacity(
 
     let opacity = undefined;
     // Binary opacity if plotting only relevant components
-    if (selected_k != undefined) {
+    if (selected_k) {
         // Opacity = 1 if the component is deemed relevant
-        let brotherhood_size = get_brotherhood_size(d, {g : g});
-        if (brotherhood_size.includes(selected_k[d.time_step])) {
-            opacity = 1;
-        // Otherwise the opacity is 0
-        } else {
-            opacity = 0;
-        }
-
+        opacity = 1;
     // Else, opacity based on the life span of the component
     } else {
         let vmax = g.life_span_max;
@@ -183,7 +177,7 @@ function add_vertices(
     fun_size = f_radius,
     fun_color = f_color,
     list_colors = get_list_colors(50),
-    selected_k = undefined,
+    selected_k = false,
     } = {},
 ) {
     let myPlot = d3.select(figElem).select("#plot-group");
@@ -234,18 +228,19 @@ function add_k_options(
     let myPlot = d3.select(figElem).select("#plot-group");
 
     function def_class(d) {
-        if (d.k === selected_k[d.t]) {
+        if (d.k == selected_k[d.t]) {
             return "k-optionOSelected"
         } else {
             return "k-optionO"
         }
     }
 
+
     // This element will render (display) the vertices but they won't be
     // interactive
     myPlot.append('g')
         .attr('id', 'k-options')
-        .attr("data-selected_k", selected_k) // update selected_k attribute
+        //.attr("data-selected_k", selected_k) // update selected_k attribute
         .selectAll('.k-optionO')
         .data(life_spans)
         .enter()
@@ -282,7 +277,7 @@ function add_edges(
     fun_size = f_stroke_width,
     fun_color = f_color,
     list_colors = get_list_colors(50),
-    selected_k = undefined,
+    selected_k = false,
     } = {},
 ) {
     let myPlot = d3.select(figElem).select("#plot-group");
@@ -308,16 +303,18 @@ function add_edges(
 // Return json graph (both as .json)
 async function load_graph(
     filename,
-    {method = "", score = "", time_window = "", drepresentation=""} = {},
+    options = {
+        method = "", score = "", time_window = "", drepresentation=""
+    } = {},
 ) {
     return await $.get(
         "load_graph/",                 // URL
         {                              // Additional data
             filename : filename,
-            method: method,
-            score: score,
-            drepresentation : drepresentation,
-            time_window : time_window,
+            method: options.method,
+            score: options.score,
+            drepresentation : options.drepresentation,
+            time_window : options.time_window,
             path_data : PATH_DATA,
             path_graph : PATH_GRAPH
         },
@@ -392,7 +389,7 @@ export async function draw_meteogram(
         data,
         {
             id: id, dims : dims, include_k : include_k, kmax : kmax,
-            filename : filename, data_type : "members", parent : parent}
+            parent : parent}
     );
 
     // We create a new fig for each variable
@@ -423,11 +420,7 @@ export async function draw_mjo(
     let data_xy = d3fy(data);
 
     // Create or retrieve figs if they were already created
-    let figElem = fig_mjo(
-        {
-            id : id, dims : dims, filename : filename, data_type : "members",
-            parent : parent
-        })
+    let figElem = fig_mjo( { id : id, dims : dims, parent : parent });
 
     // get d3 scalers
     let {x, y, xk, yk} = get_scalers(figElem);
@@ -448,32 +441,29 @@ export async function draw_members(
         dims = undefined, parent = undefined,
     } = {},
 ) {
+    let res;
     if (plot_type === "mjo") {
-        return draw_mjo(filename, {id : id, dims : dims, parent : parent})
+        res = await draw_mjo(filename, {id : id, dims : dims, parent : parent})
     } else {
-        return draw_meteogram(filename, {
+        res = await draw_meteogram(filename, {
             id : id, dims : dims, parent : parent, include_k: include_k,
             kmax : kmax,
         })
     }
+    set_fig_attrs(res, {data_type : "members", filename : filename});
+    return res
 }
 
 export async function draw_entire_graph_meteogram(
     filename,
     {
         include_k = "yes", kmax = 4, id=undefined, dims = undefined,
-        parent = undefined, method = "", score = "", drepresentation = "",
-        time_window = "",
+        parent = undefined, options = undefined,
     } = {},
 ) {
     // Load the graph and wait until it is ready
     const data =  await load_data(filename);
-    const g =  await load_graph(
-        filename,
-        {
-            method : method, score : score, drepresentation : drepresentation,
-            time_window : time_window,
-    });
+    const g =  await load_graph( filename, options );
     const vertices = g.vertices.flat();
     const edges = g.edges.flat();
     const time = g.time_axis;
@@ -487,10 +477,8 @@ export async function draw_entire_graph_meteogram(
         data,
         {
             id : id, dims : dims, include_k : include_k, kmax : kmax,
-            filename : filename, data_type : "entire_graph",
-            method : method, score : score, drepresentation : drepresentation,
-            time_window : time_window, parent : parent}
-    );
+            parent : parent
+        });
 
     // We create a new fig for each variable
     for(var iplot = 0; iplot < g.d; iplot++ ) {
@@ -514,17 +502,11 @@ export async function draw_entire_graph_meteogram(
 export async function draw_entire_graph_mjo(
     filename,
     {
-        id=undefined, dims = undefined, parent = undefined,
-        method = "", score = "", drepresentation = "", time_window = "",
+        id=undefined, dims = undefined, parent = undefined, options = undefined,
     } = {},
 ) {
     // Load the graph and wait until it is ready
-    const g =  await load_graph(
-        filename,
-        {
-            method : method, score : score, drepresentation:drepresentation,
-            time_window : time_window,
-    });
+    const g =  await load_graph( filename, options );
     const vertices = g.vertices.flat();
     const edges = g.edges.flat();
     const time = g.time_axis;
@@ -533,11 +515,8 @@ export async function draw_entire_graph_mjo(
 
     let figElem = fig_mjo(
         {
-            id : id, dims : dims, filename : filename,
-            data_type : "entire_graph", method : method, score : score,
-            drepresentation : drepresentation, time_window : time_window,
-            parent : parent
-        })
+            id : id, dims : dims, parent : parent
+        });
 
     // Add x and y axis element
     let {x, y, xk, yk} = get_scalers(figElem);
@@ -552,48 +531,48 @@ export async function draw_entire_graph_mjo(
     return figElem
 }
 
-export function draw_entire_graph(
+export async function draw_entire_graph(
     filename,
     {
         plot_type = "meteogram", include_k = "yes", kmax = 4, id=undefined,
-        dims = undefined, parent = undefined, method = "", score = "",
-        drepresentation = "", time_window = "",
+        dims = undefined, parent = undefined, options = undefined,
     } = {},
 ) {
+    let res;
     if (plot_type === "mjo") {
-        return draw_entire_graph_mjo(filename, {
-            id : id, dims : dims, parent : parent, method : method,
-            score : score, drepresentation : drepresentation,
-            time_window : time_window,
-        })
+        res = await draw_entire_graph_mjo(filename, {
+            id : id, dims : dims, parent : parent, options : options,
+        });
     } else {
-        return draw_entire_graph_meteogram(filename, {
+        res = await draw_entire_graph_meteogram(filename, {
             id : id, dims : dims, parent : parent, include_k: include_k,
-            kmax : kmax, method : method, score : score,
-            drepresentation : drepresentation, time_window : time_window,
-        })
+            kmax : kmax, options : options,
+        });
     }
+    set_fig_attrs(res, options);
+    set_fig_attrs(res, {data_type : "entire_graph", filename : filename});
+    return res
 }
 
 async function get_relevant_components(
     filename,
-    {
-        k = -1, method = "", score = "", drepresentation = "",
-        time_window = "",
-    } = {}) {
+    options = {
+        k = -1, method = "", score = "", time_window = "", drepresentation=""
+    } = {},
+) {
     // Pass array as string
-    if (k != -1) {
-        k = k.map(String).join(",")
+    if (options.k != -1) {
+        options.k = options.k.map(String).join(",")
     }
     return $.get(
         "relevant/",                   // URL
         {                              // Additional data
             filename : filename,
-            method: method,
-            score: score,
-            drepresentation : drepresentation,
-            time_window : time_window,
-            k: k,
+            method: options.method,
+            score: options.score,
+            drepresentation : options.drepresentation,
+            time_window : options.time_window,
+            k: options.k,
             path_graph : PATH_GRAPH
         },
         function(data) {       // Callback function, called on success
@@ -637,51 +616,43 @@ export async function clear_graph(figElem) {
 export async function draw_relevant_graph_meteogram(
     filename,
     {
-        include_k = "yes", k=-1, kmax = 4, id=undefined, dims = undefined,
-        parent = undefined, method = "", score = "", drepresentation = "",
-        time_window = "",
+        include_k = "yes", kmax = 4, id=undefined, dims = undefined,
+        parent = undefined, options = undefined,
     } = {},
 ) {
     // Load the graph and wait until it is ready
+    let opts = {...options};
     const data =  await load_data(filename);
-    const g =  await load_graph(
-        filename,
-        {
-            method : method, score : score, drepresentation : drepresentation,
-            time_window : time_window,}
-    );
+    const g =  await load_graph( filename, opts );
     const colors = get_list_colors(g.n_clusters_range.length);
 
 
     let k_max = d3.min([kmax, g.k_max]);
     // To draw k options
     const life_spans = d3fy_life_span(g.life_span, {k_max : k_max}).flat();
-    // To define opacity
-    // let selected_k = d3fy_dict_of_arrays(g.relevant_k);
 
     // Create or retrieve figs if they were already created
     let figs = fig_meteogram(
         data,
         {
             id : id, dims : dims, include_k : include_k, kmax : kmax,
-            filename : filename, data_type : "relevant_graph",
-            method : method, score : score, drepresentation : drepresentation,
-            time_window : time_window, parent : parent}
+            parent : parent}
     );
 
     // list of k values to plot
-    if (k === -1){
-        k = g.relevant_k.k.map(Number);
+    if ( (opts != undefined) && (!('k' in opts)) || (opts.k === -1) ){
+        opts.k = g.relevant_k.k.map(Number);
     }
+    if (opts === undefined) {
+        opts = {k : g.relevant_k.k.map(Number)};
+    }
+
 
     // document ready return a promise, se we should wait
     await $(async function () {
         // sending_HTTP_request return a promise, so we should wait
         let relevant_components = await get_relevant_components(
-            filename, {
-                k : k, method : method, score : score,
-                drepresentation : drepresentation, time_window : time_window
-            }
+            filename, opts
         );
 
         let vertices = relevant_components.vertices.flat();
@@ -701,65 +672,58 @@ export async function draw_relevant_graph_meteogram(
             let yk_offset = myPlot.select('#yaxis-k').attr("yoffset");
             let cxk = (d => x( g.time_axis[d.t] ));
             let cyk = (d => (parseFloat(yk_offset) + parseFloat(yk( d.k ))).toString());
-            add_k_options(figs[iplot], cxk, cyk, g, life_spans, k);
+            add_k_options(figs[iplot], cxk, cyk, g, life_spans, opts.k);
 
             // Add vertices
             let cx = (d => x( g.time_axis[d.time_step] ));
             let cy = (d => y( d.info.mean[iplot] ));
             add_vertices(
                 figs[iplot], cx, cy, g, vertices,
-                {list_colors : colors, selected_k : k}
+                {list_colors : colors, selected_k : true}
             );
 
             // Add edges
             let fun_edge = (d => f_line_edge(d, g, x, y, iplot));
             add_edges(
                 figs[iplot], fun_edge, g, edges,
-                {list_colors : colors, selected_k : k}
+                {list_colors : colors, selected_k : true}
             );
         }
         return undefined
     })
+    set_fig_attrs(figs, {k : opts.k});
     return figs
 }
 
 export async function draw_relevant_graph_mjo(
     filename,
     {
-        k=-1, id=undefined, dims = undefined, parent = undefined,
-        method = "", score = "", drepresentation = "", time_window = "",
+        id=undefined, dims = undefined, parent = undefined,
+        options = undefined,
     } = {},
 ) {
     // Load the graph and wait until it is ready
-    const g =  await load_graph(
-        filename,
-        {
-            method : method, score : score, drepresentation : drepresentation,
-            time_window : time_window,}
-    );
+    let opts = {...options};
+    const g =  await load_graph( filename, opts );
     const colors = get_list_colors(g.n_clusters_range.length);
 
+
     // Create or retrieve figs if they were already created
-    let figElem =  fig_mjo(
-        {
-            id : id, dims : dims, filename : filename,
-            data_type : "relevant_graph", method : method, score : score,
-            drepresentation : drepresentation, time_window : time_window,
-            parent : parent
-        });
+    let figElem =  fig_mjo( { id : id, dims : dims, parent : parent });
 
     // list of k values to plot
-    if (k === -1){
-        k = g.relevant_k.k.map(Number);
+    if ( (opts != undefined) && (!('k' in opts)) || (opts.k === -1) ){
+        opts.k = g.relevant_k.k.map(Number);
+    }
+    if (opts === undefined) {
+        opts = {k : g.relevant_k.k.map(Number)};
     }
 
     // document ready return a promise, se we should wait
     await $(async function () {
         // sending_HTTP_request return a promise, so we should wait
         let relevant_components = await get_relevant_components(
-            filename, {
-                k : k, method : method, score : score,
-                drepresentation : drepresentation, time_window : time_window}
+            filename, opts,
         );
 
         let vertices = relevant_components.vertices.flat();
@@ -776,43 +740,44 @@ export async function draw_relevant_graph_mjo(
         let cy = (d => y( d.info.mean[1] ));
         add_vertices(
             figElem, cx, cy, g, vertices,
-            {list_colors : colors, selected_k : k}
+            {list_colors : colors, selected_k : true}
         );
 
         // Add edges
         let fun_edge = (d => f_line_edge_mjo(d, g, x, y));
         add_edges( figElem, fun_edge, g, edges,
-            {list_colors : colors, selected_k : k}
+            {list_colors : colors, selected_k : true}
         );
         return undefined
     })
+    set_fig_attrs(figElem, {k : opts.k});
     return figElem
 }
 
-export function draw_relevant_graph(
+export async function draw_relevant_graph(
     filename,
     {
-        plot_type = "meteogram", include_k = "yes", kmax = 4, k=-1, id=undefined,
-        dims = undefined, parent = undefined, method = "", score = "",
-        drepresentation = "", time_window = "",
+        plot_type = "meteogram", include_k = "yes", kmax = 4, id=undefined,
+        dims = undefined, parent = undefined, options = undefined,
     } = {},
 ) {
+    let res;
     if (plot_type === "mjo") {
-        return draw_relevant_graph_mjo(filename, {
-            id : id, dims : dims, parent : parent, k : k,
-            method : method, score : score, drepresentation : drepresentation,
-            time_window : time_window,
-        })
+        res = await draw_relevant_graph_mjo(filename, {
+            id : id, dims : dims, parent : parent, options : options,
+        });
     } else {
-        return draw_relevant_graph_meteogram(filename, {
+        res = await draw_relevant_graph_meteogram(filename, {
             id : id, dims : dims, parent : parent, include_k: include_k,
-            kmax : kmax, k : k, method : method, score : score,
-            drepresentation : drepresentation, time_window : time_window,
-        })
+            kmax : kmax, options : options,
+        });
     }
+    set_fig_attrs(res, options);
+    set_fig_attrs(res, {data_type : "relevant_graph", filename : filename});
+    return res
 }
 
-export function redraw_relevant_graph(selected_k=-1, interactGroupId=1){
+export async function redraw_relevant_graph(selected_k=-1, interactGroupId=1){
     // -------- Update relevant components graphs ---------------------
 
     // All figs in the body
@@ -849,14 +814,18 @@ export function redraw_relevant_graph(selected_k=-1, interactGroupId=1){
 
             // Update relevant graph
             if (!ignore) {
-                draw_relevant_graph(
+                let options = {
+                    k : selected_k,
+                    method : figs[i].getAttribute("method"),
+                    score : figs[i].getAttribute("score"),
+                    drepresentation : figs[i].getAttribute("drepresentation"),
+                    time_window : figs[i].getAttribute("time_window"),
+                };
+                console.log("redraw", options);
+                await draw_relevant_graph(
                     figs[i].getAttribute("filename"),
                     {
-                        id : id, plot_type : plot_type, k :selected_k,
-                        method : figs[i].getAttribute("method"),
-                        score : figs[i].getAttribute("score"),
-                        drepresentation : figs[i].getAttribute("drepresentation"),
-                        time_window : figs[i].getAttribute("time_window"),
+                        id : id, plot_type : plot_type, options : options,
                     }
                 );
             }
@@ -867,27 +836,20 @@ export function redraw_relevant_graph(selected_k=-1, interactGroupId=1){
 export async function draw_life_span(
     filename,
     {
-        id=undefined, dims = DIMS_mjo, parent = undefined,
-        method = "", score = "", drepresentation = "", time_window = "",
+        id=undefined, dims = DIMS_mjo, parent = undefined, options = undefined,
     } = {},
 ) {
     // Load the graph and wait until it is ready
-    const g =  await load_graph(
-        filename,
-        {
-            method : method, score : score, drepresentation : drepresentation,
-            time_window : time_window,}
-    );
+    const g =  await load_graph( filename, options );
     const life_spans = d3fy_life_span(g.life_span);
     const colors = get_list_colors(g.n_clusters_range.length);
 
-    let figElem = init_fig(
-        {
-            dims : dims, fig_id : id, filename : filename,
-            data_type : "life_span", plot_type : "meteogram", parent : parent,
-            method : method, score : score, drepresentation : drepresentation,
-            time_window : time_window,
-        });
+    let figElem = init_fig( { dims : dims, fig_id : id, parent : parent});
+    let attrs = {
+        filename : filename, data_type : "life_span", plot_type : "meteogram",
+    };
+    set_fig_attrs(figElem, attrs);
+    set_fig_attrs(figElem, options)
     let myPlot = d3.select(figElem).select("#plot-group");
 
     let x = d3.scaleLinear().range([0, dims.plot.width]),
@@ -1009,8 +971,7 @@ function onClickK(figElem, e, d) {
 
         // Find current selected k values (so element which was clicked
         // on + currently selected elements for other time steps)
-        let koptions = figElem.querySelector("#k-options");
-        let selected_k = koptions.dataset.selected_k.split(",").map(Number);
+        let selected_k = figElem.getAttribute("k").split(",").map(Number);
 
         // do something only if a new k has really been selected.
         if (selected_k[d.t] !=  d.k) {
@@ -1018,7 +979,7 @@ function onClickK(figElem, e, d) {
             selected_k[d.t] = d.k;
 
             // update attribute
-            koptions.dataset.selected_k = selected_k;
+            figElem.setAttribute("k", selected_k)
 
             // -------- Update relevant components graphs ---------------------
 

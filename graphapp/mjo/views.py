@@ -44,6 +44,14 @@ def read_request(request):
     if "time_window" in request.GET:
         if request.GET['time_window'] != "":
             context["time_window"] = request.GET['time_window']
+    if "k" in request.GET:
+        selected_k = request.GET['k']
+        # If k == -1, take the list of relevant k by default
+        if selected_k == "-1":
+            context["k"] = None
+        else:
+            # From string to list of int
+            context["k"] = list(map(int, selected_k.split(",")))
     return context
 
 def main(request):
@@ -74,14 +82,7 @@ def relevant(request):
         + "_" + drep + "_" + str(w)
     )
 
-    selected_k = request.GET["k"]
-    # If k == -1, take the list of relevant k by default
-    if selected_k == "-1":
-        selected_k = None
-    else:
-        # From string to list of int
-        selected_k = list(map(int, selected_k.split(",")))
-
+    selected_k = context['k']
     print("Loading graph at: ", full_name + ".pg")
     with open(full_name + ".pg", "rb") as f:
         g = pickle.load(f)

@@ -3,17 +3,23 @@
 <script id="{{ data_type }}-script" async=false defer=false type="module">
     import {draw_{{ data_type }}} from "{% static './plots.js' %}";
 
-    await draw_{{ data_type }}(
-        "{{ filename }}" ,
-        { dims : dims_mjo, parent : "#{{ data_type }}-figs", plot_type : "mjo",
+    let options = {
         method : "{{ method }}", score : "{{ score }}",
-        drepresentation : "{{ drepresentation }}", time_window : "{{ time_window }}",
-    });
+        drepresentation : "{{ drepresentation }}",
+        time_window : "{{ time_window }}",
+    };
+
     await draw_{{ data_type }}(
         "{{ filename }}" ,
         {
-            dims : dims_meteogram, parent : "#{{ data_type }}-figs", plot_type : "meteogram",
-            method : "{{ method }}", score : "{{ score }}",
-            drepresentation : "{{ drepresentation }}", time_window : "{{ time_window }}",
+            dims : dims_mjo, parent : "#{{ data_type }}-figs",
+            plot_type : "mjo", options : options,
+        }
+    );
+    await draw_{{ data_type }}(
+        "{{ filename }}" ,
+        {
+            dims : dims_meteogram, parent : "#{{ data_type }}-figs",
+            plot_type : "meteogram", options : options,
         });
 </script>

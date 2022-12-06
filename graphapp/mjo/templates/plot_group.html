@@ -17,11 +17,7 @@
 
     <div id="{{ data_type }}-figs" style="display:inline">
         {% block script_type %}
-        {% if data_type == "life_span" %}
-            {% include "script2.html" %}
-        {% else %}
-            {% include "script1.html" %}
-        {% endif %}
+            {% include "script.html" %}
         {% endblock script_type %}
     </div>
 </div>
