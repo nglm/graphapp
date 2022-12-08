@@ -1,10 +1,9 @@
-from copyreg import constructor
 from django.shortcuts import render
-from django.http import HttpResponse, JsonResponse
+from django.http import JsonResponse
 
 import pickle
 from os.path import exists
-from os import listdir, getcwd
+from os import listdir
 import json
 
 from persigraph.utils.d3 import serialize
@@ -77,13 +76,20 @@ def relevant(request):
     drep = context["drepresentation"]
     w = context['time_window']
     path_graph = request.GET['path_graph']
+    path_data = request.GET['path_data']
     full_name = (
         path_graph + filename + "_" + method + "_" + score
         + "_" + drep + "_" + str(w)
     )
 
     selected_k = context['k']
-    print("Loading graph at: ", full_name + ".pg")
+
+    # Make sure graph exists, otherwise generate it
+    generate_graph(
+        filename, method=method, score=score, drep=drep,
+        path_data=path_data, path_graph=path_graph, w=w
+    )
+
     with open(full_name + ".pg", "rb") as f:
         g = pickle.load(f)
     vertices, edges = g.get_relevant_components(selected_k)
@@ -95,31 +101,47 @@ def generate_data(filename, path_data=""):
     """
     Process data and save as .json from raw .txt if file doesn't already exist
     """
-    if not exists(path_data + filename + ".json"):
-
+    output_name = path_data + filename + ".json"
+    if not exists(output_name):
         # Preprocess data
-        print("Processing raw data from: ", path_data + filename + ".txt")
+        print("_"*30)
+        print(
+            "Processing raw data from: ",
+            path_data + filename + ".txt"
+        )
+        print("_"*30)
         data_dict = mm.preprocess.mjo(
-            filename =filename + ".txt",
+            filename = filename + ".txt",
             path_data = path_data
         )
-
-        # Save processed data as .json
-        mm.utils.save_as_json(data_dict, filename, path=path_data)
+        try:
+            # Exclusive access
+            with open(output_name, 'x') as f:
+                # Save processed data as .json
+                mm.utils.save_as_json(data_dict, filename, path=path_data)
+                return True
+        except FileExistsError:
+            print("_"*30)
+            print(output_name, ' is already (being) created!')
+            print("_"*30)
+            return False
+    else:
+        return True
 
 def generate_graph(
     filename, method="", score="", drep="", path_data="", path_graph="", w=""):
     """
     Generate and save graph (as .pg and .json) if it doesn't already exist
     """
-    full_name = (
+    fullname = (
         path_graph + filename + "_" + method + "_" + score
         + "_" + drep + "_" + str(w)
     )
-    if not ( exists(full_name + ".pg") and exists(full_name + ".json") ):
+    if not ( exists(fullname + ".pg") and exists(fullname + ".json") ):
 
         # Make sure data has been processed first
-        generate_data(filename, path_data=path_data)
+        while (not generate_data(filename, path_data=path_data)):
+            continue
 
         # Load data and extract members and time
         with open(path_data + filename + ".json", "rb") as json_file:
@@ -128,19 +150,31 @@ def generate_graph(
         time = data_dict['time']
 
         # Generate graph
-        print("Generating graph: ", full_name + ".pg")
+        print("_"*30)
+        print("Generating graph: ", fullname + ".pg")
+        print("_"*30)
         squared_radius = "squared_radius" in drep
         g = pg.PersistentGraph(
-            members, time_axis=time, model_class=method, score_type=score,
-            k_max=5, squared_radius=squared_radius, time_window=w
+            members, time_axis=time, model_class=method,
+            score_type=score, k_max=5,
+            squared_radius=squared_radius, time_window=w
         )
         g.construct_graph()
-
-        # Save as .pg and .json
-        g.save(full_name, type="pg")
-        g.save(full_name, type="json")
+        # Exclusive access
+        try:
+            with open(fullname + ".json", 'x') as f1:
+                with open(fullname + ".pg", 'x') as f2:
+                    # Save as .pg and .json
+                    g.save(fullname, type="pg")
+                    g.save(fullname, type="json")
+                    return True
+        except:
+            print("_"*30)
+            print(fullname + ".json", ' is already (being) created!')
+            print("_"*30)
+            return False
     else:
-        print("Graph already generated at ", full_name+ ".pg")
+        return True
 
 def load_graph(request):
     """
@@ -164,10 +198,11 @@ def load_graph(request):
     )
 
     # Make sure graph exists, otherwise generate it
-    generate_graph(
+    while (not generate_graph(
         filename, method=method, score=score, drep=drep,
         path_data=path_data, path_graph=path_graph, w=w
-    )
+    )):
+        continue
 
     # Return json version of graph
     with open(full_name + ".json", "rb") as json_file:
@@ -187,7 +222,9 @@ def load_data(request):
     path_data = request.GET['path_data']
 
     # Make sure the processed data file exists, otherwise generate it
-    generate_data(filename, path_data=path_data)
+    # Make sure data has been processed first
+    while (not generate_data(filename, path_data=path_data)):
+        continue
 
     # Return json version of processed data
     with open(path_data + filename + ".json", "rb") as json_file:

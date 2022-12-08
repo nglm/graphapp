@@ -571,7 +571,7 @@ async function get_relevant_components(
     if (options.k != -1) {
         options.k = options.k.map(String).join(",")
     }
-    return $.get(
+    return await $.get(
         "relevant/",                   // URL
         {                              // Additional data
             filename : filename,
@@ -580,7 +580,8 @@ async function get_relevant_components(
             drepresentation : options.drepresentation,
             time_window : options.time_window,
             k: options.k,
-            path_graph : PATH_GRAPH
+            path_graph : PATH_GRAPH,
+            path_data : PATH_DATA
         },
         function(data) {       // Callback function, called on success
             // Function called on success
