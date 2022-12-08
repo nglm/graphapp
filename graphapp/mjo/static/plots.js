@@ -225,10 +225,17 @@ function add_k_options(
     fun_size = (d => 7),
     } = {},
 ) {
+    if (typeof(selected_k) === 'string') {
+        selected_k = selected_k.split(",")
+    }
+    if (typeof(selected_k[0]) === 'string') {
+        selected_k = selected_k.map(Number);
+    }
+
     let myPlot = d3.select(figElem).select("#plot-group");
 
     function def_class(d) {
-        if (d.k == selected_k[d.t]) {
+        if (d.k === selected_k[d.t]) {
             return "k-optionOSelected"
         } else {
             return "k-optionO"
@@ -640,13 +647,14 @@ export async function draw_relevant_graph_meteogram(
     );
 
     // list of k values to plot
+    // opts defined but k not in opts or opts.k is the default value
+    // Then return default value according to the graph
     if ( (opts != undefined) && (!('k' in opts)) || (opts.k === -1) ){
-        opts.k = g.relevant_k.k.map(Number);
+        opts.k = g.relevant_k.k;
     }
     if (opts === undefined) {
-        opts = {k : g.relevant_k.k.map(Number)};
+        opts = {k : g.relevant_k.k};
     }
-
 
     // document ready return a promise, se we should wait
     await $(async function () {
@@ -712,11 +720,13 @@ export async function draw_relevant_graph_mjo(
     let figElem =  fig_mjo( { id : id, dims : dims, parent : parent });
 
     // list of k values to plot
+    // opts defined but k not in opts or opts.k is the default value
+    // Then return default value according to the graph
     if ( (opts != undefined) && (!('k' in opts)) || (opts.k === -1) ){
-        opts.k = g.relevant_k.k.map(Number);
+        opts.k = g.relevant_k.k;
     }
     if (opts === undefined) {
-        opts = {k : g.relevant_k.k.map(Number)};
+        opts = {k : g.relevant_k.k};
     }
 
     // document ready return a promise, se we should wait
@@ -772,6 +782,9 @@ export async function draw_relevant_graph(
             kmax : kmax, options : options,
         });
     }
+    // K is added inside the functions because if it's a default value '-1'
+    // then the g.relevant_k.k should added instead of options.k
+    delete options["k"];
     set_fig_attrs(res, options);
     set_fig_attrs(res, {data_type : "relevant_graph", filename : filename});
     return res
@@ -821,7 +834,6 @@ export async function redraw_relevant_graph(selected_k=-1, interactGroupId=1){
                     drepresentation : figs[i].getAttribute("drepresentation"),
                     time_window : figs[i].getAttribute("time_window"),
                 };
-                console.log("redraw", options);
                 await draw_relevant_graph(
                     figs[i].getAttribute("filename"),
                     {
@@ -982,7 +994,6 @@ function onClickK(figElem, e, d) {
             figElem.setAttribute("k", selected_k)
 
             // -------- Update relevant components graphs ---------------------
-
 
             // Interactive group of the fig that fired the event
             let interactGroupId = document.getElementById(figElem.id + "_input").value;
