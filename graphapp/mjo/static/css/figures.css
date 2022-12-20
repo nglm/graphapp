@@ -84,15 +84,15 @@
 
 .line {
     fill: none;
-    stroke: blue;
+    stroke: var(--col-line);
     stroke-width: var(--lw);
-    stroke-opacity: 0.3;
+    stroke-opacity: var(--opacity-line);
 }
 
 .line-event {
     fill: none;
-    stroke: blue;
-    stroke-width: 2;
+    stroke: var(--col-line);
+    stroke-width: 1.;
     stroke-opacity: 0;
     /* opacity: 0; */
     position: relative;
@@ -103,28 +103,28 @@
     fill: none;
     stroke: var(--col-hover);
     stroke-width: var(--lw-hover);
-    stroke-opacity: 1;
+    stroke-opacity: var(--opacity-hovered);
 }
 
 .lineClusterHovered {
     fill: none;
     stroke: var(--col-hover);
-    stroke-width: var(--lw);
-    stroke-opacity: 1;
+    stroke-width: 2;
+    stroke-opacity: var(--opacity-hovered);
 }
 
 .lineClicked {
     fill: none;
     stroke: var(--col-click);
     stroke-width: var(--lw-click);
-    stroke-opacity: 1;
+    stroke-opacity: var(--opacity-click);
 }
 
 .lineClustered {
     fill: none;
     stroke: var(--col-click);
     stroke-width:var(--lw);
-    stroke-opacity: 1;
+    stroke-opacity: var(--opacity-click);
 }
 
 .life-span {
@@ -141,7 +141,7 @@
     fill: black;
     stroke-width: 3;
     stroke: var(--col-hover);
-    stroke-opacity: 1;
+    stroke-opacity: var(--opacity-hovered);
 }
 
 .k-optionO-event {
@@ -155,7 +155,7 @@
     fill: black;
     stroke-width: 3;
     stroke: var(--col-click);
-    stroke-opacity: 1;
+    stroke-opacity: var(--opacity-click);
 }
 
 .k-optionL {
@@ -183,13 +183,13 @@
 .vertexHovered {
     stroke-width: var(--r-hover);
     stroke: var(--col-hover);
-    stroke-opacity: 1;
+    stroke-opacity: var(--opacity-hovered);
 }
 
 .vertexClicked {
     stroke-width: var(--r-click);
     stroke: var(--col-click);
-    stroke-opacity: 1;
+    stroke-opacity: var(--opacity-click);
 }
 
 .vertex-std {

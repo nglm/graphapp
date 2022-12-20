@@ -1,12 +1,17 @@
 :root {
     --main-col: #0094bd;
-    --col-click: red;
-    --col-hover:  rgb(6, 245, 6);
+    --col-click: #ca0020;
+    --col-line: #0571b0;
+    --col-line-bis: #92c5de;
+    --col-hover:  #f4a582;
     --lw: 0.5;
     --lw-hover: 3;
     --lw-click: 4;
     --r-hover: 10;
     --r-click: 10;
+    --opacity-line: 0.6;
+    --opacity-hovered: 1;
+    --opacity-click: 1;
     --button-col-background: rgb(241, 238, 238);
     --button-col-hover: #bbe6f2;
 	--font-small: 17px;
@@ -16,6 +21,8 @@
     --slider-width: 250px;
     --slider-rotate: translate(125px, 125px) rotate(90deg);
 }
+
+/* using colorbrewer https://colorbrewer2.org/?type=diverging&scheme=RdBu&n=4
 
 /* ------- Common style for all elements ------- */
 * {
