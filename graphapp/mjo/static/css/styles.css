@@ -23,8 +23,9 @@
 .button {
     font-size: var(--font-medium);
 	cursor: pointer;
-	border: 5px solid var(--button-col-hover);
-	padding: 5px;
+	border: var(--border-style);
+	padding: 0px;
+	margin: 0px;
 	text-align: center;
 	width: 100%;
     background-color: var(--button-col-background);
@@ -35,7 +36,7 @@
 }
 
 .option-selected {
-	font-weight: bold;
+	font-weight: normal;
 }
 
 /* container that will contain the "<input type="range"> tag  */
@@ -91,10 +92,9 @@
 		-moz- (Firefox)
 */
 .slider-range::-webkit-slider-thumb {
-	-webkit-appearance	-webkit-appearance: none; /* Override default look */
-	: none; /* Override default look */
+	-webkit-appearance: none; /* Override default look */
 	appearance: none;
-	border-radius: 10px;
+	border-radius: 8px;
 	/* Dimensions of the handle */
 	width: 15px;
 	height: 15px;
@@ -102,23 +102,21 @@
 }
 
 .slider-range::-moz-range-thumb {
-	border-radius: 10px;
+	border-radius: 8px;
 	width: 15px; /* Set a specific slider handle width */
 	height: 15px; /* Slider handle height */
 	background: var(--button-col-hover);
 }
 
 .select_group {
-    /* border: 5px solid var(--button-col-hover); */
 	width:fit-content;
-	/* padding: 10px; */
 	margin: 5px;
 	display: inline-block;
     position: relative;
 }
 
 .fig_group {
-    border: 5px solid var(--button-col-hover);
+    border: var(--border-style);
 	width:fit-content;
 	min-width: var(--min-width);
 	padding: 10px;

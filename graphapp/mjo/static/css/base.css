@@ -14,6 +14,7 @@
     --opacity-click: 1;
     --button-col-background: rgb(241, 238, 238);
     --button-col-hover: #bbe6f2;
+    --border-style: 3px solid #bbe6f2;
 	--font-small: 17px;
 	--font-medium: 25px;
 	--font-big: 30px;
@@ -28,7 +29,7 @@
 * {
     font-family: Arial, sans-serif;
     font-size: var(--font-medium);
-    border-radius: 10px;
+    border-radius: 8px;
     margin: 0px;
 }
 
@@ -54,6 +55,8 @@ select {
     padding: 5px;
     background-color: var(--button-col-background);
 	cursor: pointer;
+	border: var(--border-style)
+}
 
 fieldset {
     border: var(--border-style)
