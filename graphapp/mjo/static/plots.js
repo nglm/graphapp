@@ -311,7 +311,8 @@ function add_edges(
 async function load_graph(
     filename,
     options = {
-        method = "", score = "", time_window = "", drepresentation=""
+        method = "", score = "", time_window = "", drepresentation="",
+        trepresentation="",
     } = {},
 ) {
     return await $.get(
@@ -321,6 +322,7 @@ async function load_graph(
             method: options.method,
             score: options.score,
             drepresentation : options.drepresentation,
+            trepresentation : options.trepresentation,
             time_window : options.time_window,
             path_data : PATH_DATA,
             path_graph : PATH_GRAPH

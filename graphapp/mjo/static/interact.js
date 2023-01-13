@@ -109,6 +109,7 @@ export async function selectOption(){
     let m = document.getElementById("methods").value;
     let s = document.getElementById("scores").value;
     let drep = document.getElementById("data_representation").value;
+    let trep = document.getElementById("time_representation").value;
     let w = document.getElementById("windows").value;
     await $.get(
         "",                  // URL
@@ -117,6 +118,7 @@ export async function selectOption(){
             method : m,
             score : s,
             drepresentation : drep,
+            trepresentation : trep,
             time_window : w,
         },
         function(data) {       // Callback on success

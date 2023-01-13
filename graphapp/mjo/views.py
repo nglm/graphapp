@@ -12,9 +12,10 @@ import multimet as mm
 
 # Find all files in the data folder
 FILENAMES = [f[:-4] for f in listdir("./data/data") if f.endswith(".txt")]
-METHODS = pg.CLUSTERING_METHODS
+METHODS = pg.CLUSTERING_METHODS["names"]
 SCORES = pg.SCORES
-DATA_REPRESENTATIONS = ["RMM", "RMM-squared_radius"]
+DATA_REPRESENTATIONS = ["RMM-squared_radius", "RMM"]
+TIME_REPRESENTATIONS = ["Standard", "DTW"]
 
 def read_request(request):
     context = {
@@ -27,7 +28,9 @@ def read_request(request):
         "score" : SCORES[0],
         "drepresentations" : DATA_REPRESENTATIONS,
         "drepresentation" : DATA_REPRESENTATIONS[0],
-        "time_window": 1,
+        "trepresentations" : TIME_REPRESENTATIONS,
+        "trepresentation" : TIME_REPRESENTATIONS[0],
+        "time_window": 3,
     }
     if "filename" in request.GET:
         context["filename"] = request.GET['filename']
@@ -40,6 +43,9 @@ def read_request(request):
     if "drepresentation" in request.GET:
         if request.GET['drepresentation'] != "":
             context["drepresentation"] = request.GET['drepresentation']
+    if "trepresentation" in request.GET:
+        if request.GET['trepresentation'] != "":
+            context["trepresentation"] = request.GET['trepresentation']
     if "time_window" in request.GET:
         if request.GET['time_window'] != "":
             context["time_window"] = request.GET['time_window']
@@ -74,20 +80,21 @@ def relevant(request):
     method = context['method']
     score = context['score']
     drep = context["drepresentation"]
+    trep = context["trepresentation"]
     w = context['time_window']
     path_graph = request.GET['path_graph']
     path_data = request.GET['path_data']
     full_name = (
         path_graph + filename + "_" + method + "_" + score
-        + "_" + drep + "_" + str(w)
+        + "_" + drep + "_" + trep +  "_" + str(w)
     )
 
     selected_k = context['k']
 
     # Make sure graph exists, otherwise generate it
     generate_graph(
-        filename, method=method, score=score, drep=drep,
-        path_data=path_data, path_graph=path_graph, w=w
+        filename, method=method, score=score, drep=drep, trep=trep, w=w,
+        path_data=path_data, path_graph=path_graph,
     )
 
     with open(full_name + ".pg", "rb") as f:
@@ -129,13 +136,15 @@ def generate_data(filename, path_data=""):
         return True
 
 def generate_graph(
-    filename, method="", score="", drep="", path_data="", path_graph="", w=""):
+    filename, method="", score="", drep="", trep="", w="",
+    path_data="", path_graph="",
+):
     """
     Generate and save graph (as .pg and .json) if it doesn't already exist
     """
     fullname = (
         path_graph + filename + "_" + method + "_" + score
-        + "_" + drep + "_" + str(w)
+        + "_" + drep + "_" + trep + "_" + str(w)
     )
     if not ( exists(fullname + ".pg") and exists(fullname + ".json") ):
 
@@ -154,10 +163,11 @@ def generate_graph(
         print("Generating graph: ", fullname + ".pg")
         print("_"*30)
         squared_radius = "squared_radius" in drep
+        DTW = "DTW" in trep
         g = pg.PersistentGraph(
             members, time_axis=time, model_class=method,
             score_type=score, k_max=5,
-            squared_radius=squared_radius, time_window=w
+            squared_radius=squared_radius, DTW=DTW, time_window=w
         )
         g.construct_graph()
         # Exclusive access
@@ -188,19 +198,20 @@ def load_graph(request):
     method = context['method']
     score = context['score']
     drep = context["drepresentation"]
+    trep = context["trepresentation"]
     w = context['time_window']
     path_data = request.GET['path_data']
     path_graph = request.GET['path_graph']
 
     full_name = (
         path_graph + filename + "_" + method + "_" + score
-        + "_" + drep + "_" + str(w)
+        + "_" + drep + "_" + trep + "_" + str(w)
     )
 
     # Make sure graph exists, otherwise generate it
     while (not generate_graph(
-        filename, method=method, score=score, drep=drep,
-        path_data=path_data, path_graph=path_graph, w=w
+        filename, method=method, score=score, drep=drep, trep=trep, w=w,
+        path_data=path_data, path_graph=path_graph,
     )):
         continue
 
