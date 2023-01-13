@@ -6,6 +6,8 @@ package.json
 package-lock.json
 # no graph data
 data/graphs/*
+# no preprocessed data
+data/data/*.json
 # no backup files
 *~*
 # no ipynb checkpoints
