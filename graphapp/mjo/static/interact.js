@@ -150,12 +150,12 @@ export async function updateSliderValue(rangeId, valueId){
  */
 export function sliderMember(classMemberSelected) {
     let figs = document.getElementsByClassName("container-fig");
-    // Correspondance between the range value and the m id
+    // Correspondence between the range value and the m id
     let m_id = "m" + document.getElementById('members_range').value;
 
     for (let i = 0; i < figs.length; i++) {
 
-        // Within the outter svg element of each fig, all ids are unique
+        // Within the outer svg element of each fig, all ids are unique
         let svgElem = document.getElementById(figs[i].id + "_svg");
 
         // Consider current fig only if it is a relevant type
@@ -182,23 +182,48 @@ export function sliderMember(classMemberSelected) {
  * @param {*} classClusterSelected class of selected cluster elements (e.g. clicked or hovered?)
  * @param {*} classMemberSelected class of selected member elements
  */
-export function onEventClusterAux(
+export async function onEventClusterAux(
     e, d, clusterElem, figElem,
     classClusterSelected, classMemberSelected,
     {
         select = true, deselect = true,
+        intersection = false, accumulation = false,
+        classMemberIntersection = "lineIntersection",
     } = {}
 ) {
     // Get interactive group of the fig that fired the event
     let interactiveGroup = document.getElementById(figElem.id + "_input").value;
     // Find all figures in the document
     let figs = document.getElementsByClassName("container-fig");
-    // Correspondance between that v-event id and the v id
+    // Correspondence between that v-event id and the v id
     let v_id = "v" + clusterElem.id.slice(7);
+    // ids of members in that cluster
+    let m_ids = d.members.map((m) => ("m" + m));
+
+    // Find current intersection of cluster
+    let m_inter_ids = [];
+    if (intersection) {
+
+        // intersection ids are stored in the "intersection" element
+        let interElem = document.getElementById("intersection");
+        m_inter_ids = interElem.getAttribute("m_ids").split(",");
+
+        // If there was no selection before, then the intersection is
+        // the current selection
+        if (m_inter_ids[0] == '') {
+            m_inter_ids = [...m_ids];
+        // Otherwise, its the intersection of the prev intersection and the
+        // current selection
+        } else {
+            m_inter_ids = m_inter_ids.filter(m_id => m_ids.includes(m_id));
+        }
+        // Update attribute
+        interElem.setAttribute("m_ids", m_inter_ids);
+    }
 
     for (let i = 0; i < figs.length; i++) {
 
-        // Within the outter svg element of each fig, all ids are unique
+        // Within the outer svg element of each fig, all ids are unique
         let svgElem = document.getElementById(figs[i].id + "_svg");
 
         // Consider current fig only if it is a relevant type
@@ -207,29 +232,32 @@ export function onEventClusterAux(
         let data_type = figs[i].getAttribute('data_type');
 
         // Deal with graph plots and their vertices
-        if ((groupId == interactiveGroup) && (data_type === "entire_graph")){
-            updateSelection(
+        if (
+            (groupId == interactiveGroup)
+            && (data_type === "entire_graph" || data_type === "relevant_graph")
+        ){
+            await updateSelection(
                 svgElem, [v_id], classClusterSelected,
-                {select : select, deselect : deselect}
-            );
-        }
-
-        if ((groupId == interactiveGroup) && (data_type === "relevant_graph")){
-
-            updateSelection(
-                svgElem, [v_id], classClusterSelected,
-                {select : select, deselect : deselect}
+                {select : select, deselect : !accumulation}
             );
         }
 
         // Deal with spaghetti plots and their members
         if ((groupId == interactiveGroup) && (data_type === "members")){
-            // ids of members in that cluster
-            let m_ids = d.members.map((m) => ("m" + m));
-            updateSelection(
+
+            // Add the selected class to the right members
+            await updateSelection(
                 svgElem, m_ids, classMemberSelected,
-                {select : select, deselect : deselect}
+                {select : select, deselect : !accumulation}
             );
+
+            // Add the intersection class to the right members
+            if (intersection){
+                await updateSelection(
+                    svgElem, m_inter_ids, classMemberIntersection,
+                    {select : select, deselect : true}
+                );
+            }
         }
     }
 }
@@ -243,12 +271,12 @@ export function onEventMemberAux(
     let interactiveGroup = document.getElementById(figElem.id + "_input").value;
     // Find all figures in the document
     let figs = document.getElementsByClassName("container-fig");
-    // Correspondance between that m-event id and the m id
+    // Correspondence between that m-event id and the m id
     let m_id = "m" + memberElem.id.slice(7);
 
     for (let i = 0; i < figs.length; i++) {
 
-        // Within the outter svg element of each fig, all ids are unique
+        // Within the outer svg element of each fig, all ids are unique
         let svgElem = document.getElementById(figs[i].id + "_svg");
 
         // Consider current fig only if it is a relevant type

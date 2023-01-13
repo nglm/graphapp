@@ -926,8 +926,11 @@ function onMouseOutMember(figElem, e, d) {
 //mouseover event handler function using closure
 function onClickMember(figElem, e, d) {
     return function (e, d) {
+        // Update the displayed number of member selected
         $("#member_selected").html(this.id.slice(7));
+        // Update the slider position
         $("#members_range").attr('value', this.id.slice(7));
+        // Update styles of elements
         onEventMemberAux(
             e, d, this, figElem, 'lineClicked',
         )
@@ -958,10 +961,17 @@ function onMouseOutCluster(figElem, e, d) {
 
 //mouseover event handler function using closure
 function onClickCluster(figElem, e, d) {
+
     return function (e, d) {
+        // Determine whether we are taking the intersection or accumulation
+        // or clusters one by one
+        let intersection = document.getElementById('intersection').checked;
+        let accumulation = document.getElementById('accumulation').checked;
+
         onEventClusterAux(
             e, d, this, figElem,
             'vertexClicked', 'lineClustered',
+            {intersection : intersection, accumulation : accumulation}
         )
     }
 }
