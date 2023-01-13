@@ -99,20 +99,6 @@
 }
 
 
-.lineHovered {
-    fill: none;
-    stroke: var(--col-hover);
-    stroke-width: var(--lw-hover);
-    stroke-opacity: var(--opacity-hovered);
-}
-
-.lineClusterHovered {
-    fill: none;
-    stroke: var(--col-hover);
-    stroke-width: 2;
-    stroke-opacity: var(--opacity-hovered);
-}
-
 .lineClustered {
     fill: none;
     stroke: var(--col-hover);
@@ -132,6 +118,20 @@
     stroke: var(--col-click);
     stroke-width:var(--lw-inter);
     stroke-opacity: var(--opacity-click);
+}
+
+.lineHovered {
+    fill: none;
+    stroke: var(--col-hover);
+    stroke-width: var(--lw-hover);
+    stroke-opacity: var(--opacity-hovered);
+}
+
+.lineClusterHovered {
+    fill: none;
+    stroke: var(--col-hover);
+    stroke-width: 2;
+    stroke-opacity: var(--opacity-hovered);
 }
 
 .life-span {
