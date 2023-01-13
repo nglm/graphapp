@@ -932,9 +932,13 @@ function onClickMember(figElem, e, d) {
         $("#member_selected").html(this.id.slice(7));
         // Update the slider position
         $("#members_range").attr('value', this.id.slice(7));
+
+        // Determine whether we are taking the accumulation of members
+        let accumulation = document.getElementById('accumulation').checked;
         // Update styles of elements
         onEventMemberAux(
             e, d, this, figElem, 'lineClicked',
+            {accumulation : accumulation}
         )
     }
 }

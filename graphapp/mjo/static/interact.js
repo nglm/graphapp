@@ -223,6 +223,26 @@ export async function onEventClusterAux(
         interElem.setAttribute("m_ids", m_inter_ids);
     }
 
+    // Find current union of members
+    let m_acc_ids = [];
+    if (accumulation) {
+
+        // accumulation ids are stored in the "accumulation" element
+        let unionElem = document.getElementById("accumulation");
+        m_acc_ids = unionElem.getAttribute("m_ids").split(",");
+
+        // If there was no selection before, then the union is
+        // the current selection
+        if (m_acc_ids[0] == '') {
+            m_acc_ids = [...m_ids];
+        // Otherwise, its the union of the prev union and the
+        // current selection
+        } else {
+            m_acc_ids = m_acc_ids.concat(m_ids)
+        }
+        // Update attribute
+        unionElem.setAttribute("m_ids", m_acc_ids);
+    }
     for (let i = 0; i < figs.length; i++) {
 
         // Within the outer svg element of each fig, all ids are unique
@@ -240,7 +260,7 @@ export async function onEventClusterAux(
         ){
             await updateSelection(
                 svgElem, [v_id], classClusterSelected,
-                {select : select, deselect : !accumulation}
+                {select : select, deselect : !(intersection || accumulation)}
             );
         }
 
@@ -267,7 +287,10 @@ export async function onEventClusterAux(
 export function onEventMemberAux(
     e, d, memberElem, figElem,
     classMemberSelected,
-    {select = true, deselect = true,} = {}
+    {
+        select = true, deselect = true,
+        accumulation = false,
+    } = {}
 ) {
     // Get interactive group of the fig that fired the event
     let interactiveGroup = document.getElementById(figElem.id + "_input").value;
@@ -275,6 +298,27 @@ export function onEventMemberAux(
     let figs = document.getElementsByClassName("container-fig");
     // Correspondence between that m-event id and the m id
     let m_id = "m" + memberElem.id.slice(7);
+
+    // // Find current union of members
+    // let m_acc_ids = [];
+    // if (accumulation) {
+
+    //     // accumulation ids are stored in the "accumulation" element
+    //     let unionElem = document.getElementById("accumulation");
+    //     m_acc_ids = unionElem.getAttribute("m_ids").split(",");
+
+    //     // If there was no selection before, then the union is
+    //     // the current selection
+    //     if (m_acc_ids[0] == '') {
+    //         m_acc_ids = [m_id];
+    //     // Otherwise, its the union of the prev union and the
+    //     // current selection
+    //     } else {
+    //         m_acc_ids = m_acc_ids.concat([m_id])
+    //     }
+    //     // Update attribute
+    //     unionElem.setAttribute("m_ids", m_acc_ids);
+    // }
 
     for (let i = 0; i < figs.length; i++) {
 
@@ -289,9 +333,13 @@ export function onEventMemberAux(
         // Deal with spaghetti plots and their members
         if ((groupId == interactiveGroup) && (data_type === "members")){
             // ids of members in that cluster
+            // if deselect == False then we never deselect, regardless of acc
+            // if deselect == true but "acc" then we don't deselect
+            // if deselect == true and "!acc" then we deselect
+            // => we deselect only if deselect and "!acc"
             updateSelection(
                 svgElem, [m_id], classMemberSelected,
-                {select : select, deselect : deselect}
+                {select : select, deselect : (deselect && !accumulation)}
             );
         }
     }
