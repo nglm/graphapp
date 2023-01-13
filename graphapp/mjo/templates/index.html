@@ -98,6 +98,22 @@
             <br>
         </div>
 
+        <div class="slider-container right-bar-elem">
+            <fieldset>
+                <legend>Type of selection</legend>
+
+                <div>
+                    <input type="checkbox" id="intersection" name="intersection" m_ids = "" checked>
+                    <label for="intersection">Intersection</label>
+                </div>
+
+                <div>
+                    <input type="checkbox" id="accumulation" name="accumulation">
+                    <label for="accumulation">Accumulation</label>
+                </div>
+            </fieldset>
+        </div>
+
         <div class="button-container right-bar-elem">
             <div class="button" onclick="clearSelection()">
                 Clear selection
@@ -123,7 +139,6 @@
                 onchange="sliderMember('lineClicked');"
                 step="1" value="1" min="1" max="50"
             >
-
             <br>
         </div>
     </div>

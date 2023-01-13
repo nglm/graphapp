@@ -54,8 +54,13 @@ select {
     padding: 5px;
     background-color: var(--button-col-background);
 	cursor: pointer;
-	border: 5px solid var(--button-col-hover);
-	border-radius: 10px;
+
+fieldset {
+    border: var(--border-style)
+}
+
+legend {
+	border-color: var(--main-col);
 }
 
 .right-bar {

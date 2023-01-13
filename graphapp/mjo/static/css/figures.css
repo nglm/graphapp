@@ -113,6 +113,13 @@
     stroke-opacity: var(--opacity-hovered);
 }
 
+.lineClustered {
+    fill: none;
+    stroke: var(--col-click);
+    stroke-width:var(--lw);
+    stroke-opacity: var(--opacity-click);
+}
+
 .lineClicked {
     fill: none;
     stroke: var(--col-click);
@@ -120,9 +127,10 @@
     stroke-opacity: var(--opacity-click);
 }
 
-.lineClustered {
+.lineIntersection {
     fill: none;
-    stroke: var(--col-click);
+    /* stroke: var(--col-hover); */
+    stroke: green;
     stroke-width:var(--lw);
     stroke-opacity: var(--opacity-click);
 }
