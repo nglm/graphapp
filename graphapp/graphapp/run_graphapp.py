@@ -2,6 +2,7 @@ import webbrowser
 from django.core import management
 from django.conf import settings
 from django import setup
+import secrets
 
 
 
@@ -9,7 +10,7 @@ def start():
     settings.configure(
         DEBUG=False,
         ALLOWED_HOSTS = ['localhost', '127.0.0.1',],
-        SECRET_KEY = management.utils.get_random_secret_key())
+        SECRET_KEY = secrets.token_urlsafe())
     setup()
     for name in dir(settings):
         print(name, getattr(settings, name))
