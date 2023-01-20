@@ -12,7 +12,7 @@ def start():
         ALLOWED_HOSTS = ['localhost', '127.0.0.1',],
         SECRET_KEY = secrets.token_urlsafe())
     setup()
-    for name in dir(settings):
-        print(name, getattr(settings, name))
+    # for name in dir(settings):
+    #     print(name, getattr(settings, name))
     management.call_command('runserver', '8080')
     webbrowser.open("http://127.0.0.1:8080/mjo/")
