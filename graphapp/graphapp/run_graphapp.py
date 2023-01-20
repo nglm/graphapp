@@ -10,7 +10,8 @@ def start():
     settings.configure(
         DEBUG=False,
         ALLOWED_HOSTS = ['localhost', '127.0.0.1',],
-        SECRET_KEY = secrets.token_urlsafe())
+        SECRET_KEY = secrets.token_urlsafe(),
+        ROOT_URLCONF = 'graphapp.urls')
     setup()
     # for name in dir(settings):
     #     print(name, getattr(settings, name))
