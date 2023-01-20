@@ -11,11 +11,17 @@ import persigraph as pg
 import multimet as mm
 
 # Find all files in the data folder
-FILENAMES = [f[:-4] for f in listdir("./data/data") if f.endswith(".txt")]
-METHODS = pg.CLUSTERING_METHODS["names"]
-SCORES = pg.SCORES
-DATA_REPRESENTATIONS = ["RMM-squared_radius", "RMM"]
-TIME_REPRESENTATIONS = ["Standard", "DTW"]
+def define_default():
+    global FILENAMES
+    global METHODS
+    global SCORES
+    global DATA_REPRESENTATIONS
+    global TIME_REPRESENTATIONS
+    FILENAMES = [f[:-4] for f in listdir("./data/data") if f.endswith(".txt")]
+    METHODS = pg.CLUSTERING_METHODS["names"]
+    SCORES = pg.SCORES
+    DATA_REPRESENTATIONS = ["RMM-squared_radius", "RMM"]
+    TIME_REPRESENTATIONS = ["Standard", "DTW"]
 
 def read_request(request):
     context = {
