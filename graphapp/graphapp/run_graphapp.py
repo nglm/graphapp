@@ -16,8 +16,9 @@ def start():
         DEBUG=True,
         ALLOWED_HOSTS = ['localhost', '127.0.0.1',],
         SECRET_KEY = secrets.token_urlsafe(),
-        ROOT_URLCONF = 'graphapp.urls')
-    #setup()
+        # ROOT_URLCONF = 'graphapp.urls'
+    )
+    setup()
     # for name in dir(settings):
     #     print(name, getattr(settings, name))
     management.call_command('runserver', '8080')
