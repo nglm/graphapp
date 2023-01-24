@@ -7,12 +7,17 @@ import secrets
 
 
 def start():
+    # settings.configure(
+    #     DEBUG=False,
+    #     ALLOWED_HOSTS = ['localhost', '127.0.0.1',],
+    #     SECRET_KEY = secrets.token_urlsafe(),
+    #     ROOT_URLCONF = 'graphapp.urls')
     settings.configure(
-        DEBUG=False,
+        DEBUG=True,
         ALLOWED_HOSTS = ['localhost', '127.0.0.1',],
         SECRET_KEY = secrets.token_urlsafe(),
         ROOT_URLCONF = 'graphapp.urls')
-    setup()
+    #setup()
     # for name in dir(settings):
     #     print(name, getattr(settings, name))
     management.call_command('runserver', '8080')
