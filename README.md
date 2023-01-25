@@ -6,6 +6,12 @@ GraphApp is a package specialized in interactive visualization of ensemble of ti
 How to install
 -------------------------------------------------------------------------------
 
+### Prerequisite
+
+1. Install poetry
+
+### Once prerequisites are met
+
 1. Copy / clone the content of the `GraphApp` folder from `github.com:nglm/graphapp.git`.
 2. You should have the following arborescence: (Note that the  `GraphApp` folder can be renamed or merged with another of your personal folder)
 
@@ -37,6 +43,7 @@ How to use once installed
     ```
 
 3. In your browser, go to the following URL `http://127.0.0.1:8080/`
-4. Interact with the plots as you wish
-5. The generated graphs are saved in the `GraphApp/data/graphs` folder and can be loaded and manipulated with the `persigraph` python package.
+4. Choose your type of visualization
+5. Interact with the plots as you wish
+6. The generated graphs are saved in the `GraphApp/data/graphs` folder and can be loaded and manipulated with the `persigraph` python package.
 
