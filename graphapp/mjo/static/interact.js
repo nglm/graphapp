@@ -82,6 +82,21 @@ async function updateSelection(
 }
 
 /**
+ * Find the different HTML element that stores the selected members and
+ * clear them
+ */
+export function clearStoredSelection(){
+    $("#accumulation").html("");
+    $("#intersection").html("");
+    $("#check-intersection").attr("m_ids", "");
+    $("#check-accumulation").attr("m_ids", "");
+    // Update the displayed number of member selected
+    $("#member_selected").html("1");
+    // Update the slider position
+    $("#members_range").attr('value', 1);
+}
+
+/**
  * Clear current selection of members/clusters by keeping only default class
  *
  * This function assumes that all members and clusters already have the
@@ -212,7 +227,7 @@ export async function onEventClusterAux(
 
         // If there was no selection before, then the intersection is
         // the current selection
-        if (m_inter_ids[0] == '') {
+        if (m_inter_ids[0] == '-1') {
             m_inter_ids = [...m_ids];
         // Otherwise, its the intersection of the prev intersection and the
         // current selection
@@ -229,12 +244,14 @@ export async function onEventClusterAux(
     if (accumulation) {
 
         // accumulation ids are stored in the "accumulation" element
-        let unionElem = document.getElementById("check-accumulation");
-        m_acc_ids = unionElem.getAttribute("m_ids").split(",");
+        let unionCheckElem = document.getElementById("check-accumulation");
+        // Create a new HTML element as an item
+        let itemElem = document.createElement( "li" );
+        m_acc_ids = unionCheckElem.getAttribute("m_ids").split(",");
 
         // If there was no selection before, then the union is
         // the current selection
-        if (m_acc_ids[0] == '') {
+        if (m_acc_ids[0] == '-1') {
             m_acc_ids = [...m_ids];
         // Otherwise, its the union of the prev union and the
         // current selection
@@ -242,7 +259,10 @@ export async function onEventClusterAux(
             m_acc_ids = m_acc_ids.concat(m_ids)
         }
         // Update attribute
-        unionElem.setAttribute("m_ids", m_acc_ids);
+        unionCheckElem.setAttribute("m_ids", m_acc_ids);
+        $(itemElem).text(m_ids.map((m) => m.slice(1)).map(Number));
+        console.log(itemElem);
+        $("#accumulation").append(itemElem);
     }
     for (let i = 0; i < figs.length; i++) {
 

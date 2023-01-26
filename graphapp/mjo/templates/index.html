@@ -7,11 +7,13 @@
     <!-- buttons -->
     <script type="module">
         import {
-            clearSelection, selectOption, updateSliderValue, sliderMember,
+            clearSelection, clearStoredSelection,
+            selectOption, updateSliderValue, sliderMember,
         } from "{% static './interact.js' %}";
         import {redraw_relevant_graph} from "{% static './plots.js' %}";
         import {add_legend} from "{% static './figures.js' %}"
         globalThis.clearSelection = clearSelection;
+        globalThis.clearStoredSelection = clearStoredSelection;
         globalThis.selectOption = selectOption;
         globalThis.updateSliderValue = updateSliderValue;
         globalThis.sliderMember = sliderMember;
@@ -71,7 +73,7 @@
         {% endwith %}
 
         <span class="slider-container" >
-            <span> Time window (x6h):   </span>
+            <span style="font-weight: bold;"> Time window (x6h):   </span>
             <span id="time_window" class="slider-value"> 3 </span>
             <input
                 id="windows" type="range" class="slider-range"
@@ -90,7 +92,7 @@
     <div id="right-bar" class="right-bar">
 
         <div id="legend" class="legend right-bar-elem">
-            Legend <br>
+            <h4>Legend</h4>
             number of clusters:
             <script type="module">
                 add_legend();
@@ -100,22 +102,23 @@
 
         <div class="slider-container right-bar-elem">
             <fieldset>
-                <legend>Type of selection</legend>
+                <legend><h4>Type of selection</h4></legend>
 
                 <div>
-                    <input type="checkbox" id="check-intersection" name="check-intersection" m_ids = "" checked>
+                    <input type="checkbox" id="check-intersection" name="check-intersection" m_ids = "-1" checked>
                     <label for="check-intersection">Intersection</label>
                 </div>
 
                 <div>
-                    <input type="checkbox" id="check-accumulation" name="check-accumulation" m_ids = "">
+                    <input type="checkbox" id="check-accumulation" name="check-accumulation" m_ids = "-1">
                     <label for="check-accumulation">Accumulation</label>
                 </div>
             </fieldset>
         </div>
 
         <div class="button-container right-bar-elem">
-            <div class="button" onclick="clearSelection()">
+            <div class="button"
+            onclick="clearSelection(); clearStoredSelection()">
                 Clear selection
             </div>
         </div>
@@ -128,9 +131,9 @@
 
         <div class="slider-container right-bar-elem">
             <br>
-            <span>Selected member:</span>
+            <h4>Selected member:</h4>
             <span id="member_selected" class="slider-value">
-                1
+                0
             </span>
             <input
                 id="members_range" type="range" class="slider-range"
@@ -139,14 +142,14 @@
                     sliderMember('lineHovered');
                     "
                 onchange="sliderMember('lineClicked');"
-                step="1" value="1" min="1" max="50"
+                step="1" value="0" min="0" max="49"
             >
-            <div><br>Intersection of clusters:</div>
+            <div><br><h4>Intersection of clusters:</h4></div>
             <div id="intersection" class="slider-value">
             </div>
             <br>
-            <div>In each cluster:</div>
-                <ol id="accumulation">
+            <div><h4>In each cluster:<h4></div>
+                <ol id="accumulation" type="A" >
                     <!-- <li id="accumulation1"></li> -->
                 </ol>
             </div>

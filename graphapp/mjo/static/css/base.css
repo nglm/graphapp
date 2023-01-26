@@ -67,6 +67,14 @@ input {
 	cursor: pointer;
 }
 
+li {
+	overflow-wrap: break-word;
+}
+
+li::marker {
+	font-weight:bold;
+}
+
 fieldset {
     border: var(--border-style)
 }
