@@ -50,17 +50,13 @@
 /* style to associate with a regular div, where we write text */
 /* this has nothing to do with the "<input type="range"> tag  */
 .slider-value{
-	/* position: relative; */
     font-size: var(--font-medium);
 	text-align: right;
-	/* padding: 10px; */
 	overflow-wrap: break-word;
-	/* text-align: center;
-	top: 50%; */
+
 }
 
 .vertical-slider-value{
-	right: 20px;
 	overflow-wrap: break-word;
 }
 
