@@ -928,10 +928,11 @@ function onMouseOutMember(figElem, e, d) {
 //mouseover event handler function using closure
 function onClickMember(figElem, e, d) {
     return function (e, d) {
+        let m_id = this.id.slice(7);
         // Update the displayed number of member selected
-        $("#member_selected").html(this.id.slice(7));
+        $("#member_selected").html(m_id);
         // Update the slider position
-        $("#members_range").attr('value', this.id.slice(7));
+        document.getElementById("members_range").value = m_id;
 
         // Determine whether we are taking the accumulation of members
         let accumulation = document.getElementById('accumulation').checked;

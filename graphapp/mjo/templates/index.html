@@ -148,10 +148,12 @@
             <input
                 id="members_range" type="range" class="slider-range"
                 oninput="
+                    sliderMember('lineClicked');
                     updateSliderValue('members_range', 'member_selected');
-                    sliderMember('lineHovered');
                     "
-                onchange="sliderMember('lineClicked');"
+                onchange="
+                    sliderMember('lineClicked');
+                    updateSliderValue('members_range', 'member_selected');"
                 step="1" value="0" min="0" max="49"
             >
             <div><br><h4>Intersection of <br> selected clusters:</h4></div>

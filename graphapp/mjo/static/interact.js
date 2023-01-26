@@ -93,7 +93,9 @@ export function clearStoredSelection(){
     // Update the displayed number of member selected
     $("#member_selected").html("0");
     // Update the slider position
-    $("#members_range").attr('value', 0);
+    // Remember that the "value" property is special, so use .value
+    // instead of .attr("value")
+    document.getElementById("members_range").value = "0";
 }
 
 /**
@@ -156,9 +158,13 @@ export async function selectOption(){
         })
 }
 
-export async function updateSliderValue(rangeId, valueId){
-    let value = document.getElementById(rangeId).value;
-    $(String("#"+valueId)).html(value);
+export function updateSliderValue(rangeId, valueId){
+    // Find value of the slider
+    // Remember that the "value" property is special, so use .value
+    // instead of .attr("value")
+    let value = document.getElementById("members_range").value;
+    // Update the text
+    $("#member_selected").html(value);
 }
 
 

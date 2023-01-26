@@ -64,7 +64,8 @@
 /* here we mostly style the "range" area, i.e. the bar   */
 /* to style the handle, see below                        */
 .slider-range{
-	-webkit-appearance: none;  /* Override default CSS styles */
+	/* Override default CSS styles */
+	-webkit-appearance: none;
 	appearance: none;
 	position: relative;
 	/* Dimensions of the range bar */
