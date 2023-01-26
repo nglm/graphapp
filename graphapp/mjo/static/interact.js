@@ -207,8 +207,8 @@ export async function onEventClusterAux(
     if (intersection) {
 
         // intersection ids are stored in the "intersection" element
-        let interElem = document.getElementById("intersection");
-        m_inter_ids = interElem.getAttribute("m_ids").split(",");
+        let interCheckElem = document.getElementById("check-intersection");
+        m_inter_ids = interCheckElem.getAttribute("m_ids").split(",");
 
         // If there was no selection before, then the intersection is
         // the current selection
@@ -220,7 +220,8 @@ export async function onEventClusterAux(
             m_inter_ids = m_inter_ids.filter(m_id => m_ids.includes(m_id));
         }
         // Update attribute
-        interElem.setAttribute("m_ids", m_inter_ids);
+        interCheckElem.setAttribute("m_ids", m_inter_ids);
+        $("#intersection").text(m_inter_ids.map((m) => m.slice(1)).map(Number));
     }
 
     // Find current union of members
@@ -228,7 +229,7 @@ export async function onEventClusterAux(
     if (accumulation) {
 
         // accumulation ids are stored in the "accumulation" element
-        let unionElem = document.getElementById("accumulation");
+        let unionElem = document.getElementById("check-accumulation");
         m_acc_ids = unionElem.getAttribute("m_ids").split(",");
 
         // If there was no selection before, then the union is

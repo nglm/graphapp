@@ -54,12 +54,14 @@
     font-size: var(--font-medium);
 	text-align: right;
 	padding: 20px;
+	overflow-wrap: break-word;
 	/* text-align: center;
 	top: 50%; */
 }
 
 .vertical-slider-value{
 	right: 20px;
+	overflow-wrap: break-word;
 }
 
 /* style to associate with the "<input type="range"> tag */

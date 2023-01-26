@@ -103,13 +103,13 @@
                 <legend>Type of selection</legend>
 
                 <div>
-                    <input type="checkbox" id="intersection" name="intersection" m_ids = "" checked>
-                    <label for="intersection">Intersection</label>
+                    <input type="checkbox" id="check-intersection" name="check-intersection" m_ids = "" checked>
+                    <label for="check-intersection">Intersection</label>
                 </div>
 
                 <div>
-                    <input type="checkbox" id="accumulation" name="accumulation" m_ids = "">
-                    <label for="accumulation">Accumulation</label>
+                    <input type="checkbox" id="check-accumulation" name="check-accumulation" m_ids = "">
+                    <label for="check-accumulation">Accumulation</label>
                 </div>
             </fieldset>
         </div>
@@ -128,8 +128,10 @@
 
         <div class="slider-container right-bar-elem">
             <br>
-            <span> Selected member: </span>
-            <span id="member_selected" class="slider-value slider-value"> 1 </span>
+            <span>Selected member:</span>
+            <span id="member_selected" class="slider-value">
+                1
+            </span>
             <input
                 id="members_range" type="range" class="slider-range"
                 oninput="
@@ -139,6 +141,15 @@
                 onchange="sliderMember('lineClicked');"
                 step="1" value="1" min="1" max="50"
             >
+            <div><br>Intersection of clusters:</div>
+            <div id="intersection" class="slider-value">
+            </div>
+            <br>
+            <div>In each cluster:</div>
+                <ol id="accumulation">
+                    <!-- <li id="accumulation1"></li> -->
+                </ol>
+            </div>
             <br>
         </div>
     </div>

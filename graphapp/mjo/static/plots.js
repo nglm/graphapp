@@ -971,8 +971,8 @@ function onClickCluster(figElem, e, d) {
     return function (e, d) {
         // Determine whether we are taking the intersection or accumulation
         // or clusters one by one
-        let intersection = document.getElementById('intersection').checked;
-        let accumulation = document.getElementById('accumulation').checked;
+        let intersection = document.getElementById('check-intersection').checked;
+        let accumulation = document.getElementById('check-accumulation').checked;
 
         onEventClusterAux(
             e, d, this, figElem,
