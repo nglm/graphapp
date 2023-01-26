@@ -100,7 +100,22 @@
             <br>
         </div>
 
+        <div class="button-container right-bar-elem">
+            <br>
+            <div class="button"
+            onclick="clearSelection(); clearStoredSelection()">
+                Clear selection
+            </div>
+        </div>
+
+        <div class="button-container right-bar-elem">
+            <div class="button" onclick="redraw_relevant_graph()">
+                Default k values
+            </div>
+        </div>
+
         <div class="slider-container right-bar-elem">
+            <br>
             <fieldset>
                 <legend><h4>Type of selection</h4></legend>
 
@@ -114,19 +129,6 @@
                     <label for="check-accumulation">Accumulation</label>
                 </div>
             </fieldset>
-        </div>
-
-        <div class="button-container right-bar-elem">
-            <div class="button"
-            onclick="clearSelection(); clearStoredSelection()">
-                Clear selection
-            </div>
-        </div>
-
-        <div class="button-container right-bar-elem">
-            <div class="button" onclick="redraw_relevant_graph()">
-                Default k values
-            </div>
         </div>
 
         <div class="slider-container right-bar-elem">
@@ -144,11 +146,11 @@
                 onchange="sliderMember('lineClicked');"
                 step="1" value="0" min="0" max="49"
             >
-            <div><br><h4>Intersection of clusters:</h4></div>
+            <div><br><h4>Intersection of <br> selected clusters:</h4></div>
             <div id="intersection" class="slider-value">
             </div>
             <br>
-            <div><h4>In each cluster:<h4></div>
+            <div><h4>In each <br> selected cluster:<h4></div>
                 <ol id="accumulation" type="A" >
                     <!-- <li id="accumulation1"></li> -->
                 </ol>
