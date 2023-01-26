@@ -949,7 +949,7 @@ function onMouseOverCluster(figElem, e, d) {
         onEventClusterAux(
             e, d, this, figElem,
             'vertexHovered', 'lineClusterHovered',
-            {deselect : false}
+            {deselect : false, show_cluster_content : false}
         )
     }
 }
@@ -960,7 +960,7 @@ function onMouseOutCluster(figElem, e, d) {
         onEventClusterAux(
             e, d, this, figElem,
             'vertexHovered', 'lineClusterHovered',
-            {select : false}
+            {select : false, show_cluster_content : false}
         )
     }
 }

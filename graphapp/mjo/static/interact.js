@@ -88,12 +88,12 @@ async function updateSelection(
 export function clearStoredSelection(){
     $("#accumulation").html("");
     $("#intersection").html("");
-    $("#check-intersection").attr("m_ids", "");
-    $("#check-accumulation").attr("m_ids", "");
+    $("#check-intersection").attr("m_ids", "-1");
+    $("#check-accumulation").attr("m_ids", "-1");
     // Update the displayed number of member selected
-    $("#member_selected").html("1");
+    $("#member_selected").html("0");
     // Update the slider position
-    $("#members_range").attr('value', 1);
+    $("#members_range").attr('value', 0);
 }
 
 /**
@@ -205,6 +205,7 @@ export async function onEventClusterAux(
     {
         select = true, deselect = true,
         intersection = false, accumulation = false,
+        show_cluster_content = true,
         classMemberIntersection = "lineIntersection",
     } = {}
 ) {
@@ -216,6 +217,18 @@ export async function onEventClusterAux(
     let v_id = "v" + clusterElem.id.slice(7);
     // ids of members in that cluster
     let m_ids = d.members.map((m) => ("m" + m));
+
+    // Show what is inside the selected cluster
+    if (show_cluster_content){
+        let itemElem = document.createElement( "li" );
+        $(itemElem).text(m_ids.map((m) => m.slice(1)).map(Number));
+        // If we take clusters one by one, remove what was there first
+        if (!(intersection || accumulation)) {
+            $("#accumulation").empty();
+        }
+        // Add an item with the members in that cluster
+        $("#accumulation").append(itemElem);
+    }
 
     // Find current intersection of cluster
     let m_inter_ids = [];
@@ -246,7 +259,7 @@ export async function onEventClusterAux(
         // accumulation ids are stored in the "accumulation" element
         let unionCheckElem = document.getElementById("check-accumulation");
         // Create a new HTML element as an item
-        let itemElem = document.createElement( "li" );
+
         m_acc_ids = unionCheckElem.getAttribute("m_ids").split(",");
 
         // If there was no selection before, then the union is
@@ -260,9 +273,6 @@ export async function onEventClusterAux(
         }
         // Update attribute
         unionCheckElem.setAttribute("m_ids", m_acc_ids);
-        $(itemElem).text(m_ids.map((m) => m.slice(1)).map(Number));
-        console.log(itemElem);
-        $("#accumulation").append(itemElem);
     }
     for (let i = 0; i < figs.length; i++) {
 

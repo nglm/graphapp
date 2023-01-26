@@ -118,14 +118,19 @@
             <br>
             <fieldset>
                 <legend><h4>Type of selection</h4></legend>
-
+                <!-- A 'radio' group must share the same 'name' to be treated as a group. -->
+                <!-- Once the group is created, selecting any radio button in that group  -->
+                <!-- automatically deselects any other selected button in the same group. -->
                 <div>
-                    <input type="checkbox" id="check-intersection" name="check-intersection" m_ids = "-1" checked>
+                    <input type="radio" id="check-single" name="select-type" m_ids = "-1">
+                    <label for="check-single">Single</label>
+                </div>
+                <div>
+                    <input type="radio" id="check-intersection" name="select-type" m_ids = "-1" checked>
                     <label for="check-intersection">Intersection</label>
                 </div>
-
                 <div>
-                    <input type="checkbox" id="check-accumulation" name="check-accumulation" m_ids = "-1">
+                    <input type="radio" id="check-accumulation" name="select-type" m_ids = "-1">
                     <label for="check-accumulation">Accumulation</label>
                 </div>
             </fieldset>
