@@ -59,6 +59,14 @@ select {
 	border: var(--border-style)
 }
 
+label {
+	cursor: pointer;
+}
+
+input {
+	cursor: pointer;
+}
+
 fieldset {
     border: var(--border-style)
 }
