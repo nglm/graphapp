@@ -32,7 +32,7 @@ How to install
    poetry install
    ```
 
-How to use once installed
+How to run once installed
 -------------------------------------------------------------------------------
 
 1. Put your data in the `GraphApp/data/data` folder
