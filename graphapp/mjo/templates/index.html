@@ -122,15 +122,18 @@
                 <!-- Once the group is created, selecting any radio button in that group  -->
                 <!-- automatically deselects any other selected button in the same group. -->
                 <div>
-                    <input type="radio" id="check-single" name="select-type" m_ids = "-1">
+                    <input type="radio" id="check-single" name="select-type" m_ids = "-1"
+                    onclick="clearSelection(); clearStoredSelection()">
                     <label for="check-single">Single</label>
                 </div>
                 <div>
-                    <input type="radio" id="check-intersection" name="select-type" m_ids = "-1" checked>
+                    <input type="radio" id="check-intersection" name="select-type" m_ids = "-1"
+                    onclick="clearSelection(); clearStoredSelection()" checked>
                     <label for="check-intersection">Intersection</label>
                 </div>
                 <div>
-                    <input type="radio" id="check-accumulation" name="select-type" m_ids = "-1">
+                    <input type="radio" id="check-accumulation" name="select-type" m_ids = "-1"
+                    onclick="clearSelection(); clearStoredSelection()">
                     <label for="check-accumulation">Accumulation</label>
                 </div>
             </fieldset>
