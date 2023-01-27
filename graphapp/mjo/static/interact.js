@@ -286,9 +286,8 @@ export async function onEventClusterAux(
         // Find all the children of accumulation
         let clusters = document.getElementById("accumulation").children;
         clusters = [...clusters]
-        console.log(clusters);
-        console.log(clusters.map(elem => (elem.textContent)));
         clusters = clusters.map(elem => (elem.textContent.split(",")));
+        // Intersection of multiple array. Found on the internet
         let inter = clusters.reduce((a, b) => a.filter(c => b.includes(c)));
         $("#intersection").text(inter);
     }
