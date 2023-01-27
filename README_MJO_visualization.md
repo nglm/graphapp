@@ -26,7 +26,8 @@ Correspondence between the number of clusters and the colors.
 
 ### Options for the type of selection
 
-- `Intersection`: Enable the selection of multiple clusters. Only the members that belong in all selected clusters will be selected
+- `Single`: Select only one cluster at a time. Clicking on a new cluster will deselect the previous one.
+- `Intersection`: Enable the selection of multiple clusters. Only the members that belong in all selected clusters will be selected.
 - `Accumulation`: Enable the selection of multiple clusters. Any members that belong to at least one selected cluster will be selected.
 
 ### Buttons
@@ -37,3 +38,5 @@ Correspondence between the number of clusters and the colors.
 ### Slider
 
 - `Selected member`: Show the selected member.
+- `Intersection of selected clusters`: *Updated only when the selection of multiple clusters is enabled (i.e. `Intersection` or `Accumulation` type of selection is checked).* Show the intersection of all selected clusters.
+- `In each selected cluster`: *Updated only when the selection of multiple clusters is enabled (i.e. `Intersection` or `Accumulation` type of selection is checked)*. Ordered list of clusters. Clicking on a new cluster will append a new item on this list. Each item contains the members belonging to the corresponding cluster.

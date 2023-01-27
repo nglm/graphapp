@@ -224,18 +224,6 @@ export async function onEventClusterAux(
     // ids of members in that cluster
     let m_ids = d.members.map((m) => ("m" + m));
 
-    // Show what is inside the selected cluster
-    if (show_cluster_content){
-        let itemElem = document.createElement( "li" );
-        $(itemElem).text(m_ids.map((m) => m.slice(1)).map(Number));
-        // If we take clusters one by one, remove what was there first
-        if (!(intersection || accumulation)) {
-            $("#accumulation").empty();
-        }
-        // Add an item with the members in that cluster
-        $("#accumulation").append(itemElem);
-    }
-
     // Find current intersection of cluster
     let m_inter_ids = [];
     if (intersection) {
@@ -255,7 +243,6 @@ export async function onEventClusterAux(
         }
         // Update attribute
         interCheckElem.setAttribute("m_ids", m_inter_ids);
-        $("#intersection").text(m_inter_ids.map((m) => m.slice(1)).map(Number));
     }
 
     // Find current union of members
@@ -280,6 +267,31 @@ export async function onEventClusterAux(
         // Update attribute
         unionCheckElem.setAttribute("m_ids", m_acc_ids);
     }
+
+    // Show what is inside the selected cluster before
+    if (show_cluster_content){
+
+        // ----- accumulation -----
+        let accjQ = $("#accumulation");
+        let itemElem = document.createElement( "li" );
+        $(itemElem).text(m_ids.map((m) => m.slice(1)));
+        // If we take clusters one by one, remove what was there first
+        if (!(intersection || accumulation)) {
+            accjQ.empty();
+        }
+        // Add an item with the members in that cluster
+        accjQ.append(itemElem);
+
+        // ----- intersection -----
+        // Find all the children of accumulation
+        let clusters = document.getElementById("accumulation").children;
+        console.log(clusters);
+        console.log(clusters.map(elem => (elem.textContent)));
+        clusters = clusters.map(elem => (elem.textContent.split(",")));
+        let inter = clusters.reduce((a, b) => a.filter(c => b.includes(c)));
+        $("#intersection").text(inter);
+    }
+
     for (let i = 0; i < figs.length; i++) {
 
         // Within the outer svg element of each fig, all ids are unique
