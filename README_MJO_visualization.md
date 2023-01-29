@@ -15,7 +15,7 @@ Top bar
 
 ### Slider
 
-- `Time window`: length of the time window used to cluster a specific time step
+- `Time window`: Defines the length of the time window used to cluster a specific time step.
 
 Right bar
 -------------------------------------------------------------------------------
@@ -30,13 +30,36 @@ Correspondence between the number of clusters and the colors.
 - `Intersection`: Enable the selection of multiple clusters. Only the members that belong in all selected clusters will be selected.
 - `Accumulation`: Enable the selection of multiple clusters. Any members that belong to at least one selected cluster will be selected.
 
+For more information about selecting members see `Spaghetti plots` and for more information about selecting clusters see `Entire graphs` and `Relevant graphs` sections.
+
 ### Buttons
 
-- `Clear selection button`: Deselect all members / clusters
+- `Clear selection button`: Deselect all members / clusters.
 - `Default k values button`: Go back to the automated suggestion of number of clusters.
 
 ### Slider
 
-- `Selected member`: Show the selected member.
-- `Intersection of selected clusters`: *Updated only when the selection of multiple clusters is enabled (i.e. `Intersection` or `Accumulation` type of selection is checked).* Show the intersection of all selected clusters.
-- `In each selected cluster`: *Updated only when the selection of multiple clusters is enabled (i.e. `Intersection` or `Accumulation` type of selection is checked)*. Ordered list of clusters. Clicking on a new cluster will append a new item on this list. Each item contains the members belonging to the corresponding cluster.
+- `Selected member`: Select a specific member.
+
+### Additional information about selection
+
+- `Intersection of selected clusters`: Show the intersection of all selected clusters.
+- `In each selected cluster`: Ordered list of selected clusters. Each item contains the members belonging to the corresponding cluster.
+
+Spaghetti plots
+-------------------------------------------------------------------------------
+
+- Select members by clicking on them. Their numbers appear on the slider in the side bar as explained above
+- Members that correspond to the type of selection chosen (see `type of selection` above) to a selected clusters (see `Entire graphs` and `Relevant graphs` sections for more information about selecting clusters)
+
+Entire graph plots
+-------------------------------------------------------------------------------
+
+
+Life span plot
+-------------------------------------------------------------------------------
+
+
+Most relevant graph plots
+-------------------------------------------------------------------------------
+
