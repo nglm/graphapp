@@ -14,6 +14,7 @@ data/data/*.json
 *.ipynb_checkpoints*
 # no personal notes on code
 */notes*
+notes_for_developers.md
 # no generated html files
 */docs/build*
 # no tmp files
