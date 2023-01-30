@@ -6,6 +6,8 @@ The `MJO visualization` page allows the user to analyse the MJO forecasts, the i
 
 This page is divided into 3 mains sections, the top bar, the side bar and the plots.
 
+Before trying to visualize your plots, make sure you have added the data in the `GraphApp/data/data` folder, as `.txt` files.
+
 Top bar
 -------------------------------------------------------------------------------
 
