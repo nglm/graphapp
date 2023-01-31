@@ -1,0 +1,59 @@
+{% with "File" as option_title %}
+{% with "files" as option_name %}
+{% with filenames as options %}
+{% with filename as option %}
+{% include "select.html" %}
+{% endwith %}
+{% endwith %}
+{% endwith %}
+{% endwith %}
+
+{% with "Clustering method" as option_title %}
+{% with "methods" as option_name %}
+{% with methods as options %}
+{% with method as option %}
+{% include "select.html" %}
+{% endwith %}
+{% endwith %}
+{% endwith %}
+{% endwith %}
+
+{% with "Clustering score" as option_title %}
+{% with "scores" as option_name %}
+{% with scores as options %}
+{% with score as option %}
+{% include "select.html" %}
+{% endwith %}
+{% endwith %}
+{% endwith %}
+{% endwith %}
+
+{% with "Data representation" as option_title %}
+{% with "data_representation" as option_name %}
+{% with drepresentations as options %}
+{% with drepresentation as option %}
+{% include "select.html" %}
+{% endwith %}
+{% endwith %}
+{% endwith %}
+{% endwith %}
+
+{% with "Time representation" as option_title %}
+{% with "time_representation" as option_name %}
+{% with trepresentations as options %}
+{% with trepresentation as option %}
+{% include "select.html" %}
+{% endwith %}
+{% endwith %}
+{% endwith %}
+{% endwith %}
+
+<span class="slider-container" >
+    <span style="font-weight: bold;"> Time window (x6h):   </span>
+    <span id="time_window" class="slider-value"> 3 </span>
+    <input
+        id="windows" type="range" class="slider-range"
+        onchange="selectOption()" oninput="updateSliderValue('windows', 'time_window')"
+        step="1" value="1" min="1" max="50"
+    >
+</span>

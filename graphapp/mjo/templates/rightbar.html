@@ -1,0 +1,76 @@
+<div id="legend" class="legend right-bar-elem">
+    <h4>Legend</h4>
+    number of clusters:
+    <script type="module">
+        add_legend();
+    </script>
+    <br>
+</div>
+
+<div class="button-container right-bar-elem">
+    <br>
+    <div class="button"
+    onclick="clearSelection(); clearStoredSelection()">
+        Clear selection
+    </div>
+</div>
+
+<div class="button-container right-bar-elem">
+    <div class="button" onclick="redraw_relevant_graph()">
+        Default k values
+    </div>
+</div>
+
+<div class="slider-container right-bar-elem">
+    <br>
+    <fieldset>
+        <legend><h4>Type of selection</h4></legend>
+        <!-- A 'radio' group must share the same 'name' to be treated as a group. -->
+        <!-- Once the group is created, selecting any radio button in that group  -->
+        <!-- automatically deselects any other selected button in the same group. -->
+        <div>
+            <input type="radio" id="check-single" name="select-type" m_ids = "-1"
+            onclick="clearSelection(); clearStoredSelection()">
+            <label for="check-single">Single</label>
+        </div>
+        <div>
+            <input type="radio" id="check-intersection" name="select-type" m_ids = "-1"
+            onclick="clearSelection(); clearStoredSelection()" checked>
+            <label for="check-intersection">Intersection</label>
+        </div>
+        <div>
+            <input type="radio" id="check-accumulation" name="select-type" m_ids = "-1"
+            onclick="clearSelection(); clearStoredSelection()">
+            <label for="check-accumulation">Accumulation</label>
+        </div>
+    </fieldset>
+</div>
+
+<div class="slider-container right-bar-elem">
+    <br>
+    <h4>Selected member:</h4>
+    <span id="member_selected" class="slider-value">
+        0
+    </span>
+    <input
+        id="members_range" type="range" class="slider-range"
+        oninput="
+            sliderMember('lineClicked');
+            updateSliderValue('members_range', 'member_selected');
+            "
+        onchange="
+            sliderMember('lineClicked');
+            updateSliderValue('members_range', 'member_selected');"
+        step="1" value="0" min="0" max="49"
+    >
+    <div><br><h4>Intersection of <br> selected clusters:</h4></div>
+    <div id="intersection" class="slider-value">
+    </div>
+    <br>
+    <div><h4>In each <br> selected cluster:<h4></div>
+        <ol id="accumulation" type="A" >
+            <!-- <li id="accumulation1"></li> -->
+        </ol>
+    </div>
+    <br>
+</div>
