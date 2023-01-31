@@ -1,0 +1,94 @@
+:root {
+    --main-col: #0094bd;
+    --col-click: #ca0020;
+    --col-line: #0571b0;
+    --col-line-bis: #92c5de;
+    --col-hover:  #f4a582;
+    --lw: 0.5;
+    --lw-hover: 3;
+    --lw-click: 4;
+    --lw-inter: 0.8;
+    --r-hover: 10;
+    --r-click: 10;
+    --opacity-line: 0.6;
+    --opacity-hovered: 1;
+    --opacity-click: 1;
+    --button-col-background: rgb(241, 238, 238);
+    --button-col-hover: #bbe6f2;
+    --border-style: 3px solid #bbe6f2;
+	--font-small: 17px;
+	--font-medium: 25px;
+	--font-big: 30px;
+    --min-width: 85%;
+    --slider-width: 250px;
+    --slider-rotate: translate(125px, 125px) rotate(90deg);
+}
+
+/* using colorbrewer https://colorbrewer2.org/?type=diverging&scheme=RdBu&n=4
+
+/* ------- Common style for all elements ------- */
+* {
+    font-family: Arial, sans-serif;
+    font-size: var(--font-medium);
+    border-radius: 8px;
+    margin: 0px;
+}
+
+
+/* ------- Styles of existing types ------- */
+body {
+	padding: 5px;
+}
+
+h2 {
+    padding: 5px;
+    font-size: var(--font-big);
+	width: auto;
+}
+
+h2:hover {
+	cursor: pointer;
+	background-color: var(--button-col-hover);
+}
+
+select {
+	font-size: var(--font-medium);
+    padding: 5px;
+    background-color: var(--button-col-background);
+	cursor: pointer;
+	border: var(--border-style)
+}
+
+label {
+	cursor: pointer;
+}
+
+input {
+	cursor: pointer;
+}
+
+li {
+	overflow-wrap: break-word;
+}
+
+li::marker {
+	font-weight:bold;
+}
+
+fieldset {
+    border: var(--border-style)
+}
+
+legend {
+	border-color: var(--main-col);
+}
+
+.right-bar {
+    position: fixed;
+    top:5%;
+	right: 20px;
+    height: 80%;
+    margin: 0px;
+    width: 250px;
+    max-width: 15%;
+}

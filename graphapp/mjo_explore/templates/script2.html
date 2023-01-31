@@ -1,0 +1,17 @@
+{% load static %}
+
+<script id="{{ data_type }}-script" async=false defer=false type="module">
+    import {draw_{{ data_type }}} from "{% static './plots.js' %}";
+
+    let options = {
+        method : "{{ method }}", score : "{{ score }}",
+        drepresentation : "{{ drepresentation }}",
+        time_window : "{{ time_window }}",
+    };
+
+    await draw_{{ data_type }}(
+        "{{ filename }}" , {
+            dims : dims_meteogram, parent : "#{{ data_type }}-figs",
+            options : options,
+        });
+</script>
