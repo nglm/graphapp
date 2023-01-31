@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class MjoConfig(AppConfig):
+class MjoExploreConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'mjo'
+    name = 'mjo_explore'
