@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "mjo_explore/base.html" %}
 
 {% load static %}
 
@@ -26,7 +26,7 @@
         {% with "files" as option_name %}
         {% with filenames as options %}
         {% with filename as option %}
-        {% include "select.html" %}
+        {% include "mjo_explore/select.html" %}
         {% endwith %}
         {% endwith %}
         {% endwith %}
@@ -36,7 +36,7 @@
         {% with "methods" as option_name %}
         {% with methods as options %}
         {% with method as option %}
-        {% include "select.html" %}
+        {% include "mjo_explore/select.html" %}
         {% endwith %}
         {% endwith %}
         {% endwith %}
@@ -46,7 +46,7 @@
         {% with "scores" as option_name %}
         {% with scores as options %}
         {% with score as option %}
-        {% include "select.html" %}
+        {% include "mjo_explore/select.html" %}
         {% endwith %}
         {% endwith %}
         {% endwith %}
@@ -56,7 +56,7 @@
         {% with "data_representation" as option_name %}
         {% with drepresentations as options %}
         {% with drepresentation as option %}
-        {% include "select.html" %}
+        {% include "mjo_explore/select.html" %}
         {% endwith %}
         {% endwith %}
         {% endwith %}
@@ -66,7 +66,7 @@
         {% with "time_representation" as option_name %}
         {% with trepresentations as options %}
         {% with trepresentation as option %}
-        {% include "select.html" %}
+        {% include "mjo_explore/select.html" %}
         {% endwith %}
         {% endwith %}
         {% endwith %}
@@ -86,7 +86,7 @@
 
 
     <div id="all-plots">
-        {% include "plots.html" %}
+        {% include "mjo_explore/plots.html" %}
     </div>
 
     <div id="right-bar" class="right-bar">

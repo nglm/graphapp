@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "mjo/base.html" %}
 
 {% load static %}
 
@@ -22,17 +22,17 @@
     </script>
 
     <div class="top-bar">
-        {% include "topbar.html" %}
+        {% include "mjo/topbar.html" %}
     </div>
 
 
 
     <div id="all-plots">
-        {% include "plots.html" %}
+        {% include "mjo/plots.html" %}
     </div>
 
     <div id="right-bar" class="right-bar">
-        {% include "rightbar.html" %}
+        {% include "mjo/rightbar.html" %}
     </div>
 
 {% endblock content %}

@@ -66,10 +66,10 @@ def main(request):
         "filename" not in request.GET or "method" not in request.GET
         or "score" not in request.GET
     ):
-        return render(request, 'index.html', context)
+        return render(request, 'mjo/index.html', context)
     # Render only the main content with the specific options selected
     else:
-        return render(request, 'plots.html', context)
+        return render(request, 'mjo/plots.html', context)
 
 def relevant(request):
     """

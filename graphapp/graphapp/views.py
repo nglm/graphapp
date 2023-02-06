@@ -4,4 +4,4 @@ from django.shortcuts import render
 # Create your views here.
 
 def main(request):
-    return render(request, "welcome.html")
+    return render(request, "graphapp/welcome.html")
