@@ -9,9 +9,9 @@
         import {
             clearSelection, clearStoredSelection,
             selectOption, updateSliderValue, sliderMember,
-        } from "{% static './interact.js' %}";
-        import {redraw_relevant_graph} from "{% static './plots.js' %}";
-        import {add_legend} from "{% static './figures.js' %}"
+        } from "{% static './mjo_explore/interact.js' %}";
+        import {redraw_relevant_graph} from "{% static './mjo_explore/plots.js' %}";
+        import {add_legend} from "{% static './mjo_explore/figures.js' %}"
         globalThis.clearSelection = clearSelection;
         globalThis.clearStoredSelection = clearStoredSelection;
         globalThis.selectOption = selectOption;

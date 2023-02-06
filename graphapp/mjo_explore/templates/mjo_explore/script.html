@@ -1,7 +1,7 @@
 {% load static %}
 
 <script id="{{ data_type }}-script" async=false defer=false type="module">
-    import {draw_{{ data_type }}} from "{% static './plots.js' %}";
+    import {draw_{{ data_type }}} from "{% static './mjo_explore/plots.js' %}";
 
     let options = {
         method : "{{ method }}", score : "{{ score }}",

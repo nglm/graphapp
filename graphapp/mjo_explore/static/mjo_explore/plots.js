@@ -1,14 +1,14 @@
 
-import { d3fy, d3fy_dict_of_arrays, d3fy_life_span } from "./preprocess.js";
+import { d3fy, d3fy_dict_of_arrays, d3fy_life_span } from "./mjo_explore/preprocess.js";
 
 import {
     dimensions, setAxTitle, setFigTitle, setXLabel, setYLabel,
     init_fig, style_ticks, get_list_colors, fig_meteogram, fig_mjo, get_scalers,
     DIMS_mjo, set_fig_attrs
-} from "./figures.js"
-import { onEventClusterAux, onEventMemberAux, updateSliderValue} from "./interact.js";
+} from "./mjo_explore/figures.js"
+import { onEventClusterAux, onEventMemberAux, updateSliderValue} from "./mjo_explore/interact.js";
 
-import {range_rescale, sigmoid, linear} from "./utils.js"
+import {range_rescale, sigmoid, linear} from "./mjo_explore/utils.js"
 
 export const PATH_SCRIPT = document.getElementById("main-script").getAttribute("path_script");
 const ROOT_DATA = 'data/'
