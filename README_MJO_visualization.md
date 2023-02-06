@@ -4,9 +4,11 @@ Manual visualization of MJO
 
 The `MJO visualization` page allows the user to analyse the MJO forecasts, the interpretation of the forecasts made by the `PersiGraph` method, and to interact with both the raw data and the clustered data in order to effortlessly get the most relevant interpretation of the data according to a domain expert.
 
-This page is divided into 3 mains sections, the top bar, the side bar and the plots.
+The `MJO visualization` page is divided into 3 mains sections, the top bar, the side bar and the plots.
 
-Before trying to visualize your plots, make sure you have added the data in the `GraphApp/data/data` folder, as `.txt` files.
+Before to visualizing plots, make sure you have added the data in the `GraphApp/data/data` folder, as `.txt` files.
+
+In case of unexpected behaviour, reload the page, some computations must have conflicted.
 
 Top bar
 -------------------------------------------------------------------------------
@@ -14,8 +16,8 @@ Top bar
 ### Select elements
 
 - `File`: All `.txt` files put in the `GraphApp/data/data` folder will appear here. Select the file that corresponds to the plots you want to analyse.
-- `Clustering method`: Clustering methods that are natively available in the `persigraph` library. A clustering method determines how datapoints are grouped into clusters. Select the clustering method that is the most suitable for your data and goals.
-- `Clustering score`: Clustering scores that are natively available in the `persigraph` library. Clustering scores evaluates the relevance of the grouping made by the clustering method. Select the clustering score that is the most suitable for your data and goals.
+- `Clustering method`: Clustering methods that are natively available in the `PersiGraph` library. A clustering method determines how datapoints are grouped into clusters. Select the clustering method that is the most suitable for your data and goals.
+- `Clustering score`: Clustering scores that are natively available in the `PersiGraph` library. Clustering scores evaluates the relevance of the grouping made by the clustering method. Select the clustering score that is the most suitable for your data and goals.
 - `Data representation`: Representation of the physical variables.
 - `Time representation`: Representation of the time dimension.
 
@@ -30,6 +32,11 @@ Right bar
 
 Correspondence between the number of clusters and the colors.
 
+### Buttons
+
+- `Clear selection button`: Deselect all members / clusters.
+- `Default k values button`: Go back to the automated suggestion of number of clusters.
+
 ### Options for the type of selection
 
 - `Single`: Select only one cluster at a time. Clicking on a new cluster will deselect the previous one.
@@ -37,11 +44,6 @@ Correspondence between the number of clusters and the colors.
 - `Accumulation`: Enable the selection of multiple clusters. Any members that belong to at least one selected cluster will be selected.
 
 For more information about selecting members see `Spaghetti plots` and for more information about selecting clusters see `Entire graphs` and `Relevant graphs` sections.
-
-### Buttons
-
-- `Clear selection button`: Deselect all members / clusters.
-- `Default k values button`: Go back to the automated suggestion of number of clusters.
 
 ### Slider
 
