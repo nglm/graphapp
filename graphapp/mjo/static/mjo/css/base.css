@@ -16,9 +16,9 @@
     --button-col-background: rgb(241, 238, 238);
     --button-col-hover: #bbe6f2;
     --border-style: 3px solid #bbe6f2;
-	--font-small: 17px;
-	--font-medium: 25px;
-	--font-big: 30px;
+	--font-small: 13px;
+	--font-medium: 20px;
+	--font-big: 23px;
     --min-width: 85%;
     --slider-width: 250px;
     --slider-rotate: translate(125px, 125px) rotate(90deg);
@@ -30,18 +30,19 @@
 * {
     font-family: Arial, sans-serif;
     font-size: var(--font-medium);
-    border-radius: 8px;
+    border-radius: 8px; /* Define how round the corners are */
     margin: 0px;
+    padding: 0px;
 }
 
 
 /* ------- Styles of existing types ------- */
 body {
-	padding: 5px;
+	padding: 0px;
 }
 
 h2 {
-    padding: 5px;
+    padding: 0px;
     font-size: var(--font-big);
 	width: auto;
 }
@@ -76,19 +77,11 @@ li::marker {
 }
 
 fieldset {
+    padding: 5px;
     border: var(--border-style)
 }
 
 legend {
+    padding: 5px;
 	border-color: var(--main-col);
-}
-
-.right-bar {
-    position: fixed;
-    top:5%;
-	right: 20px;
-    height: 80%;
-    margin: 0px;
-    width: 250px;
-    max-width: 15%;
 }

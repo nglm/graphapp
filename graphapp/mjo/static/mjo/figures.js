@@ -26,23 +26,23 @@ export function dimensions({
     figWidth=1200,
     figHeight=600,
     figMarginTop=0,
-    figMarginLeft=5,
-    figMarginRight=5,
-    figMarginBottom=5,
-    labelsX=70,
-    labelsY=80,
-    labelsAxes=50,
+    figMarginLeft=1,
+    figMarginRight=1,
+    figMarginBottom=1,
+    labelsX=60,         // Vertical space for X label
+    labelsY=80,         // Horizontal space for Y Label
+    labelsAxes=10,      // Vertical space for ax title
     labelsFig=0,
     axesMarginTop=0,
-    axesMarginLeft=5,
-    axesMarginRight=5,
-    axesMarginBottom=5,
+    axesMarginLeft=1,
+    axesMarginRight=1,
+    axesMarginBottom=1,
     plotWidth=undefined,
     plotHeight=undefined,
     plotMarginTop=0,
-    plotMarginLeft=5,
-    plotMarginRight=5,
-    plotMarginBottom=5,
+    plotMarginLeft=1,
+    plotMarginRight=1,
+    plotMarginBottom=1,
 } = {}) {
 
     let fig, labels, axes, plot;
