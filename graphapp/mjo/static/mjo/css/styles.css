@@ -164,8 +164,8 @@
     border: var(--border-style);
 	width:fit-content;
 	min-width: var(--min-width);
-	padding: 10px;
-	margin: 5px;
+	padding: 3px;
+	margin: 3px;
 }
 
 .legend{
@@ -180,6 +180,16 @@
 
 /* ------- Styles of specific id ------- */
 
+#advanced-settings-container {
+	float: right;
+	margin-right: 40px;
+	margin-top: 20px;
+	margin-top: 20px;
+}
 
+.button#advanced-settings-button {
+	padding: 0px;
+	font-size: var(--font-small);
+}
 
 
