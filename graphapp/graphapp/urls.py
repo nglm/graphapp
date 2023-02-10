@@ -21,6 +21,5 @@ from . import views
 urlpatterns = [
     path('', views.main),
     path('admin/', admin.site.urls),
-    path('mjo/param/', include('mjo_explore.urls')),
     path('mjo/', include('mjo.urls')),
 ]
