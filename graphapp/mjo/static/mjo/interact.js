@@ -82,6 +82,17 @@ async function updateSelection(
 }
 
 /**
+ * Toggle visibility property of topbar elements
+ */
+export function toggleTopbar(){
+    $("#time-window-container").toggle();
+    $("#time_representation-container").toggle();
+    $("#data_representation-container").toggle();
+    $("#scores-container").toggle();
+    $("#methods-container").toggle();
+}
+
+/**
  * Find the different HTML element that stores the selected members and
  * clear them
  */

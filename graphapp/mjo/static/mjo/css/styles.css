@@ -185,9 +185,16 @@
 	top: 20px;
 }
 
-.button#advanced-settings-button {
-	padding: 0px;
+#advanced-settings-button {
+	padding: 3px;
 	font-size: var(--font-small);
+	cursor: pointer;
+	border: var(--border-style);
+	margin: 0px;
+	text-align: center;
+    background-color: var(--button-col-background);
 }
 
-
+#advanced-settings-button:hover {
+    background-color: var(--button-col-hover);
+}

@@ -9,6 +9,7 @@
         import {
             clearSelection, clearStoredSelection,
             selectOption, updateSliderValue, sliderMember,
+            toggleTopbar
         } from "{% static './mjo/interact.js' %}";
         import {redraw_relevant_graph} from "{% static './mjo/plots.js' %}";
         import {add_legend} from "{% static './mjo/figures.js' %}"
@@ -17,6 +18,7 @@
         globalThis.selectOption = selectOption;
         globalThis.updateSliderValue = updateSliderValue;
         globalThis.sliderMember = sliderMember;
+        globalThis.toggleTopbar = toggleTopbar;
         globalThis.redraw_relevant_graph = redraw_relevant_graph;
         globalThis.add_legend = add_legend;
     </script>
