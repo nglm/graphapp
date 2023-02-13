@@ -11,7 +11,6 @@
     }
 </script>
 
-
 <div id="{{ data_type }}-div" class="fig_group">
     <h2 id="{{ data_type }}-title">
         <!-- Title -->
@@ -21,15 +20,17 @@
         <!-- Switch -->
         <div style="float: right">
             <span class="toggle-text">Thick lines</span>
-            <label class="toggle">
-                <input class="input-toggle" type="checkbox">
+            <label for="check-thick" class="toggle">
+                <input
+                    id="check-thick" class="input-toggle" type="checkbox"
+                    onclick="switchClasses()"
+                    >
                 <span class="switch"></span>
             </label>
         </div>
     </h2>
 
-
-
+    <!-- Generate plots -->
     <div id="{{ data_type }}-figs" style="display:inline">
         {% block script_type %}
             {% include "mjo/script.html" %}

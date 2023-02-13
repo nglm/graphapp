@@ -27,6 +27,7 @@ async function deselectElems(
     svgElem, classSelected
 ){
     let to_deselect = svgElem.getElementsByClassName(classSelected);
+    let deselected = [...to_deselect].map(x => x.id)
     // For an unknown reason this "do..While" loop is necessary otherwise
     // only roughly half of the list is properly treated...
     do {
@@ -35,6 +36,7 @@ async function deselectElems(
         }
         to_deselect = svgElem.getElementsByClassName(classSelected);
     } while (to_deselect.length > 0)
+    return deselected;
 }
 
 /**
@@ -66,19 +68,21 @@ async function updateSelection(
     svgElem, ids, classSelected,
     {deselect = true, select = true} = {},
 ){
+    let deselected;
     // First deselect all already selected elements (w/ 'classSelected' class)
     // And then select only those which were given (add 'classSelected' class)
     if (select && deselect){
-        await deselectElems( svgElem, classSelected );
+        deselected = await deselectElems( svgElem, classSelected );
         await selectElems( svgElem, ids, classSelected );
     } else {
         if (deselect) {
-            await deselectElems( svgElem, classSelected );
+            deselected = await deselectElems( svgElem, classSelected );
         }
         if (select) {
             await selectElems( svgElem, ids, classSelected );
         }
     }
+    return deselected
 }
 
 /**
@@ -90,6 +94,34 @@ export function toggleTopbar(){
     $("#data_representation-container").toggle();
     $("#scores-container").toggle();
     $("#methods-container").toggle();
+}
+
+/**
+ * Switch one class for another
+ */
+export async function switchClasses(
+    switchId="check-thick", classOn="line-thick", classOff="line",
+){
+    // Check if switch is on
+    let isOn = document.getElementById(switchId).checked;
+    let classToSelect = classOff;
+    let classToDeselect = classOn;
+    if (isOn) {
+        classToSelect = classOn;
+        classToDeselect = classOff
+    }
+    // Find all figures in the document
+    let figs = document.getElementsByClassName("container-fig");
+    for (let i = 0; i < figs.length; i++) {
+        // Within the outter svg element of each fig, all ids are unique
+        let svgElem = document.getElementById(figs[i].id + "_svg");
+        let data_type = figs[i].getAttribute('data_type');
+        if (data_type === "members") {
+            let deselected = await deselectElems(svgElem, classToDeselect);
+            console.log(deselected);
+            await selectElems(svgElem, deselected, classToSelect);
+        }
+    }
 }
 
 /**

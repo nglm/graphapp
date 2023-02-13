@@ -82,11 +82,17 @@
     fill: black;
 }
 
-.line {
+.line, .line-thick{
     fill: none;
     stroke: var(--col-line);
     stroke-width: var(--lw);
     stroke-opacity: var(--opacity-line);
+}
+
+.line-thick {
+    stroke: var(--col-line);
+    stroke-width: var(--lw-thick);
+    stroke-opacity: var(--opacity-line-thick);
 }
 
 .line-event {
@@ -99,39 +105,64 @@
 }
 
 
-.lineClustered {
+.lineClustered, .lineClustered-thick{
     fill: none;
     stroke: var(--col-hover);
     stroke-width:var(--lw);
     stroke-opacity: var(--opacity-click);
 }
 
-.lineClicked {
+.lineClustered-thick{
+    stroke-width:var(--lw-thick);
+    stroke-opacity: var(--opacity-click-thick);
+}
+
+.lineClicked, .lineClicked-thick{
     fill: none;
     stroke: var(--col-click);
     stroke-width: var(--lw-click);
     stroke-opacity: var(--opacity-click);
 }
 
-.lineIntersection {
+.lineClicked-thick{
+    stroke-width: var(--lw-click-thick);
+    stroke-opacity: var(--opacity-click-thick);
+}
+
+.lineIntersection, .lineIntersection-thick {
     fill: none;
     stroke: var(--col-click);
     stroke-width:var(--lw-inter);
     stroke-opacity: var(--opacity-click);
 }
 
-.lineHovered {
+.lineIntersection-thick {
+    stroke-width:var(--lw-inter-thick);
+    stroke-opacity: var(--opacity-inter-thick);
+}
+
+.lineHovered, .lineHovered-thick {
     fill: none;
     stroke: var(--col-hover);
     stroke-width: var(--lw-hover);
     stroke-opacity: var(--opacity-hovered);
 }
 
-.lineClusterHovered {
+.lineHovered-thick {
+    stroke-width: var(--lw-hover-thick);
+    stroke-opacity: var(--opacity-hovered-thick);
+}
+
+.lineClusterHovered, .lineClusterHovered-thick {
     fill: none;
     stroke: var(--col-hover);
-    stroke-width: 2;
+    stroke-width: var(--lw-cluster-hover);
     stroke-opacity: var(--opacity-hovered);
+}
+
+.lineClusterHovered-thick {
+    stroke-width: var(--lw-cluster-hover-thick);
+    stroke-opacity: var(--opacity-cluster-hovered-thick);
 }
 
 .life-span {

@@ -1,12 +1,5 @@
 {% block plots %}
 
-    <!-- Title with current filename -->
-    {% comment %}
-    {% block title %}
-        <h1>{{ filename }}</h1>
-    {% endblock title %}
-    {% endcomment %}
-
     {% with "members" as data_type %}
     {% with "Spaghetti plot" as plot_title %}
     {% include "mjo/plot_group.html" %}
