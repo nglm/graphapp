@@ -173,9 +173,9 @@ export function updateSliderValue(rangeId, valueId){
     // Find value of the slider
     // Remember that the "value" property is special, so use .value
     // instead of .attr("value")
-    let value = document.getElementById("members_range").value;
+    let value = document.getElementById(rangeId).value;
     // Update the text
-    $("#member_selected").html(value);
+    $("#" + valueId).html(value);
 }
 
 
