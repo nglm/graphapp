@@ -9,6 +9,16 @@
 
 /* ------- Styles of existing types with specific class ------- */
 
+.h2-plot {
+	display: inline-block;
+	width: 90%;
+}
+
+.h2-plot:hover {
+	cursor: pointer;
+	background-color: var(--button-col-hover);
+}
+
 .right-bar {
     position: fixed;
     top:5%;

@@ -13,7 +13,22 @@
 
 
 <div id="{{ data_type }}-div" class="fig_group">
-    <h2 id="{{ data_type }}-title" onclick="show_{{ data_type }}()">{{ plot_title }}</h2>
+    <h2 id="{{ data_type }}-title">
+        <!-- Title -->
+        <div class="h2-plot" onclick="show_{{ data_type }}()">
+            {{ plot_title }}
+        </div>
+        <!-- Switch -->
+        <div style="float: right">
+            <span class="toggle-text">Thick lines</span>
+            <label class="toggle">
+                <input class="input-toggle" type="checkbox">
+                <span class="switch"></span>
+            </label>
+        </div>
+    </h2>
+
+
 
     <div id="{{ data_type }}-figs" style="display:inline">
         {% block script_type %}

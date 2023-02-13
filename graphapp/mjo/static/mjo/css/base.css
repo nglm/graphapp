@@ -45,12 +45,7 @@ body {
 h2 {
     padding: 0px;
     font-size: var(--font-big);
-	width: auto;
-}
-
-h2:hover {
-	cursor: pointer;
-	background-color: var(--button-col-hover);
+	width: 100%;
 }
 
 select {
