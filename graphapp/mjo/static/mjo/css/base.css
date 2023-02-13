@@ -1,8 +1,9 @@
 :root {
     --main-col: #0094bd;
     --col-click: #ca0020;
-    --col-line: #0571b0;
+    --col-line: rgb(110, 110, 110);
     --col-line-bis: #92c5de;
+    --col-line-ter: #0571b0;
     --col-hover:  #f4a582;
     --lw: 0.5;
     --lw-hover: 3;
