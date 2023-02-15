@@ -18,16 +18,9 @@
             {{ plot_title }}
         </div>
         <!-- Switch -->
-        <div style="float: right">
-            <span class="toggle-text">Thick lines</span>
-            <label for="check-thick" class="toggle">
-                <input
-                    id="check-thick" class="input-toggle" type="checkbox"
-                    onclick="switchClasses()"
-                    >
-                <span class="switch"></span>
-            </label>
-        </div>
+        {% block switch %}
+            {% include "mjo/switch.html" %}
+        {% endblock switch %}
     </h2>
 
     <!-- Generate plots -->

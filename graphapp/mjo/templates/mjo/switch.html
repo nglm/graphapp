@@ -1,0 +1,15 @@
+
+
+{% if data_type == "members" %}
+    <div style="float: right">
+        <span class="toggle-text">Thick lines</span>
+        <label for="{{ data_type }}-switch" class="toggle">
+            <input
+                id="{{ data_type }}-switch" class="input-toggle" type="checkbox"
+                onclick="switchClasses()"
+                >
+            <span class="switch"></span>
+        </label>
+    </div>
+{% else %}
+{% endif %}

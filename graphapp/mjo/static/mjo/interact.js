@@ -100,7 +100,7 @@ export function toggleTopbar(){
  * Switch one class for another
  */
 export async function switchClasses(
-    switchId="check-thick", classOn="line-thick", classOff="line",
+    switchId="members-switch", classOn="line-thick", classOff="line",
 ){
     // Check if switch is on
     let isOn = document.getElementById(switchId).checked;
@@ -118,7 +118,6 @@ export async function switchClasses(
         let data_type = figs[i].getAttribute('data_type');
         if (data_type === "members") {
             let deselected = await deselectElems(svgElem, classToDeselect);
-            console.log(deselected);
             await selectElems(svgElem, deselected, classToSelect);
         }
     }
