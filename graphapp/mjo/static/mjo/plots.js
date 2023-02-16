@@ -217,7 +217,80 @@ function add_vertices(
         .attr("cy", (d => fun_cy(d)))
         .attr("r", (d => 4*fun_size(d)) )
         .attr("id", (d => "v-event" + d.key));
+
+    draw_time_markers_vertices(
+        figElem, fun_cx, fun_cy, g, vertices,
+        {fun_opacity : fun_opacity, selected_k : selected_k}
+    );
 }
+
+function draw_time_markers_vertices(
+    figElem, fun_cx, fun_cy, g, vertices,
+    {fun_opacity = f_opacity,
+    selected_k = false,
+    } = {},
+) {
+    // Find vertices before and after 1st 1/3 of time. Same with 2nd third
+    // We draw the marker on the edge between the 2 vertices NOOOOO
+    // This is a mess to use edges for the graphs, it would be possible just for
+    // the spaghetti plots
+    let T = g.time_axis.length;
+    let steps = [Math.floor(T/3), Math.floor(2*T/3)];
+    for (var step of steps) {}
+        let markers = [];
+
+        vertices.forEach((v) => {
+            if (v.time_step === step) { markers.push(v); }
+        });
+
+        add_time_marker(
+            figElem, fun_cx, fun_cy, g, markers,
+            {fun_opacity : fun_opacity, selected_k : selected_k}
+        );
+
+}
+
+function add_time_marker(
+    figElem, fun_cx, fun_cy, g, markers,
+    {fun_opacity = f_opacity,
+    selected_k = false,
+    } = {},
+) {
+
+    let myPlot = d3.select(figElem).select("#plot-group");
+
+    myPlot.append('g')
+        .attr('id', 'markers')
+        .selectAll('.time-marker')
+        .data(markers)
+        .enter()
+        .append("ellipse")                 // path: svg element for ellipses
+        .classed("time-marker", true)
+        .attr("cx", (d => fun_cx(d)))      // Compute x, y coord
+        .attr("cy", (d => fun_cy(d)))
+        .attr("rx", 1.5)                   // Compute radius
+        .attr("ry", 7)
+        .attr("opacity", (d => 2*fun_opacity(
+            d, {g : g, selected_k : selected_k}
+        )))
+        .attr("fill", "black")
+
+    myPlot.append('g')
+        .attr('id', 'markers')
+        .selectAll('.time-marker')
+        .data(markers)
+        .enter()
+        .append("ellipse")
+        .classed("time-marker", true)
+        .attr("cx", (d => fun_cx(d)))
+        .attr("cy", (d => fun_cy(d)))
+        .attr("ry", 1.5)
+        .attr("rx", 7)
+        .attr("opacity", (d => 2*fun_opacity(
+            d, {g : g, selected_k : selected_k}
+        )))
+        .attr("fill", "black")
+    }
 
 function add_k_options(
     figElem, fun_cx, fun_cy, g, life_spans, selected_k,
