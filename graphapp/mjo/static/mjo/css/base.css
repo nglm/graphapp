@@ -21,10 +21,10 @@
     --opacity-hovered: 1;
     --opacity-click: 1;
     --opacity-line-thick: 0.05;
-    --opacity-click-thick: 0.05;
-    --opacity-hovered-thick: 0.05;
-    --opacity-cluster-hovered-thick: 0.05;
-    --opacity-inter-thick: 0.05;
+    --opacity-click-thick: 0.3;
+    --opacity-hovered-thick: 0.3;
+    --opacity-cluster-hovered-thick: 0.07;
+    --opacity-inter-thick: 0.1;
     --button-col-background: rgb(241, 238, 238);
     --button-col-hover: #bbe6f2;
     --border-style: 3px solid #bbe6f2;
