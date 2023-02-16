@@ -184,6 +184,11 @@ export function clearStoredSelection(){
 export function clearSelection(
     classClusterDefault="vertex", classMemberDefault="line",
 ){
+
+    if (document.getElementById("members-switch").checked) {
+        classMemberDefault = classMemberDefault + "-thick";
+        //classClusterDefault = classClusterDefault + "-thick";
+    }
     // Find all figures in the document
     let figs = document.getElementsByClassName("container-fig");
     for (let i = 0; i < figs.length; i++) {
