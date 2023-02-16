@@ -218,10 +218,38 @@ function add_vertices(
         .attr("r", (d => 4*fun_size(d)) )
         .attr("id", (d => "v-event" + d.key));
 
-    draw_time_markers_vertices(
-        figElem, fun_cx, fun_cy, g, vertices,
-        {fun_opacity : fun_opacity, selected_k : selected_k}
-    );
+    if (figElem.getAttribute("plot_type") === "mjo") {
+
+        draw_time_markers_vertices(
+            figElem, fun_cx, fun_cy, g, vertices,
+            {fun_opacity : fun_opacity, selected_k : selected_k}
+        );
+    }
+}
+
+function draw_time_markers_members( figElem, members, ) {
+    // Find vertices before and after 1st 1/3 of time. Same with 2nd third
+    // We draw the marker on the edge between the 2 vertices NOOOOO
+    // This is a mess to use edges for the graphs, it would be possible just for
+    // the spaghetti plots
+    console.log("members", members);
+    // get d3 scalers
+    let {x, y, xk, yk} = get_scalers(figElem);
+    let T = members[0].length;
+    let steps = [Math.floor(T/3), Math.floor(2*T/3)];
+
+    let cx = (d => x( d.rmm1 ));
+    let cy = (d => y( d.rmm2 ));
+
+    for (var step of steps) {}
+        let markers = [];
+
+        members.forEach((m) => { markers.push(m[step]) });
+
+        add_time_marker(
+            figElem, cx, cy, markers,
+            {g : undefined, fun_opacity : f_opacity, selected_k : true}
+        );
 }
 
 function draw_time_markers_vertices(
@@ -244,16 +272,16 @@ function draw_time_markers_vertices(
         });
 
         add_time_marker(
-            figElem, fun_cx, fun_cy, g, markers,
-            {fun_opacity : fun_opacity, selected_k : selected_k}
+            figElem, fun_cx, fun_cy, markers,
+            {g : g, fun_opacity : fun_opacity, selected_k : selected_k}
         );
-
 }
 
 function add_time_marker(
-    figElem, fun_cx, fun_cy, g, markers,
-    {fun_opacity = f_opacity,
-    selected_k = false,
+    figElem, fun_cx, fun_cy, markers,
+    {
+        g = undefined, fun_opacity = f_opacity,
+        selected_k = false,
     } = {},
 ) {
 
@@ -512,6 +540,7 @@ export async function draw_mjo(
         .y(d => y(d.rmm2));
 
     add_members(figElem, myLine, data_xy);
+    draw_time_markers_members(figElem, data_xy)
 
     return figElem
 }
