@@ -4,10 +4,10 @@
 <div style="float: right">
     {% if data_type != "life_span" %}
     <span class="toggle-text">Time markers</span>
-    <label for="{{ data_type }}-switch-time" class="toggle">
+    <label for="{{ data_type }}-switch-marker" class="toggle">
         <input
-            id="{{ data_type }}-switch-time" class="input-toggle" type="checkbox"
-            onclick="switchClasses()"
+            id="{{ data_type }}-switch-marker" class="input-toggle" type="checkbox"
+            onclick="switchMarkers('{{ data_type }}')"
             >
         <span class="switch"></span>
     </label>

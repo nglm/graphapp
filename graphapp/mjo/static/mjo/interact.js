@@ -123,6 +123,23 @@ export async function switchClasses(
     }
 }
 
+export async function switchMarkers(
+    data_type = "members"
+){
+    // Find all figures in the document
+    let figs = document.getElementsByClassName("container-fig");
+    for (let i = 0; i < figs.length; i++) {
+        // Within the outter svg element of each fig, all ids are unique
+        console.log(figs[i].getAttribute('data_type'), data_type);
+        let svgElem = document.getElementById(figs[i].id + "_svg");
+        if (figs[i].getAttribute('data_type') === data_type) {
+            let selector = '#' + figs[i].id + " " + ".time-marker"
+            console.log(selector, $(selector));
+            $(selector).toggle();
+        }
+    }
+}
+
 /**
  * Find the different HTML element that stores the selected members and
  * clear them

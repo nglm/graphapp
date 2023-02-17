@@ -302,6 +302,7 @@ function add_time_marker(
             .data(markers)
             .enter()
             .append("ellipse")                 // path: svg element for ellipses
+            .classed("time-marker", true)
             .classed(mclass + "-vertical", true)
             .attr("cx", (d => fun_cx(d)))      // Compute x, y coord
             .attr("cy", (d => fun_cy(d)))
@@ -318,6 +319,7 @@ function add_time_marker(
             .data(markers)
             .enter()
             .append("ellipse")
+            .classed("time-marker", true)
             .classed(mclass + "-horizontal", true)
             .attr("cx", (d => fun_cx(d)))
             .attr("cy", (d => fun_cy(d)))
@@ -345,6 +347,7 @@ function add_time_marker(
             .append("path")
             .attr("d", polygon)
             .attr("transform", d => transf(d))
+            .classed("time-marker", true)
             .classed(mclass, true)
             .attr("opacity", (d => fun_opacity(
                 d, {g : g, selected_k : selected_k}
