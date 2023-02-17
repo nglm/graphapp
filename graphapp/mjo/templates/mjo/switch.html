@@ -1,15 +1,26 @@
 
 
-{% if data_type == "members" %}
-    <div style="float: right">
+
+<div style="float: right">
+    {% if data_type != "life_span" %}
+    <span class="toggle-text">Time markers</span>
+    <label for="{{ data_type }}-switch-time" class="toggle">
+        <input
+            id="{{ data_type }}-switch-time" class="input-toggle" type="checkbox"
+            onclick="switchClasses()"
+            >
+        <span class="switch"></span>
+    </label>
+    {% endif %}
+    {% if data_type == "members" %}
         <span class="toggle-text">Thick lines</span>
-        <label for="{{ data_type }}-switch" class="toggle">
+        <label for="{{ data_type }}-switch-thick" class="toggle">
             <input
-                id="{{ data_type }}-switch" class="input-toggle" type="checkbox"
+                id="{{ data_type }}-switch-thick" class="input-toggle" type="checkbox"
                 onclick="switchClasses()"
                 >
             <span class="switch"></span>
         </label>
-    </div>
-{% else %}
-{% endif %}
+    {% else %}
+    {% endif %}
+</div>

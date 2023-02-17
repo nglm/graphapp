@@ -99,40 +99,8 @@ export function toggleTopbar(){
 /**
  * Switch one class for another
  */
-export async function switchClasses_bis(
-    switchId="members-switch", classOn="line-thick", classOff="line",
-){
-    // If on, find all classes and add "-thick"
-    // If off, find all classes and remove "-thick"
-    //myElement.classList
-    //myElement.className.replace("-thick", "")
-    //myElement.classList.map(x => x+'-thick')
-    // Check if switch is on
-    let isOn = document.getElementById(switchId).checked;
-    let classToSelect = classOff;
-    let classToDeselect = classOn;
-    if (isOn) {
-        classToSelect = classOn;
-        classToDeselect = classOff
-    }
-    // Find all figures in the document
-    let figs = document.getElementsByClassName("container-fig");
-    for (let i = 0; i < figs.length; i++) {
-        // Within the outter svg element of each fig, all ids are unique
-        let svgElem = document.getElementById(figs[i].id + "_svg");
-        let data_type = figs[i].getAttribute('data_type');
-        if (data_type === "members") {
-            let deselected = await deselectElems(svgElem, classToDeselect);
-            await selectElems(svgElem, deselected, classToSelect);
-        }
-    }
-}
-
-/**
- * Switch one class for another
- */
 export async function switchClasses(
-    switchId="members-switch", classOn="line-thick", classOff="line",
+    switchId="members-switch-thick", classOn="line-thick", classOff="line",
 ){
     // Check if switch is on
     let isOn = document.getElementById(switchId).checked;
@@ -185,7 +153,7 @@ export function clearSelection(
     classClusterDefault="vertex", classMemberDefault="line",
 ){
 
-    if (document.getElementById("members-switch").checked) {
+    if (document.getElementById("members-switch-thick").checked) {
         classMemberDefault = classMemberDefault + "-thick";
         //classClusterDefault = classClusterDefault + "-thick";
     }
@@ -254,7 +222,7 @@ export function sliderMember(classMemberSelected) {
     let figs = document.getElementsByClassName("container-fig");
     // Correspondence between the range value and the m id
     let m_id = "m" + document.getElementById('members_range').value;
-    if (document.getElementById("members-switch").checked) {
+    if (document.getElementById("members-switch-thick").checked) {
         classMemberSelected = classMemberSelected + "-thick";
     }
 
@@ -305,7 +273,7 @@ export async function onEventClusterAux(
     let v_id = "v" + clusterElem.id.slice(7);
     // ids of members in that cluster
     let m_ids = d.members.map((m) => ("m" + m));
-    if (document.getElementById("members-switch").checked) {
+    if (document.getElementById("members-switch-thick").checked) {
         classMemberSelected = classMemberSelected + "-thick";
         classMemberIntersection = classMemberIntersection + "-thick";
     }
@@ -433,7 +401,7 @@ export function onEventMemberAux(
     let figs = document.getElementsByClassName("container-fig");
     // Correspondence between that m-event id and the m id
     let m_id = "m" + memberElem.id.slice(7);
-    if (document.getElementById("members-switch").checked) {
+    if (document.getElementById("members-switch-thick").checked) {
         classMemberSelected = classMemberSelected + "-thick";
     }
 
