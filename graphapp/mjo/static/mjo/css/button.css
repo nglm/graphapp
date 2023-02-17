@@ -1,0 +1,20 @@
+@import url("base.css");
+
+.button-container {
+	width: 60%;
+}
+
+.button {
+    font-size: var(--font-medium);
+	cursor: pointer;
+	border: var(--border-style);
+	padding: 5px;
+	margin: 0px;
+	text-align: center;
+	width: 100%;
+    background-color: var(--button-col-background);
+}
+
+.button:hover {
+    background-color: var(--button-col-hover);
+}
