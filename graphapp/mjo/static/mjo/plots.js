@@ -272,9 +272,18 @@ function draw_time_markers_vertices(
     // This is a mess to use edges for the graphs, it would be possible just for
     // the spaghetti plots
     let T = g.time_axis.length;
-    let steps = [Math.floor(1*T/4), Math.floor(2*T/4), Math.floor(3*T/4)];
-    // let colors = ["cyan", "blue", "purple"];
-    let colors = ["#edf8b1", "#7fcdbb", "cyan"];
+    // let steps = [Math.floor(1*T/4), Math.floor(2*T/4), Math.floor(3*T/4)];
+    // // let colors = ["cyan", "blue", "purple"];
+    // let colors = ["#edf8b1", "#7fcdbb", "cyan"];
+    // let steps = [0, 1*T/4, 2*T/4, 3*T/4];
+    let steps = [1*T/4, 3*T/4];
+    steps = steps.map(d => Math.floor(d));
+    // let colors = [
+    //     "rgb(255, 255, 255)", "rgb(170, 170, 170)", "rgb(85, 85, 85)",
+    //     "rgb(0, 0, 0)"];
+    let colors = [
+        "cyan", "rgb(241, 76, 241)"];
+
     for (let i = 0; i < steps.length; i++) {
         let markers = [];
 
@@ -286,7 +295,7 @@ function draw_time_markers_vertices(
             figElem, fun_cx, fun_cy, markers,
             {
                 g : g, fun_opacity : fun_opacity, selected_k : selected_k,
-                color : colors[i]
+                color : "grey"
             }
         );
     }
@@ -296,44 +305,62 @@ function add_time_marker(
     figElem, fun_cx, fun_cy, markers,
     {
         g = undefined, fun_opacity = f_opacity, color = "black",
-        selected_k = false, fun_rx = (d => 2.), fun_ry = (d => 10),
+        selected_k = false, fun_rx = (d => 2.), fun_ry = (d => 15),
+        type = "ellipse", mclass = "marker-ellipse"
     } = {},
 ) {
 
     let myPlot = d3.select(figElem).select("#plot-group");
 
-    myPlot.append('g')
-        .attr('id', 'markers')
-        .selectAll('.bli')
-        .data(markers)
-        .enter()
-        .append("ellipse")                 // path: svg element for ellipses
-        .classed("time-marker", true)
-        .attr("cx", (d => fun_cx(d)))      // Compute x, y coord
-        .attr("cy", (d => fun_cy(d)))
-        .attr("rx", (d => fun_rx(d)))      // Compute radius
-        .attr("ry", (d => fun_ry(d)))
-        .attr("opacity", (d => fun_opacity(
-            d, {g : g, selected_k : selected_k}
-        )))
-        .attr("fill", color)
+    if (type === "ellipse") {
+        myPlot.append('g')
+            .attr('id', 'markers')
+            .selectAll('.bli')
+            .data(markers)
+            .enter()
+            .append("ellipse")                 // path: svg element for ellipses
+            .classed(mclass + "-vertical", true)
+            .attr("cx", (d => fun_cx(d)))      // Compute x, y coord
+            .attr("cy", (d => fun_cy(d)))
+            .attr("rx", (d => fun_rx(d)))      // Compute radius
+            .attr("ry", (d => fun_ry(d)))
+            .attr("opacity", (d => fun_opacity(
+                d, {g : g, selected_k : selected_k}
+            )))
+            .attr("fill", color);
 
-    myPlot.append('g')
-        .attr('id', 'markers')
-        .selectAll('.bla')
-        .data(markers)
-        .enter()
-        .append("ellipse")
-        .classed("time-marker", true)
-        .attr("cx", (d => fun_cx(d)))
-        .attr("cy", (d => fun_cy(d)))
-        .attr("ry", (d => fun_rx(d)))
-        .attr("rx", (d => fun_ry(d)))
-        .attr("opacity", (d => fun_opacity(
-            d, {g : g, selected_k : selected_k}
-        )))
-        .attr("fill", color)
-    }
+
+        myPlot.append('g')
+            .attr('id', 'markers')
+            .selectAll('.bla')
+            .data(markers)
+            .enter()
+            .append("ellipse")
+            .classed(mclass + "-horizontal", true)
+            .attr("cx", (d => fun_cx(d)))
+            .attr("cy", (d => fun_cy(d)))
+            .attr("ry", (d => fun_rx(d)))
+            .attr("rx", (d => fun_ry(d)))
+            .attr("opacity", (d => fun_opacity(
+                d, {g : g, selected_k : selected_k}
+            )))
+            .attr("fill", color);
+        }
+
+    if (type === "polygon") {
+        myPlot.append('g')
+            .attr('id', 'markers')
+            .selectAll('.bla')
+            .data(markers)
+            .enter()
+            .append("polygon")
+            .classed(mclass, true)
+            .attr("points", (d => fun_cx(d)))
+            .attr("opacity", (d => fun_opacity(
+                d, {g : g, selected_k : selected_k}
+            )))
+        }
+}
 
 function add_k_options(
     figElem, fun_cx, fun_cy, g, life_spans, selected_k,

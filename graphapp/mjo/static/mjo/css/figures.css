@@ -82,10 +82,23 @@
     fill: black;
 }
 
-.time-marker {
+.marker-ellipse-vertical, .marker-ellipse-horizontal {
     stroke-opacity: 1;
-    stroke: black;
     stroke-width: 0.15;
+}
+
+.marker-ellipse-vertical {
+    stroke: white;
+}
+
+.marker-ellipse-horizontal {
+    stroke: black;
+}
+
+.marker-ellipse-vertex-vertical, .marker-ellipse-vertex-horizontal, .marker-polygon-vertex {
+    stroke-width: 2;
+    stroke: rgb(0, 0, 0);
+    fill: rgb(255, 255, 255);
 }
 
 .line, .line-thick{
