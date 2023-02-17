@@ -235,26 +235,29 @@ function draw_time_markers_members( figElem, members, ) {
     // get d3 scalers
     let {x, y, xk, yk} = get_scalers(figElem);
     let T = members[0].length;
-    let steps = [Math.floor(T/4), Math.floor(2*T/4)];
+    let steps = [Math.floor(1*T/4), Math.floor(2*T/4), Math.floor(3*T/4)];
     // let steps = [2, 30];
     console.log(T, steps);
 
     let cx = (d => x( d.rmm1 ));
     let cy = (d => y( d.rmm2 ));
 
-    let rx = (d => 0.7);
+    let rx = (d => 0.5);
     let ry = (d => 4);
     let f_opac = (d => 1);
+    let colors = ["cyan", "blue", "purple"]
 
-    for (var step of steps) {
+    for (let i = 0; i < steps.length; i++) {
         let markers = [];
 
-        members.forEach((m) => { markers.push(m[step]) });
-        console.log('members', step, markers);
+        members.forEach((m) => { markers.push(m[steps[i]]) });
 
         add_time_marker(
             figElem, cx, cy, markers,
-            {g : undefined, fun_opacity : f_opac, fun_ry : ry, fun_rx : rx}
+            {
+                g : undefined, fun_opacity : f_opac, fun_ry : ry, fun_rx : rx,
+                color : colors[i]
+            }
         );
     }
 }
@@ -270,14 +273,13 @@ function draw_time_markers_vertices(
     // This is a mess to use edges for the graphs, it would be possible just for
     // the spaghetti plots
     let T = g.time_axis.length;
-    let steps = [Math.floor(T/3), Math.floor(2*T/3)];
+    let steps = [Math.floor(1*T/4), Math.floor(3*T/4)];
     for (var step of steps) {
         let markers = [];
 
         vertices.forEach((v) => {
             if (v.time_step === step) { markers.push(v); }
         });
-        console.log('vertices', step, markers);
 
         add_time_marker(
             figElem, fun_cx, fun_cy, markers,
@@ -289,8 +291,8 @@ function draw_time_markers_vertices(
 function add_time_marker(
     figElem, fun_cx, fun_cy, markers,
     {
-        g = undefined, fun_opacity = f_opacity,
-        selected_k = false, fun_rx = (d => 1.5), fun_ry = (d => 7),
+        g = undefined, fun_opacity = f_opacity, color = "black",
+        selected_k = false, fun_rx = (d => 1.), fun_ry = (d => 7),
     } = {},
 ) {
 
@@ -310,7 +312,7 @@ function add_time_marker(
         .attr("opacity", (d => 2*fun_opacity(
             d, {g : g, selected_k : selected_k}
         )))
-        .attr("fill", "black")
+        .attr("fill", color)
 
     myPlot.append('g')
         .attr('id', 'markers')
@@ -326,7 +328,7 @@ function add_time_marker(
         .attr("opacity", (d => 2*fun_opacity(
             d, {g : g, selected_k : selected_k}
         )))
-        .attr("fill", "black")
+        .attr("fill", color)
     }
 
 function add_k_options(
