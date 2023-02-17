@@ -100,25 +100,34 @@ export function toggleTopbar(){
  * Switch one class for another
  */
 export async function switchClasses(
-    switchId="members-switch-thick", classOn="line-thick", classOff="line",
+    switchId="members-switch-thick",
 ){
+    let classes = [
+        "line", "lineClustered", "lineClicked", "lineIntersection",
+        "lineHovered", "lineClusterHovered"
+    ];
     // Check if switch is on
     let isOn = document.getElementById(switchId).checked;
-    let classToSelect = classOff;
-    let classToDeselect = classOn;
-    if (isOn) {
-        classToSelect = classOn;
-        classToDeselect = classOff
-    }
     // Find all figures in the document
     let figs = document.getElementsByClassName("container-fig");
-    for (let i = 0; i < figs.length; i++) {
-        // Within the outter svg element of each fig, all ids are unique
-        let svgElem = document.getElementById(figs[i].id + "_svg");
-        let data_type = figs[i].getAttribute('data_type');
-        if (data_type === "members") {
-            let deselected = await deselectElems(svgElem, classToDeselect);
-            await selectElems(svgElem, deselected, classToSelect);
+
+    for (let c of classes) {
+
+        let classToSelect = c;
+        let classToDeselect = c + "-thick";
+        if (isOn) {
+            classToSelect = c + "-thick";;
+            classToDeselect = c;
+        }
+
+        for (let i = 0; i < figs.length; i++) {
+            // Within the outter svg element of each fig, all ids are unique
+            let svgElem = document.getElementById(figs[i].id + "_svg");
+            let data_type = figs[i].getAttribute('data_type');
+            if (data_type === "members") {
+                let deselected = await deselectElems(svgElem, classToDeselect);
+                await selectElems(svgElem, deselected, classToSelect);
+            }
         }
     }
 }
