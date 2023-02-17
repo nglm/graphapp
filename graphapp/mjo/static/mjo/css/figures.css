@@ -82,6 +82,12 @@
     fill: black;
 }
 
+.time-marker {
+    stroke-opacity: 1;
+    stroke: black;
+    stroke-width: 0.2;
+}
+
 .line, .line-thick{
     fill: none;
     stroke: var(--col-line);

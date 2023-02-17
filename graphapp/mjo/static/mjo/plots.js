@@ -236,8 +236,6 @@ function draw_time_markers_members( figElem, members, ) {
     let {x, y, xk, yk} = get_scalers(figElem);
     let T = members[0].length;
     let steps = [Math.floor(1*T/4), Math.floor(2*T/4), Math.floor(3*T/4)];
-    // let steps = [2, 30];
-    console.log(T, steps);
 
     let cx = (d => x( d.rmm1 ));
     let cy = (d => y( d.rmm2 ));
@@ -245,7 +243,8 @@ function draw_time_markers_members( figElem, members, ) {
     let rx = (d => 0.5);
     let ry = (d => 4);
     let f_opac = (d => 1);
-    let colors = ["cyan", "blue", "purple"]
+    let colors = ["cyan", "blue", "#BF40BF"];
+    // let colors = ["yellow", "#66FF99", "cyan"];
 
     for (let i = 0; i < steps.length; i++) {
         let markers = [];
@@ -264,8 +263,8 @@ function draw_time_markers_members( figElem, members, ) {
 
 function draw_time_markers_vertices(
     figElem, fun_cx, fun_cy, g, vertices,
-    {fun_opacity = f_opacity,
-    selected_k = false,
+    {
+        fun_opacity = f_opacity, selected_k = false,
     } = {},
 ) {
     // Find vertices before and after 1st 1/3 of time. Same with 2nd third
@@ -273,17 +272,22 @@ function draw_time_markers_vertices(
     // This is a mess to use edges for the graphs, it would be possible just for
     // the spaghetti plots
     let T = g.time_axis.length;
-    let steps = [Math.floor(1*T/4), Math.floor(3*T/4)];
-    for (var step of steps) {
+    let steps = [Math.floor(1*T/4), Math.floor(2*T/4), Math.floor(3*T/4)];
+    // let colors = ["cyan", "blue", "purple"];
+    let colors = ["#edf8b1", "#7fcdbb", "cyan"];
+    for (let i = 0; i < steps.length; i++) {
         let markers = [];
 
         vertices.forEach((v) => {
-            if (v.time_step === step) { markers.push(v); }
+            if (v.time_step === steps[i]) { markers.push(v); }
         });
 
         add_time_marker(
             figElem, fun_cx, fun_cy, markers,
-            {g : g, fun_opacity : fun_opacity, selected_k : selected_k}
+            {
+                g : g, fun_opacity : fun_opacity, selected_k : selected_k,
+                color : colors[i]
+            }
         );
     }
 }
@@ -292,7 +296,7 @@ function add_time_marker(
     figElem, fun_cx, fun_cy, markers,
     {
         g = undefined, fun_opacity = f_opacity, color = "black",
-        selected_k = false, fun_rx = (d => 1.), fun_ry = (d => 7),
+        selected_k = false, fun_rx = (d => 2.), fun_ry = (d => 10),
     } = {},
 ) {
 
@@ -309,7 +313,7 @@ function add_time_marker(
         .attr("cy", (d => fun_cy(d)))
         .attr("rx", (d => fun_rx(d)))      // Compute radius
         .attr("ry", (d => fun_ry(d)))
-        .attr("opacity", (d => 2*fun_opacity(
+        .attr("opacity", (d => fun_opacity(
             d, {g : g, selected_k : selected_k}
         )))
         .attr("fill", color)
@@ -325,7 +329,7 @@ function add_time_marker(
         .attr("cy", (d => fun_cy(d)))
         .attr("ry", (d => fun_rx(d)))
         .attr("rx", (d => fun_ry(d)))
-        .attr("opacity", (d => 2*fun_opacity(
+        .attr("opacity", (d => fun_opacity(
             d, {g : g, selected_k : selected_k}
         )))
         .attr("fill", color)
