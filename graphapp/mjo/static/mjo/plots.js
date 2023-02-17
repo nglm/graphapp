@@ -263,9 +263,9 @@ function draw_time_markers_vertices(
     } = {},
 ) {
     let T = g.time_axis.length;
-    let steps = [1*T/4, 3*T/4];
-    let types = ["ellipse", "polygon"];
-    let mclasses = ["marker-ellipse-vertex", "marker-polygon-vertex"];
+    let steps = [1*T/4, 2*T/4, 3*T/4];
+    let types = ["symbolCircle", "ellipse", "symbolTriangle"];
+    let mclasses = ["marker-polygon-vertex", "marker-ellipse-vertex", "marker-polygon-vertex"];
     steps = steps.map(d => Math.floor(d));
 
     for (let i = 0; i < steps.length; i++) {
@@ -298,7 +298,6 @@ function add_time_marker(
 
     if (type === "ellipse") {
         myPlot.append('g')
-            .attr('id', 'markers')
             .selectAll('.bli')
             .data(markers)
             .enter()
@@ -315,7 +314,6 @@ function add_time_marker(
 
 
         myPlot.append('g')
-            .attr('id', 'markers')
             .selectAll('.bla')
             .data(markers)
             .enter()
@@ -331,22 +329,21 @@ function add_time_marker(
             .attr("fill", color);
         }
 
-    if (type === "polygon") {
+    else {
 
         let size = 175;
         let transf = (d => ("translate(" + (fun_cx(d)) +","+ (fun_cy(d)) + ")"))
 
-        var triangle = d3.symbol()
+        var polygon = d3.symbol()
             .type(d3.symbolTriangle)
             .size(size);
 
         myPlot.append('g')
-            .attr('id', 'markers')
             .selectAll('.bla')
             .data(markers)
             .enter()
             .append("path")
-            .attr("d", triangle)
+            .attr("d", polygon)
             .attr("transform", d => transf(d))
             .classed(mclass, true)
             .attr("opacity", (d => fun_opacity(
