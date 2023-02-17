@@ -235,7 +235,8 @@ function draw_time_markers_members( figElem, members, ) {
     // get d3 scalers
     let {x, y, xk, yk} = get_scalers(figElem);
     let T = members[0].length;
-    let steps = [Math.floor(1*T/4), Math.floor(2*T/4), Math.floor(3*T/4)];
+    let steps = [0, 1*T/4, 2*T/4, 3*T/4];
+    steps = steps.map(d => Math.floor(d));
 
     let cx = (d => x( d.rmm1 ));
     let cy = (d => y( d.rmm2 ));
@@ -243,8 +244,7 @@ function draw_time_markers_members( figElem, members, ) {
     let rx = (d => 0.5);
     let ry = (d => 4);
     let f_opac = (d => 1);
-    let colors = ["cyan", "blue", "#BF40BF"];
-    // let colors = ["yellow", "#66FF99", "cyan"];
+    let colors = ["yellow", "cyan", "rgb(45, 159, 253)", "rgb(241, 76, 241)"];
 
     for (let i = 0; i < steps.length; i++) {
         let markers = [];
