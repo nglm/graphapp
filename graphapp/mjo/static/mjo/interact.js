@@ -123,6 +123,9 @@ export async function switchClasses(
     }
 }
 
+/**
+ * Toggle time markers
+ */
 export async function switchMarkers(
     data_type = "members"
 ){
