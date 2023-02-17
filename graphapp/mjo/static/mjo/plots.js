@@ -264,7 +264,7 @@ function draw_time_markers_vertices(
 ) {
     let T = g.time_axis.length;
     let steps = [1*T/4, 2*T/4, 3*T/4];
-    let types = ["symbolCircle", "ellipse", "symbolTriangle"];
+    let types = [d3.symbolCircle, "ellipse", d3.symbolTriangle];
     let mclasses = ["marker-polygon-vertex", "marker-ellipse-vertex", "marker-polygon-vertex"];
     steps = steps.map(d => Math.floor(d));
 
@@ -337,7 +337,7 @@ function add_time_marker(
         let transf = (d => ("translate(" + (fun_cx(d)) +","+ (fun_cy(d)) + ")"))
 
         var polygon = d3.symbol()
-            .type(d3.symbolTriangle)
+            .type(type)
             .size(size);
 
         myPlot.append('g')
