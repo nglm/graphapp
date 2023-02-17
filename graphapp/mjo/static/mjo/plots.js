@@ -333,8 +333,8 @@ function add_time_marker(
 
     if (type === "polygon") {
 
-        var size = 175;
-        let offset = Math.sqrt(size);
+        let size = 175;
+        let transf = (d => ("translate(" + (fun_cx(d)) +","+ (fun_cy(d)) + ")"))
 
         var triangle = d3.symbol()
             .type(d3.symbolTriangle)
@@ -347,11 +347,7 @@ function add_time_marker(
             .enter()
             .append("path")
             .attr("d", triangle)
-            .attr("transform", function(d) {
-                return (
-                    "translate(" + (fun_cx(d)) + ","
-                    + (fun_cy(d)) + ")"
-                )})
+            .attr("transform", d => transf(d))
             .classed(mclass, true)
             .attr("opacity", (d => fun_opacity(
                 d, {g : g, selected_k : selected_k}
