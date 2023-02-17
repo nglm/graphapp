@@ -228,11 +228,6 @@ function add_vertices(
 }
 
 function draw_time_markers_members( figElem, members, ) {
-    // Find vertices before and after 1st 1/3 of time. Same with 2nd third
-    // We draw the marker on the edge between the 2 vertices NOOOOO
-    // This is a mess to use edges for the graphs, it would be possible just for
-    // the spaghetti plots
-    // get d3 scalers
     let {x, y, xk, yk} = get_scalers(figElem);
     let T = members[0].length;
     let steps = [0, 1*T/4, 2*T/4, 3*T/4];
@@ -267,22 +262,11 @@ function draw_time_markers_vertices(
         fun_opacity = f_opacity, selected_k = false,
     } = {},
 ) {
-    // Find vertices before and after 1st 1/3 of time. Same with 2nd third
-    // We draw the marker on the edge between the 2 vertices NOOOOO
-    // This is a mess to use edges for the graphs, it would be possible just for
-    // the spaghetti plots
     let T = g.time_axis.length;
-    // let steps = [Math.floor(1*T/4), Math.floor(2*T/4), Math.floor(3*T/4)];
-    // // let colors = ["cyan", "blue", "purple"];
-    // let colors = ["#edf8b1", "#7fcdbb", "cyan"];
-    // let steps = [0, 1*T/4, 2*T/4, 3*T/4];
     let steps = [1*T/4, 3*T/4];
+    let types = ["ellipse", "polygon"];
+    let mclasses = ["marker-ellipse-vertex", "marker-polygon-vertex"];
     steps = steps.map(d => Math.floor(d));
-    // let colors = [
-    //     "rgb(255, 255, 255)", "rgb(170, 170, 170)", "rgb(85, 85, 85)",
-    //     "rgb(0, 0, 0)"];
-    let colors = [
-        "cyan", "rgb(241, 76, 241)"];
 
     for (let i = 0; i < steps.length; i++) {
         let markers = [];
@@ -295,7 +279,7 @@ function draw_time_markers_vertices(
             figElem, fun_cx, fun_cy, markers,
             {
                 g : g, fun_opacity : fun_opacity, selected_k : selected_k,
-                color : "grey"
+                type : types[i], mclass : mclasses[i]
             }
         );
     }
@@ -306,10 +290,10 @@ function add_time_marker(
     {
         g = undefined, fun_opacity = f_opacity, color = "black",
         selected_k = false, fun_rx = (d => 2.), fun_ry = (d => 15),
-        type = "ellipse", mclass = "marker-ellipse"
+        type = "ellipse", mclass = "marker-ellipse",
     } = {},
 ) {
-
+    let {x, y, xk, yk} = get_scalers(figElem);
     let myPlot = d3.select(figElem).select("#plot-group");
 
     if (type === "ellipse") {
@@ -348,14 +332,27 @@ function add_time_marker(
         }
 
     if (type === "polygon") {
+
+        var size = 175;
+        let offset = Math.sqrt(size);
+
+        var triangle = d3.symbol()
+            .type(d3.symbolTriangle)
+            .size(size);
+
         myPlot.append('g')
             .attr('id', 'markers')
             .selectAll('.bla')
             .data(markers)
             .enter()
-            .append("polygon")
+            .append("path")
+            .attr("d", triangle)
+            .attr("transform", function(d) {
+                return (
+                    "translate(" + (fun_cx(d)) + ","
+                    + (fun_cy(d)) + ")"
+                )})
             .classed(mclass, true)
-            .attr("points", (d => fun_cx(d)))
             .attr("opacity", (d => fun_opacity(
                 d, {g : g, selected_k : selected_k}
             )))
