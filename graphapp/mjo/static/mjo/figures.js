@@ -152,7 +152,7 @@ export function set_fig_attrs(
     attrs = {
         filename = undefined, data_type = undefined, plot_type = undefined,
         method = undefined, score = undefined, drepresentation = undefined,
-        time_window = undefined,
+        trepresentation = undefined, time_window = undefined,
     } = {}
 ){
     if (figs.constructor != Array){

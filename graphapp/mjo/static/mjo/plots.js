@@ -703,7 +703,8 @@ export async function draw_entire_graph(
 async function get_relevant_components(
     filename,
     options = {
-        k = -1, method = "", score = "", time_window = "", drepresentation=""
+        k = -1, method = "", score = "", time_window = "", drepresentation="",
+        trepresentation=""
     } = {},
 ) {
     // Pass array as string
@@ -717,6 +718,7 @@ async function get_relevant_components(
             method: options.method,
             score: options.score,
             drepresentation : options.drepresentation,
+            trepresentation : options.trepresentation,
             time_window : options.time_window,
             k: options.k,
             path_graph : PATH_GRAPH,
@@ -972,6 +974,7 @@ export async function redraw_relevant_graph(selected_k=-1, interactGroupId=1){
                     method : figs[i].getAttribute("method"),
                     score : figs[i].getAttribute("score"),
                     drepresentation : figs[i].getAttribute("drepresentation"),
+                    trepresentation : figs[i].getAttribute("trepresentation"),
                     time_window : figs[i].getAttribute("time_window"),
                 };
                 await draw_relevant_graph(
