@@ -30,7 +30,7 @@ def read_request(request):
         "drepresentation" : DATA_REPRESENTATIONS[0],
         "trepresentations" : TIME_REPRESENTATIONS,
         "trepresentation" : TIME_REPRESENTATIONS[0],
-        "time_window": 3,
+        "time_window": 9,
     }
     if "filename" in request.GET:
         context["filename"] = request.GET['filename']
