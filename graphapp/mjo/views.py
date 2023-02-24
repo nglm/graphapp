@@ -3,7 +3,7 @@ from django.http import JsonResponse
 
 import pickle
 from os.path import exists
-from os import listdir
+from os import listdir, makedirs
 import json
 
 from persigraph.utils.d3 import serialize
@@ -104,12 +104,13 @@ def relevant(request):
     e_dict = serialize(edges)
     return JsonResponse({"vertices" : v_dict, "edges" : e_dict}, safe=False)
 
-def generate_data(filename, path_data=""):
+def generate_data(filename, path_data="", path_generated = "processed/"):
     """
     Process data and save as .json from raw .txt if file doesn't already exist
     """
-    output_name = path_data + filename + ".json"
+    output_name = path_data + path_generated + filename + ".json"
     if not exists(output_name):
+        makedirs(path_data + path_generated, exist_ok = True)
         # Preprocess data
         print("_"*30)
         print(
@@ -125,8 +126,8 @@ def generate_data(filename, path_data=""):
             # Exclusive access
             with open(output_name, 'x') as f:
                 # Save processed data as .json
-                mm.utils.save_as_json(data_dict, filename, path=path_data)
-                return True
+                mm.utils.save_as_json(data_dict, output_name)
+            return True
         except FileExistsError:
             print("_"*30)
             print(output_name, ' is already (being) created!')
@@ -137,7 +138,7 @@ def generate_data(filename, path_data=""):
 
 def generate_graph(
     filename, method="", score="", drep="", trep="", w="",
-    path_data="", path_graph="",
+    path_data="", path_graph="", path_generated = "processed/"
 ):
     """
     Generate and save graph (as .pg and .json) if it doesn't already exist
@@ -148,13 +149,13 @@ def generate_graph(
     )
     if not ( exists(fullname + ".pg") and exists(fullname + ".json") ):
 
+        makedirs(path_graph, exist_ok = True)
         # Make sure data has been processed first
         while (not generate_data(filename, path_data=path_data)):
-            continue
+            pass
 
         # Load data and extract members and time
-        with open(path_data + filename + ".json", "rb") as json_file:
-            data_dict = json.load(json_file)
+        data_dict = await_load(path_data + path_generated + filename + ".json")
         members = data_dict['members']
         time = data_dict['time']
 
@@ -172,12 +173,12 @@ def generate_graph(
         g.construct_graph()
         # Exclusive access
         try:
+            # Save as .pg and .json
+            with open(fullname + ".pg", 'x') as f1:
+                g.save(fullname, type="pg")
             with open(fullname + ".json", 'x') as f1:
-                with open(fullname + ".pg", 'x') as f2:
-                    # Save as .pg and .json
-                    g.save(fullname, type="pg")
-                    g.save(fullname, type="json")
-                    return True
+                g.save(fullname, type="json")
+            return True
         except:
             print("_"*30)
             print(fullname + ".json", ' is already (being) created!')
@@ -213,14 +214,14 @@ def load_graph(request):
         filename, method=method, score=score, drep=drep, trep=trep, w=w,
         path_data=path_data, path_graph=path_graph,
     )):
-        continue
+        pass
 
     # Return json version of graph
-    with open(full_name + ".json", "rb") as json_file:
-        dict_from_json = json.load(json_file)
+    dict_from_json = await_load(full_name + ".json")
+
     return JsonResponse(dict_from_json, safe=False)
 
-def load_data(request):
+def load_data(request, path_generated = "processed/"):
     """
     Load data (json file), and return it as a json as well
 
@@ -235,12 +236,12 @@ def load_data(request):
     # Make sure the processed data file exists, otherwise generate it
     # Make sure data has been processed first
     while (not generate_data(filename, path_data=path_data)):
-        continue
+        pass
 
     # Return json version of processed data
-    with open(path_data + filename + ".json", "rb") as json_file:
-        print("Loading data at", path_data + filename + ".json")
-        dict_from_json = json.load(json_file)
+    json_fname = path_data + path_generated + filename + ".json"
+    print("Loading data at", json_fname)
+    dict_from_json = await_load(json_fname)
     return JsonResponse(dict_from_json, safe=False)
 
 def find_files(request):
@@ -250,3 +251,17 @@ def find_files(request):
     path = request.GET['path']
     filenames = listdir(path)
     return JsonResponse(filenames, safe=False)
+
+def await_load(fname):
+    """
+    Load a json file while waiting for it to be fully written
+    """
+    while (True):
+        with open(fname, "rb") as json_file:
+            try:
+                dict_from_json = json.load(json_file)
+            # This happens when we read the file while it's being created...
+            except json.decoder.JSONDecodeError:
+                pass
+            else:
+                return dict_from_json
