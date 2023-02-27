@@ -507,9 +507,9 @@ scipy==1.10.1 ; python_version >= "3.8" and python_version < "3.9" \
 seaborn==0.11.2 ; python_version >= "3.8" and python_version < "3.9" \
     --hash=sha256:85a6baa9b55f81a0623abddc4a26b334653ff4c6b18c418361de19dbba0ef283 \
     --hash=sha256:cf45e9286d40826864be0e3c066f98536982baf701a7caa386511792d61ff4f6
-setuptools==67.3.3 ; python_version >= "3.8" and python_version < "3.9" \
-    --hash=sha256:9d3de8591bd6f6522594406fa46a6418eabd0562dacb267f8556675762801514 \
-    --hash=sha256:ed4e75fafe103c79b692f217158ba87edf38d31004b9dbc1913debb48793c828
+setuptools==67.4.0 ; python_version >= "3.8" and python_version < "3.9" \
+    --hash=sha256:e5fd0a713141a4a105412233c63dc4e17ba0090c8e8334594ac790ec97792330 \
+    --hash=sha256:f106dee1b506dee5102cc3f3e9e68137bbad6d47b616be7991714b0c62204251
 six==1.16.0 ; python_version >= "3.8" and python_version < "3.9" \
     --hash=sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926 \
     --hash=sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254
@@ -525,6 +525,6 @@ tslearn==0.5.3.2 ; python_version >= "3.8" and python_version < "3.9" \
 tzdata==2022.7 ; python_version >= "3.8" and python_version < "3.9" and sys_platform == "win32" \
     --hash=sha256:2b88858b0e3120792a3c0635c23daf36a7d7eeeca657c323da299d2094402a0d \
     --hash=sha256:fe5f866eddd8b96e9fcba978f8e503c909b19ea7efda11e52e39494bad3a7bfa
-zipp==3.14.0 ; python_version >= "3.8" and python_version < "3.9" \
-    --hash=sha256:188834565033387710d046e3fe96acfc9b5e86cbca7f39ff69cf21a4128198b7 \
-    --hash=sha256:9e5421e176ef5ab4c0ad896624e87a7b2f07aca746c9b2aa305952800cb8eecb
+zipp==3.15.0 ; python_version >= "3.8" and python_version < "3.9" \
+    --hash=sha256:112929ad649da941c23de50f356a2b5570c954b65150642bccdd66bf194d224b \
+    --hash=sha256:48904fc76a60e542af151aded95726c1a5c34ed43ab4134b597665c86d7ad556
