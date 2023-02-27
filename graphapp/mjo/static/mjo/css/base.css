@@ -59,14 +59,6 @@ h2 {
 	width: 100%;
 }
 
-select {
-	font-size: var(--font-medium);
-    padding: 5px;
-    background-color: var(--button-col-background);
-	cursor: pointer;
-	border: var(--border-style)
-}
-
 label {
 	cursor: pointer;
 }

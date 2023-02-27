@@ -1,0 +1,36 @@
+@import url("base.css");
+
+/* Select with groups and disabled options, full example */
+/* https://stackoverflow.com/a/17316603 */
+/*
+<select>
+    <optgroup label="CITY 1">
+        <option>City 1 branch A</option>
+        <option>City 1 branch B</option>
+        <option>City 1 branch C</option>
+    </optgroup>
+    <optgroup label="CITY 2">
+        <option disabled>City 2 branch A</option>
+        <option>City 2 branch B</option>
+    </optgroup>
+</select>
+*/
+
+select {
+	font-size: var(--font-medium);
+    padding: 5px;
+    background-color: var(--button-col-background);
+	cursor: pointer;
+	border: var(--border-style)
+}
+
+.option-selected {
+	font-weight: normal;
+}
+
+.select_group {
+	width:fit-content;
+	margin: 5px;
+	display: inline-block;
+    position: relative;
+}
