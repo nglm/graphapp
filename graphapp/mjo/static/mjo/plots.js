@@ -10,11 +10,6 @@ import { onEventClusterAux, onEventMemberAux, updateSliderValue} from "./interac
 
 import {range_rescale, sigmoid, linear} from "./utils.js"
 
-export const PATH_SCRIPT = document.getElementById("main-script").getAttribute("path_script");
-const ROOT_DATA = 'data/'
-export const PATH_DATA = ROOT_DATA + "data/";
-export const PATH_GRAPH = ROOT_DATA + "graphs/";
-
 function get_brotherhood_size(
     d,
     {g=undefined} = {}
@@ -460,8 +455,6 @@ async function load_graph(
             drepresentation : options.drepresentation,
             trepresentation : options.trepresentation,
             time_window : options.time_window,
-            path_data : PATH_DATA,
-            path_graph : PATH_GRAPH
         },
         function(data) {       // Callback on success
             // "data" is the value returned by the python function
@@ -483,7 +476,6 @@ async function load_data(
         "load_data/",                  // URL
         {                              // Additional data
             filename : filename,
-            path_data : PATH_DATA,
         },
         function(data) {       // Callback on success
             // "data" is the value returned by the python function
@@ -501,9 +493,7 @@ async function load_data(
 export async function find_files() {
     return await $.get(
         "find_files/",                  // URL
-        {                              // Additional data
-            path : PATH_DATA,
-        },
+        {},                             // Additional data
         function(data) {       // Callback on success
             // "data" is the value returned by the python function
             return data
@@ -721,8 +711,6 @@ async function get_relevant_components(
             trepresentation : options.trepresentation,
             time_window : options.time_window,
             k: options.k,
-            path_graph : PATH_GRAPH,
-            path_data : PATH_DATA
         },
         function(data) {       // Callback function, called on success
             // Function called on success
