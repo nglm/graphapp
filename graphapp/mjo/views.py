@@ -11,9 +11,9 @@ import persigraph as pg
 import multimet as mm
 
 # Find all files in the data folder
-PATH_PROCESSED = "./generated/processed/"
-PATH_DATA = "./data"
-PATH_GRAPH = "./generated/graphs/"
+PATH_DATA = "./data/"
+PATH_GRAPH = PATH_DATA + "generated/graphs/"
+PATH_PROCESSED = PATH_DATA + "generated/processed/"
 FILENAMES = [f[:-4] for f in listdir(PATH_DATA) if f.endswith(".txt")]
 METHODS = pg.CLUSTERING_METHODS["names"]
 SCORES = pg.SCORES
@@ -118,7 +118,7 @@ def process_data(filename):
             PATH_DATA + filename + ".txt"
         )
         print("_"*30)
-        data_dict = mm.preprocess.mjo( filename = filename + ".txt")
+        data_dict = mm.preprocess.mjo(filename = PATH_DATA + filename + ".txt")
         try:
             # Exclusive access
             with open(output_name, 'x') as f:
