@@ -6,7 +6,7 @@ The `MJO visualization` page allows the user to analyse the MJO forecasts, the i
 
 The `MJO visualization` page is divided into 3 mains sections, the top bar, the side bar and the plots.
 
-Before to visualizing plots, make sure the data has been added to the `GraphApp/data/data` folder, as `.txt` files.
+Before to visualizing plots, make sure the data has been added to the `GraphApp/data/original` folder, as `.txt` files. All generated files will appear in `GraphApp/data/generated/`.
 
 In case of unexpected behaviour, please reload the page.
 
@@ -15,7 +15,7 @@ Top bar
 
 ### Select elements
 
-- `File`: All `.txt` files put in the `GraphApp/data/data` folder will appear here. Select the file that corresponds to the data you want to analyse.
+- `File`: All `.txt` files put in the `GraphApp/data/original` folder will appear here. Select the file that corresponds to the data you want to analyse.
 - `Clustering method`: Clustering methods that are natively available in the `PersiGraph` library. A clustering method determines how datapoints are grouped into clusters. Select the clustering method that is the most suitable for your data and goals.
 - `Clustering score`: Clustering scores that are natively available in the `PersiGraph` library. Clustering scores evaluates the relevance of the grouping made by the clustering method. Select the clustering score that is the most suitable for your data and goals.
 - `Data representation`: Representation of the physical variables.
