@@ -4,10 +4,8 @@
 *node_modules*
 package.json
 package-lock.json
-# no graph data
-data/graphs/*
-# no preprocessed data
-data/data/processed/*
+# no generated data
+data/generated/*
 # no backup files
 *~*
 # no ipynb checkpoints
