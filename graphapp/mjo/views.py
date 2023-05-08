@@ -11,7 +11,10 @@ import persigraph as pg
 import multimet as mm
 
 # Find all files in the data folder
-FILENAMES = [f[:-4] for f in listdir("./data/data") if f.endswith(".txt")]
+PATH_PROCESSED = "./generated/processed/"
+PATH_DATA = "./data"
+PATH_GRAPH = "./generated/graphs/"
+FILENAMES = [f[:-4] for f in listdir(PATH_DATA) if f.endswith(".txt")]
 METHODS = pg.CLUSTERING_METHODS["names"]
 SCORES = pg.SCORES
 DATA_REPRESENTATIONS = ["RMM-squared_radius", "RMM"]
@@ -82,10 +85,8 @@ def relevant(request):
     drep = context["drepresentation"]
     trep = context["trepresentation"]
     w = context['time_window']
-    path_graph = request.GET['path_graph']
-    path_data = request.GET['path_data']
     full_name = (
-        path_graph + filename + "_" + method + "_" + score
+        PATH_GRAPH + filename + "_" + method + "_" + score
         + "_" + drep + "_" + trep +  "_" + str(w)
     )
 
@@ -94,7 +95,6 @@ def relevant(request):
     # Make sure graph exists, otherwise generate it
     generate_graph(
         filename, method=method, score=score, drep=drep, trep=trep, w=w,
-        path_data=path_data, path_graph=path_graph,
     )
 
     with open(full_name + ".pg", "rb") as f:
@@ -104,24 +104,21 @@ def relevant(request):
     e_dict = serialize(edges)
     return JsonResponse({"vertices" : v_dict, "edges" : e_dict}, safe=False)
 
-def generate_data(filename, path_data="", path_generated = "processed/"):
+def process_data(filename):
     """
     Process data and save as .json from raw .txt if file doesn't already exist
     """
-    output_name = path_data + path_generated + filename + ".json"
+    output_name = PATH_PROCESSED + filename + ".json"
     if not exists(output_name):
-        makedirs(path_data + path_generated, exist_ok = True)
+        makedirs(PATH_PROCESSED, exist_ok = True)
         # Preprocess data
         print("_"*30)
         print(
             "Processing raw data from: ",
-            path_data + filename + ".txt"
+            PATH_DATA + filename + ".txt"
         )
         print("_"*30)
-        data_dict = mm.preprocess.mjo(
-            filename = filename + ".txt",
-            path_data = path_data
-        )
+        data_dict = mm.preprocess.mjo( filename = filename + ".txt")
         try:
             # Exclusive access
             with open(output_name, 'x') as f:
@@ -138,24 +135,23 @@ def generate_data(filename, path_data="", path_generated = "processed/"):
 
 def generate_graph(
     filename, method="", score="", drep="", trep="", w="",
-    path_data="", path_graph="", path_generated = "processed/"
 ):
     """
     Generate and save graph (as .pg and .json) if it doesn't already exist
     """
     fullname = (
-        path_graph + filename + "_" + method + "_" + score
+        PATH_GRAPH + filename + "_" + method + "_" + score
         + "_" + drep + "_" + trep + "_" + str(w)
     )
     if not ( exists(fullname + ".pg") and exists(fullname + ".json") ):
 
-        makedirs(path_graph, exist_ok = True)
+        makedirs(PATH_GRAPH, exist_ok = True)
         # Make sure data has been processed first
-        while (not generate_data(filename, path_data=path_data)):
+        while (not process_data(filename) ):
             pass
 
         # Load data and extract members and time
-        data_dict = await_load(path_data + path_generated + filename + ".json")
+        data_dict = await_load(PATH_PROCESSED + filename + ".json")
         members = data_dict['members']
         time = data_dict['time']
 
@@ -201,18 +197,15 @@ def load_graph(request):
     drep = context["drepresentation"]
     trep = context["trepresentation"]
     w = context['time_window']
-    path_data = request.GET['path_data']
-    path_graph = request.GET['path_graph']
 
     full_name = (
-        path_graph + filename + "_" + method + "_" + score
+        PATH_GRAPH + filename + "_" + method + "_" + score
         + "_" + drep + "_" + trep + "_" + str(w)
     )
 
     # Make sure graph exists, otherwise generate it
     while (not generate_graph(
         filename, method=method, score=score, drep=drep, trep=trep, w=w,
-        path_data=path_data, path_graph=path_graph,
     )):
         pass
 
@@ -221,7 +214,7 @@ def load_graph(request):
 
     return JsonResponse(dict_from_json, safe=False)
 
-def load_data(request, path_generated = "processed/"):
+def load_data(request):
     """
     Load data (json file), and return it as a json as well
 
@@ -231,15 +224,14 @@ def load_data(request, path_generated = "processed/"):
     """
     context = read_request(request)
     filename = context['filename']
-    path_data = request.GET['path_data']
 
     # Make sure the processed data file exists, otherwise generate it
     # Make sure data has been processed first
-    while (not generate_data(filename, path_data=path_data)):
+    while (not process_data(filename)):
         pass
 
     # Return json version of processed data
-    json_fname = path_data + path_generated + filename + ".json"
+    json_fname = PATH_PROCESSED + filename + ".json"
     print("Loading data at", json_fname)
     dict_from_json = await_load(json_fname)
     return JsonResponse(dict_from_json, safe=False)

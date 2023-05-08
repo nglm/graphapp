@@ -46,7 +46,7 @@ How to install
 How to run once installed
 -------------------------------------------------------------------------------
 
-1. Put your data in the `GraphApp/data/data` folder
+1. Put your data in the `GraphApp/data` folder
 2. In the `GraphApp` folder, run the command that corresponds to your python package manager (see `Prerequisite`) in order to run the application locally
 
    - OPTION A. using poetry (recommended).
@@ -67,4 +67,4 @@ How to run once installed
 3. In your browser, go to the following URL `http://127.0.0.1:8080/`
 4. Choose your type of visualization
 5. Interact with the plots as you wish
-6. The generated graphs are saved in the `GraphApp/data/graphs` folder and can be loaded and manipulated with the `persigraph` python package.
+6. The generated graphs are saved in the `GraphApp/data/generated/graphs` folder and can be loaded and manipulated with the `persigraph` python package.
