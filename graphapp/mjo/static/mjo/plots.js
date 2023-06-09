@@ -10,19 +10,19 @@ import { onEventClusterAux, onEventMemberAux, updateSliderValue} from "./interac
 
 import {range_rescale, sigmoid, linear} from "./utils.js"
 
-function get_brotherhood_size(
+function get_k(
     d,
     {g=undefined} = {}
 ) {
-    let brotherhood_size;
+    let k;
     // If d is an edge
     try {
-        brotherhood_size = g.vertices[d.time_step][d.v_start].info.brotherhood_size;
+        k = g.vertices[d.time_step][d.v_start].info.k;
     // d is a vertex
     } catch {
-        brotherhood_size = d.info.brotherhood_size;
+        k = d.info.k;
     }
-    return brotherhood_size;
+    return k;
 }
 
 function f_opacity(
@@ -121,7 +121,7 @@ function f_color(
     d,
     {colors = get_list_colors(50), g=undefined} = {}
 ) {
-    return colors[get_brotherhood_size(d, {g : g})[0]];
+    return colors[get_k(d, {g : g})[0]];
 }
 
 function f_radius(d) {
