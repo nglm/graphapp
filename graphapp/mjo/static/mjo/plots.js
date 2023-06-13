@@ -48,21 +48,21 @@ function f_opacity(
 function f_polygon_edge(d, g, xscale, yscale, iplot) {
     let offset = 0.*xscale(g.time_axis[1]);
     let t = d.time_step;
-    let mean_start = d.info_start.mean[iplot];
-    let mean_end = d.info_end.mean[iplot];
-    let points = offset + xscale(g.time_axis[t])+","+yscale(mean_start - d.info_start.std_inf[iplot])+" ";
-    points += offset + xscale(g.time_axis[t])+","+yscale(mean_start + d.info_start.std_sup[iplot])+" ";
-    points += -offset + xscale(g.time_axis[t+1])+","+yscale(mean_end + d.info_end.std_sup[iplot])+" ";
-    points += -offset + xscale(g.time_axis[t+1])+","+yscale(mean_end - d.info_end.std_inf[iplot])+" ";
+    let mean_start = d.info_start.center[iplot];
+    let mean_end = d.info_end.center[iplot];
+    let points = offset + xscale(g.time_axis[t])+","+yscale(mean_start - d.info_start.disp_inf[iplot])+" ";
+    points += offset + xscale(g.time_axis[t])+","+yscale(mean_start + d.info_start.disp_sup[iplot])+" ";
+    points += -offset + xscale(g.time_axis[t+1])+","+yscale(mean_end + d.info_end.disp_sup[iplot])+" ";
+    points += -offset + xscale(g.time_axis[t+1])+","+yscale(mean_end - d.info_end.disp_inf[iplot])+" ";
     return points;
 }
 
 function f_line_edge_detailed(d, g, xscale, yscale, iplot) {
     let t = d.time_step;
-    let start_edge = d.info_start.mean[iplot];
-    let end_edge = d.info_end.mean[iplot];
-    let start_vertex = g.vertices[t][d.v_start].info.mean[iplot];
-    let end_vertex = g.vertices[t+1][d.v_end].info.mean[iplot];
+    let start_edge = d.info_start.center[iplot];
+    let end_edge = d.info_end.center[iplot];
+    let start_vertex = g.vertices[t][d.v_start].info.center[iplot];
+    let end_vertex = g.vertices[t+1][d.v_end].info.center[iplot];
     let points = xscale(g.time_axis[t])+","+yscale(start_vertex)+" ";
     points += xscale(g.time_axis[t])+","+yscale(start_edge)+" ";
     points += xscale(g.time_axis[t+1])+","+yscale(end_edge)+" ";
@@ -72,8 +72,8 @@ function f_line_edge_detailed(d, g, xscale, yscale, iplot) {
 
 function f_line_edge(d, g, xscale, yscale, iplot) {
     let t = d.time_step;
-    let start_vertex = g.vertices[t][d.v_start].info.mean[iplot];
-    let end_vertex = g.vertices[t+1][d.v_end].info.mean[iplot];
+    let start_vertex = g.vertices[t][d.v_start].info.center[iplot];
+    let end_vertex = g.vertices[t+1][d.v_end].info.center[iplot];
     let points = xscale(g.time_axis[t])+","+yscale(start_vertex)+" ";
     points += xscale(g.time_axis[t+1])+","+yscale(end_vertex);
     return points;
@@ -81,8 +81,8 @@ function f_line_edge(d, g, xscale, yscale, iplot) {
 
 function f_line_edge_mjo(d, g, xscale, yscale) {
     let t = d.time_step;
-    let mean_start = g.vertices[t][d.v_start].info.mean;
-    let mean_end = g.vertices[t+1][d.v_end].info.mean;
+    let mean_start = g.vertices[t][d.v_start].info.center;
+    let mean_end = g.vertices[t+1][d.v_end].info.center;
     let points = xscale(mean_start[0])+","+yscale(mean_start[1])+" ";
     points += xscale(mean_end[0])+","+yscale(mean_end[1]);
     return points;
@@ -98,21 +98,21 @@ function f_polygon_vertex(d, g, xscale, yscale, iplot) {
     let points = ""
     for (let e_num of d.e_to) {
         let e = g.edges[t-1][e_num];
-        let mean_start = e.info_end.mean[iplot];
-        let mean_end = d.info.mean[iplot];
-        points += -offset + xscale(g.time_axis[t])+","+yscale(mean_start + e.info_end.std_sup[iplot])+" ";
-        points += -offset + xscale(g.time_axis[t])+","+yscale(mean_start - e.info_end.std_inf[iplot])+" ";
-        points += xscale(g.time_axis[t])+","+yscale(mean_end - d.info.std_inf[iplot])+" ";
-        points += xscale(g.time_axis[t])+","+yscale(mean_end + d.info.std_sup[iplot])+" ";
+        let mean_start = e.info_end.center[iplot];
+        let mean_end = d.info.center[iplot];
+        points += -offset + xscale(g.time_axis[t])+","+yscale(mean_start + e.info_end.disp_sup[iplot])+" ";
+        points += -offset + xscale(g.time_axis[t])+","+yscale(mean_start - e.info_end.disp_inf[iplot])+" ";
+        points += xscale(g.time_axis[t])+","+yscale(mean_end - d.info.disp_inf[iplot])+" ";
+        points += xscale(g.time_axis[t])+","+yscale(mean_end + d.info.disp_sup[iplot])+" ";
     }
     for (let e_num of d.e_from) {
         let e = g.edges[t][e_num];
-        let mean_start = d.info.mean[iplot];
-        let mean_end = e.info_start.mean[iplot];
-        points += offset + xscale(g.time_axis[t])+","+yscale(mean_end + e.info_start.std_sup[iplot])+" ";
-        points += offset + xscale(g.time_axis[t])+","+yscale(mean_end - e.info_start.std_inf[iplot])+" ";
-        points += xscale(g.time_axis[t])+","+yscale(mean_start - d.info.std_inf[iplot])+" ";
-        points += xscale(g.time_axis[t])+","+yscale(mean_start + d.info.std_sup[iplot])+" ";
+        let mean_start = d.info.center[iplot];
+        let mean_end = e.info_start.center[iplot];
+        points += offset + xscale(g.time_axis[t])+","+yscale(mean_end + e.info_start.disp_sup[iplot])+" ";
+        points += offset + xscale(g.time_axis[t])+","+yscale(mean_end - e.info_start.disp_inf[iplot])+" ";
+        points += xscale(g.time_axis[t])+","+yscale(mean_start - d.info.disp_inf[iplot])+" ";
+        points += xscale(g.time_axis[t])+","+yscale(mean_start + d.info.disp_sup[iplot])+" ";
     }
     return points;
 }
@@ -373,7 +373,6 @@ function add_k_options(
         }
     }
 
-
     // This element will render (display) the vertices but they won't be
     // interactive
     myPlot.append('g')
@@ -623,7 +622,7 @@ export async function draw_entire_graph_meteogram(
         let {x, y, xk, yk} = get_scalers(figs[iplot]);
 
         let cx = (d => x( g.time_axis[d.time_step] ));
-        let cy = (d => y( d.info.mean[iplot] ));
+        let cy = (d => y( d.info.center[iplot] ));
 
         add_vertices(figs[iplot], cx, cy, g, vertices, {list_colors : colors});
 
@@ -657,8 +656,8 @@ export async function draw_entire_graph_mjo(
     // Add x and y axis element
     let {x, y, xk, yk} = get_scalers(figElem);
 
-    let cx = (d => x( d.info.mean[0] ));
-    let cy = (d => y( d.info.mean[1] ));
+    let cx = (d => x( d.info.center[0] ));
+    let cy = (d => y( d.info.center[1] ));
     add_vertices(figElem, cx, cy, g, vertices, {list_colors : colors} );
 
     let fun_edge = (d => f_line_edge_mjo(d, g, x, y));
@@ -766,7 +765,7 @@ export async function draw_relevant_graph_meteogram(
 
     let k_max = d3.min([kmax, g.k_max]);
     // To draw k options
-    const life_spans = d3fy_life_span(g.life_span, {k_max : k_max}).flat();
+    const k_info = d3fy_life_span(g.k_info, {k_max : k_max}).flat();
 
     // Create or retrieve figs if they were already created
     let figs = fig_meteogram(
@@ -810,11 +809,11 @@ export async function draw_relevant_graph_meteogram(
             let yk_offset = myPlot.select('#yaxis-k').attr("yoffset");
             let cxk = (d => x( g.time_axis[d.t] ));
             let cyk = (d => (parseFloat(yk_offset) + parseFloat(yk( d.k ))).toString());
-            add_k_options(figs[iplot], cxk, cyk, g, life_spans, opts.k);
+            add_k_options(figs[iplot], cxk, cyk, g, k_info, opts.k);
 
             // Add vertices
             let cx = (d => x( g.time_axis[d.time_step] ));
-            let cy = (d => y( d.info.mean[iplot] ));
+            let cy = (d => y( d.info.center[iplot] ));
             add_vertices(
                 figs[iplot], cx, cy, g, vertices,
                 {list_colors : colors, selected_k : true}
@@ -876,8 +875,8 @@ export async function draw_relevant_graph_mjo(
         clear_graph(figElem);
 
         // Add vertices
-        let cx = (d => x( d.info.mean[0] ));
-        let cy = (d => y( d.info.mean[1] ));
+        let cx = (d => x( d.info.center[0] ));
+        let cy = (d => y( d.info.center[1] ));
         add_vertices(
             figElem, cx, cy, g, vertices,
             {list_colors : colors, selected_k : true}
@@ -984,7 +983,7 @@ export async function draw_life_span(
 ) {
     // Load the graph and wait until it is ready
     const g =  await load_graph( filename, options );
-    const life_spans = d3fy_life_span(g.life_span);
+    const k_info = d3fy_life_span(g.k_info);
     const colors = get_list_colors(g.n_clusters_range.length);
 
     let figElem = init_fig( { dims : dims, fig_id : id, parent : parent});
@@ -1022,7 +1021,7 @@ export async function draw_life_span(
     myPlot.append('g')
         .attr('id', 'life-spans')
         .selectAll('.life-span')
-        .data(life_spans)
+        .data(k_info)
         .enter()
         .append("path")
         .classed("life-span", true)
