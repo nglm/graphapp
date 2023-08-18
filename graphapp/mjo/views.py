@@ -160,11 +160,15 @@ def generate_graph(
         print("Generating graph: ", fullname + ".pg")
         print("_"*30)
         squared_radius = "squared_radius" in drep
+        if squared_radius:
+            transformer = mm.preprocess.square_radius
+        else:
+            transformer = None
         DTW = "DTW" in trep
         g = pg.PersistentGraph(
             members, time_axis=time, model_class=method,
             score_type=score, k_max=5,
-            squared_radius=squared_radius, DTW=DTW, time_window=w
+            transformer=transformer, DTW=DTW, w=w
         )
         g.construct_graph()
         # Exclusive access

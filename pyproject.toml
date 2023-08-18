@@ -8,7 +8,6 @@ license = "MIT"
 [tool.poetry.dependencies]
 python = ">=3.8,<3.9"
 Django = "^4.1"
-persigraph = {git = "https://github.com/nglm/persigraph.git"}
 multimet = {git = "https://github.com/nglm/multimet.git"}
 
 [tool.poetry.dev-dependencies]
