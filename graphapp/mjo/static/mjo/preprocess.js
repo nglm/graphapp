@@ -1,6 +1,6 @@
 export function d3fy(data) {
     // data is an object with at least 3 keys:
-    // - members (N,d,T) array
+    // - members (N,T,d) array
     // - time (T) array
     // - var_names (d) array
     //
@@ -18,9 +18,9 @@ export function d3fy(data) {
             // Initialize object and add time
             let obj = {t: data.time[i]};
             // Iterate over variables
-            for(var k = 0; k < data.members[0].length; k++ ) {
-                // Add each variable one by one if mutlivariate
-                obj[data.var_names[k]] =  data.members[m][k][i];
+            for(var k = 0; k < data.members[0][0].length; k++ ) {
+                // Add each variable one by one if multivariate
+                obj[data.var_names[k]] =  data.members[m][i][k];
             }
             xy.push(obj);
         }
