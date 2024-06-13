@@ -17,6 +17,8 @@ notes_for_developers.md
 */docs/build*
 # no tmp files
 */tmp/*
+README.pdf
+!README.md
 
 # --- Django ----
 graphapp/static*
