@@ -1,7 +1,7 @@
 GraphApp
 ===============================================================================
 
-`GraphApp` is a package specialized in interactive visualization of ensemble of time-series, notably when the ensemble size is small such as in ensemble weather prediction. `GraphApp` interpretation of the data relies on the `[PersiGraph](https://github.com/nglm/persigraph)` method (which itself uses the `[PyCVI](https://github.com/nglm/pycvi)` package to assess the quality of the clusters).
+`GraphApp` is a package specialized in interactive visualization of ensemble of time-series, notably when the ensemble size is small such as in ensemble weather prediction. `GraphApp` interpretation of the data relies on the [`PersiGraph`](https://github.com/nglm/persigraph) method (which itself uses the [`PyCVI`](https://github.com/nglm/pycvi) package to assess the quality of the clusters).
 
 How to install
 -------------------------------------------------------------------------------
@@ -67,4 +67,4 @@ How to run once installed
 3. In your browser, go to the following URL `http://127.0.0.1:8080/`
 4. Choose your type of visualization
 5. Interact with the plots as you wish
-6. The generated graphs are saved in the `GraphApp/data/generated/graphs` folder and can be loaded and manipulated with the `[PersiGraph](https://github.com/nglm/persigraph)` python package.
+6. The generated graphs are saved in the `GraphApp/data/generated/graphs` folder and can be loaded and manipulated with the [`PersiGraph`](https://github.com/nglm/persigraph) python package.
